@@ -4,13 +4,21 @@ extends Node2D
 var current_number
 var number
 
-# mr code code
+
 export (int) var value
 export (PackedScene) var next_piece
 onready var effect = get_node("move_tween")
 onready var destroy = get_node("destroy_tween")
 onready var alpha = get_node("alpha_tween")
 onready var timer = get_node("destroy_timer")
+
+
+export (PackedScene) var tile_background
+var width = 4
+var height = 4
+var x_start = 96
+var y_start = 704
+
 
 func _ready():
 	enter_scene()
@@ -29,9 +37,9 @@ func move(new_position):
 	effect.start()
 
 func start_timer():
-	destroy_piece()
+	destroy_number()
 
-func destroy_piece():
+func destroy_number():
 	#Use a tween to make the piece larger
 	destroy.interpolate_property(self, "scale", Vector2(1, 1), Vector2(1.4, 1.4), .6, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	destroy.start()
@@ -40,17 +48,13 @@ func destroy_piece():
 	alpha.start()
 
 func _on_destroy_timer_timeout():
-	destroy_piece()
+	destroy_number()
 
 
-func _on_alpha_tween_tween_completed(object, key):
+func _on_alpha_tween_tween_completed(_object, _key):
 	queue_free()
 
-export (PackedScene) var tile_background
-var width = 4
-var height = 4
-var x_start = 96
-var y_start = 704
+
 
 #func _ready():
 #	setup()
@@ -62,7 +66,11 @@ func setup():
 			add_child(bkg)
 			bkg.position = Vector2(x_start + i * 128, y_start + j * -128)
 
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-#	pass
+func _process(_delta):
+	draw_numbers()
+	pass
+
+
+func draw_numbers():
+	
+	pass

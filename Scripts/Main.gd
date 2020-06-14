@@ -2,28 +2,35 @@ extends Node2D
 
 
 # Signals
-signal score_changed
+signal new_game
+signal game_over
+signal moving_numbers
+signal exit_game
+signal save_player_data
+
 
 # Grid Variables
-export (int) var x_start
-export (int) var y_start
-export (int) var offset
-export (int) var num_starting_numbers
-export (int) var width
-export (int) var height
+var x_start
+var y_start
+var offset
+
 
 # Touch Variables
 var first_touch = Vector2(0, 0)
 var final_touch = Vector2(0, 0)
 var last_direction = 0
 
+# Game Hard Level
+# количество цифр за ход
+# начальное количество цифр на доске
+# размер доски 4х4 / 6х6 / 8х8
 var hard_level = 3
 var iq_level = 0
 var new_game_numbers = 3
 
-# number Variables
+var game_field_size = 6 
 
-#var possible_numbers = 
+#var numbers_array = 
 #[
 #preload("res://scenes/2_number.tscn"),
 #preload("res://scenes/4_number.tscn")
@@ -33,26 +40,22 @@ var game_window_width = 500
 var game_window_heigth = 700
 var game_window_margin = 3
 
-var game_field_size = 6 
 var game_field_width = 100
 var game_field_heigth = 100
 var game_field_margin = 3
 
-#global summ
 var summ = 0
 var eend = 3
 
 var game_field = [[], []]
+
 var randgen = RandomNumberGenerator.new()
 
+var current_score = 0
+var total_score = 0
+var best_score = 0
 
-func make_2d_array():
-	var array = []
-	for i in width:
-		array.append([])
-		for j in height:
-			array[i].append(null)
-	return array
+
 
 
 func _ready():
@@ -61,40 +64,76 @@ func _ready():
 	setup()
 
 
-func new_game():
-	# числа на поле, 3 числа в начале
+func _process(_delta):		
+	touch_input()
+	randomize()
+	
+
+func setup():
+	new_game_field()	
+
+
+func game_over():
+	$Music.stop()
+	$DeathSound.play()
+	$Background.color = Color(1, 0, 0, 1)
+	$ScoreTimer.stop()
+	$MobTimer.stop()	
+	$HUD.show_game_over()	
+	get_tree().call_group("mobs", "queue_free")
+	$Background.color = Color(0.098039, 0.823529, 0.501961)
+	
+	
+func new_game():	
+	$Music.play()
+	score = 0
+	$Player.start($StartPosition.position)
+	$StartTimer.start()
+	$HUD.update_score(score)
+	$HUD.show_message("Get Ready")
+
+
+
+func new_game_field():	
 	for	x in new_game_numbers:
 		if possible_match_on_board() == true:
 			game_field = possible_numbers(game_field)
 
 
-func setup():
-	new_game()	
+
+func exit_game():
+	get_tree().quit()
+
 	
-#	while current_numbers < starting_numbers:
-#		var current_x = round(randgen.randi_range(0, 6))
-#		var current_y = round(randgen.randi_range(0, 6))
-#		if(game_field[current_x][current_y] == null):
-			#var number_to_make = round(randgen.randi_range(0, 3))
-			# генерация допустимых чисел Фиб
-			# число выставляем как объект
-#			var number = possible_numbers(current_numbers).instance()
-#			current_numbers += 1
-#			numbers_to_field()
-			# добавялем в дерево ноду числа
-			# add_child(number)
-			# расставялем по координатам на поле
-#			number.position = grid_to_pixel(Vector2(current_x, current_y))			
-#			game_field[current_x][current_y] = possible_numbers()
-
-
-func numbers_to_field():
+func increase_score(amount):
+	current_score += amount
+	total_score += current_score
 	
-	pass			
+
+func make_2d_array():
+	var array = []
+	for i in game_field_size:
+		array.append([])
+		for j in game_field_size:
+			array[i].append(null)
+	return array
 
 
-func possible_numbers(array):
-	print("Get Fib Numbers from Space - possible_numbers()")	
+func show_message(text):
+	$GUI/GUI_InGamePlay/Message.text = text
+	$GUI/GUI_InGamePlay/Message.show()
+	$GUI/GUI_InGamePlay/MessageTimer.start()
+
+
+func game_over():
+	#print("КОНЕЦ ИГРЫ", "СУММА =", summ)
+	show_message("Game Over, Score = %s" % total_score)
+	# emit signal?
+	summ = 0
+	setup()
+				
+
+func possible_numbers(array):	
 	var kodn = 1	
 	while kodn == 1:
 		var nx = randgen.randf()
@@ -120,6 +159,56 @@ func possible_numbers(array):
 	return array
 
 
+func is_possible_match():
+	for i in game_field_size:
+		for j in game_field_size:
+			if game_field[i][j] != null:
+				var value = game_field[i][j].value
+				if j > 0:
+					if game_field[i][j - 1].value == value:
+						return true
+				if j < game_field_size - 1:
+					if game_field[i][j + 1].value == value:
+						return true
+				if i > 0:
+					if game_field[i -1][j].value == value:
+						return true
+				if i < game_field_size - 1:
+					if game_field[i + 1][j].value == value:
+						return true
+	return false
+
+
+func blank_space_on_board():
+	for i in game_field_size:
+		for j in game_field_size:
+			if game_field[i][j] == null:
+				return true
+	return false
+
+
+func possible_match_on_board():	
+	if blank_space_on_board():
+		return true	
+	if is_possible_match():
+		return true
+	return false
+
+
+func fill_board():
+	if blank_space_on_board():
+		generate_new_number()
+	else:
+		if is_possible_match():
+			return
+		else:
+			game_over()	
+
+
+func generate_new_number():
+	pass
+
+
 func grid_to_pixel(grid_position):
 	var new_x = grid_position.x * offset + x_start
 	var new_y = grid_position.y * -offset + y_start
@@ -130,12 +219,6 @@ func pixel_to_grid(pixel_position):
 	var new_x = round((pixel_position.x - x_start) / offset)
 	var new_y = round((pixel_position.y - y_start) / -offset)
 	return (Vector2(new_x, new_y))
-
-
-func _process(_delta):
-	# проверка ввода в цикле игры	
-	touch_input()
-	randomize()
 
 
 func touch_input():
@@ -153,55 +236,120 @@ func swipe_angle():
 	print(angle)
 
 
-func calculate_direction():
-	last_direction = 0
+func calculate_direction():	
 	var difference = final_touch - first_touch
 	if abs(difference.x) > abs(difference.y):
 		if difference.x >= 25:
-			for i in range(3, -1, -1):
-				for j in height: 
-					if game_field[i][j] != null:
-						move_right(i,j)
-						last_direction = 1
+			move_right(game_field)						
 		elif difference.x <= -25:
-			for i in range(1, 4, 1):
-				for j in height:
-					if game_field[i][j] != null:
-						move_left(i,j)
-						last_direction = 2
+			move_left(game_field)						
 	elif abs(difference.x) <= abs(difference.y):
 		if difference.y <= -25:
-			for i in width:
-				for j in range(3, -1, -1):
-					if game_field[i][j] != null:
-						move_up(i,j)
-						last_direction = 3
+			move_up(game_field)
 		elif difference.y >= 25:
-			for i in width:
-				for j in range(1, 4, 1):
-					if game_field[i][j] != null:
-						move_down(i,j)
-						last_direction = 4
+			move_down(game_field)
 	if abs(difference.x) >= 25 || abs(difference.y) >= 25:
 		fill_board()
 
 
-func move_right(column, row):
-	# Store this number
-	var this_number = game_field[column][row]
-	# Store the value of the next column
-	var next_x = column + 1
-	# Store the value of this number:
-	var value = game_field[column][row].value
-	# Iterate through the columns looking for the end of the board, or a
-	# non-empty space.
-	for i in range(next_x, width):
+func draw_field():
+	pass
+
+
+
+func help_draw():
+	for row in range(game_field_size):
+		for col in range(game_field_size):
+			if game_field[row][col] > 0:
+				k = game_field[row][col]
+				nf = fibn(k)
+				#rd = rd - nf*5
+				grn = grn - nf*7
+				bl = bl - nf*7
+				rrd = 0
+			else:
+				color = white
+			k = game_field[row][col]
+			if k == 0:
+				kk = " "
+			else:
+				if k > 1500:
+					rrd = 255
+				kk = str(k)
+			x = width*col + margin*(col + 1)
+			y = heigth*row + margin*(row + 1)
+			#pygame.draw.rect(screen, color, (x, y, width, heigth))
+			#text1 = f1.render( kk, 1, (rrd, rrd, rrd))
+			#screen.blit(text1, (x + width//8, y + heigth*2//5))
+
+			
+func get_empty(mas):
+	n_emp = 0
+	for i in range(game_field_size):
+		#n_emp = 0
+		for j in range(game_field_size):
+			if mas[i][j] == 0:
+				n_emp += 1
+
+	return n_emp
+
+
+func fibn(k):
+	if k == 1:
+		return 0
+	if k == 2:
+		return 1
+	sc = 0
+	sa = 1
+	sb = 2
+	n = 1
+	while k > sc:
+		n += 1
+		sc = sa + sb
+		sa = sb
+		sb = sc
+	return n
+
+
+func move_right(mas):
+	kodx2 = 1
+	while kodx2 == 1:
+		for x in range(1, game_field_size):
+			for y in range(game_field_size):
+				if mas[y][game_field_size-x-1] > 0:
+					if mas[y][game_field_size-x] == 0:
+						kodx2 += 1
+						mas[y][game_field_size-x] = mas[y][game_field_size-x-1]
+						mas[y][game_field_size-x-1] = 0
+					elif mas[y][game_field_size-x] == 1 and mas[y][game_field_size-x-1] == 1:
+						kodx2 += 1
+						mas[y][game_field_size-x] = 2
+						mas[y][game_field_size-x-1] = 0
+					elif mas[y][game_field_size-x] < mas[y][game_field_size-x-1] and 2 * mas[y][game_field_size-x] >= mas[y][game_field_size-x-1]:
+						kodx2 += 1
+						mas[y][game_field_size-x] = mas[y][game_field_size-x] + mas[y][game_field_size-x-1]
+						mas[y][game_field_size-x-1] = 0
+					elif mas[y][game_field_size-x] > mas[y][game_field_size-x-1] and 2 * mas[y][game_field_size-x-1] >= mas[y][game_field_size-x]:
+						kodx2 += 1
+						mas[y][game_field_size-x] = mas[y][game_field_size-x] + mas[y][game_field_size-x-1]
+						mas[y][game_field_size-x-1] = 0
+		if kodx2 > 1:
+			kodx2 = 1
+		else:
+			kodx2 = 0
+			fill_board()			
+			# if get_empty(mas) > eend:
+			# 	mas, summ = rand_(mas, summ)
+
+
+
+	for i in range(column + 1, game_field_size):
 		# If it's the end of the board, and that spot is null:
-		if i == width - 1 && game_field[i][row] == null:
+		if i == game_field_size - 1 && game_field[i][row] == null:
 			# Move the number there:
 			game_field[column][row] = null
-			this_number.move(grid_to_pixel(Vector2(width - 1, row)))
-			game_field[width - 1][row] = this_number
+			this_number.move(grid_to_pixel(Vector2(game_field_size - 1, row)))
+			game_field[game_field_size - 1][row] = this_number
 			break
 		# If this spot is full, then move to one before it:
 		if game_field[i][row] != null && game_field[i][row].value != value:
@@ -222,18 +370,51 @@ func move_right(column, row):
 			new_number.position = grid_to_pixel(Vector2(i, row))
 			emit_signal("score_changed", new_number.value)
 			break
+			
+
+func move_left(mas):
+
+	kodx1 = 1
+	while kodx1 == 1:
+		for x in range(1, game_field_size):
+			for y in range(game_field_size):
+				if mas[y][x] > 0:
+					if mas[y][x-1] == 0:
+						kodx1 += 1
+						mas[y][x-1] = mas[y][x]
+						mas[y][x] = 0
+					elif mas[y][x-1] == 1 and mas[y][x] == 1:
+						kodx1 += 1
+						mas[y][x-1] = 2
+						mas[y][x] = 0
+					elif mas[y][x-1] < mas[y][x] and 2 * mas[y][x-1] >= mas[y][x]:
+						kodx1 += 1
+						mas[y][x-1] = mas[y][x-1] + mas[y][x]
+						mas[y][x] = 0
+					elif mas[y][x-1] > mas[y][x] and 2 * mas[y][x] >= mas[y][x-1]:
+						kodx1 += 1
+						mas[y][x-1] = mas[y][x-1] + mas[y][x]
+						mas[y][x] = 0
+
+		if kodx1 > 1:
+			kodx1 = 1
+		else:
+			kodx1 = 0
+			fill_board()
+			# if get_empty(mas) > eend:
+			# 	mas, summ = rand_(mas, summ)
 
 
-func move_left(column, row):
+
+
+
 	# Store this number
-	var this_number = game_field[column][row]
-	# Store the value of the next column
-	var next_x = column - 1
+	var this_number = game_field[column][row]	
 	# Store the value of this number:
 	var value = game_field[column][row].value
 	# Iterate through the columns looking for the end of the board, or a
 	# non-empty space.
-	for i in range(next_x, -1, -1):
+	for i in range(column - 1, -1, -1):
 		# If it's the end of the board, and that spot is null:
 		if i == 0 && game_field[i][row] == null:
 			# Move the number there:
@@ -262,22 +443,52 @@ func move_left(column, row):
 			break
 
 
-func move_up(column, row):
-		# Store this number
+func move_up(mas):
+	kody1 = 1
+	while kody1 == 1:
+		for y in range(1, game_field_size):
+			for x in range(game_field_size):
+				if mas[y][x] > 0:
+					if mas[y-1][x] == 0:
+						kody1 += 1
+						mas[y-1][x] = mas[y][x]
+						mas[y][x] = 0
+					elif mas[y-1][x] == 1 and mas[y][x] == 1:
+						kody1 += 1
+						mas[y-1][x] = 2
+						mas[y][x] = 0
+					elif mas[y-1][x] < mas[y][x] and 2 * mas[y-1][x] >= mas[y][x]:
+						kody1 += 1
+						mas[y-1][x] = mas[y-1][x] + mas[y][x]
+						mas[y][x] = 0
+					elif mas[y-1][x] > mas[y][x] and 2 * mas[y][x] >= mas[y-1][x]:
+						kody1 += 1
+						mas[y-1][x] = mas[y-1][x] + mas[y][x]
+						mas[y][x] = 0
+
+		if kody1 > 1:
+			kody1 = 1
+		else:
+			kody1 = 0
+			fill_board()
+			# if get_empty(mas) > eend:
+			# 	mas, summ = rand_(mas, summ)
+
+
+
+	# Store this number
 	var this_number = game_field[column][row]
-	# Store the value of the next column
-	var next_y = row + 1
 	# Store the value of this number:
 	var value = game_field[column][row].value
 	# Iterate through the columns looking for the end of the board, or a
 	# non-empty space.
-	for i in range(next_y, width):
+	for i in range(row + 1, game_field_size):
 		# If it's the end of the board, and that spot is null:
-		if i == width - 1 && game_field[column][i] == null:
+		if i == game_field_size - 1 && game_field[column][i] == null:
 			# Move the number there:
 			game_field[column][row] = null
-			this_number.move(grid_to_pixel(Vector2(column, width - 1)))
-			game_field[column][width - 1] = this_number
+			this_number.move(grid_to_pixel(Vector2(column, game_field_size - 1)))
+			game_field[column][game_field_size - 1] = this_number
 			break
 		# If this spot is full, then move to one before it:
 		if game_field[column][i] != null && game_field[column][i].value != value:
@@ -298,19 +509,48 @@ func move_up(column, row):
 			new_number.position = grid_to_pixel(Vector2(column, i))
 			emit_signal("score_changed", new_number.value)
 			break
-	pass
 
 
-func move_down(column, row):
+func move_down(mas):
+		  
+	kody2 = 1
+	while kody2 == 1:
+		for y in range(1, game_field_size):
+			for x in range(game_field_size):
+				if mas[game_field_size-y-1][x] > 0:
+					if mas[game_field_size-y][x] == 0:
+						kody2 += 1
+						mas[game_field_size-y][x] = mas[game_field_size-y-1][x]
+						mas[game_field_size-y-1][x] = 0
+					elif mas[game_field_size-y][x] == 1 and mas[game_field_size-y-1][x] == 1:
+						kody2 += 1
+						mas[game_field_size-y][x] = 2
+						mas[game_field_size-y-1][x] = 0
+					elif mas[game_field_size-y][x] < mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y][x] >= mas[game_field_size-y-1][x]:
+						kody2 += 1
+						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
+						mas[game_field_size-y-1][x] = 0
+					elif mas[game_field_size-y][x] > mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y-1][x] >= mas[game_field_size-y][x]:
+						kody2 += 1
+						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
+						mas[game_field_size-y-1][x] = 0
+		if kody2 > 1:
+			kody2 = 1
+		else:
+			kody2 = 0
+			fill_board()
+			# if get_empty(mas) > eend:
+			# 	mas, summ = rand_(mas, summ)
+
+
 	# Store this number
 	var this_number = game_field[column][row]
-	# Store the value of the next column
-	var next_y = row - 1
-	# Store the value of this number:
+	# Store the value of the next column Y 
+	# Store the value of this number
 	var value = game_field[column][row].value
 	# Iterate through the columns looking for the end of the board, or a
 	# non-empty space.
-	for i in range(next_y, -1, -1):
+	for i in range(row - 1, -1, -1):
 		# If it's the end of the board, and that spot is null:
 		if i == 0 && game_field[column][i] == null:
 			# Move the number there:
@@ -336,102 +576,3 @@ func move_down(column, row):
 			new_number.position = grid_to_pixel(Vector2(column, i))
 			emit_signal("score_changed", new_number.value)
 			break
-
-
-func fill_board():
-	# заполняем игровое поле
-	if blank_space_on_board():
-		generate_new_number()
-	else:
-		if is_possible_match():
-			return
-		else:
-			print("Game Over")
-
-
-func generate_new_number():
-	# разместить новое число на игровом поле
-	if(last_direction == 1):
-		var number_made = false
-		while !number_made:
-			var row = round(rand_range(-.5, 3.4))
-			if(game_field[0][row] == null):
-				#var number = possible_numbers[0].instance()
-				var number = possible_numbers(number_made).instance()
-				add_child(number)
-				number.position = grid_to_pixel(Vector2(0, row))
-				number_made = true
-				game_field[0][row] = number
-	elif(last_direction == 2):
-		var number_made = false
-		while !number_made:
-			var row = round(rand_range(-.5, 3.4))
-			if game_field[3][row] == null:
-				#var number = possible_numbers[0].instance()
-				var number = possible_numbers(number_made).instance()
-				add_child(number)
-				number.position = grid_to_pixel(Vector2(3, row))
-				number_made = true
-				game_field[3][row] = number
-	elif(last_direction == 3):
-		var number_made = false
-		while !number_made:
-			var column = round(rand_range(-.5, 3.4))
-			if game_field[column][0] == null:
-				#var number = possible_numbers[0].instance()
-				var number = possible_numbers(number_made).instance()
-				add_child(number)
-				number.position = grid_to_pixel(Vector2(column, 0))
-				number_made = true
-				game_field[column][0] = number
-	elif(last_direction == 4):
-		var number_made = false
-		while !number_made:
-			var column = round(rand_range(-.5, 3.4))
-			if game_field[column][3] == null:
-				#var number = possible_numbers[0].instance()
-				var number = possible_numbers(number_made).instance()
-				add_child(number)
-				number.position = grid_to_pixel(Vector2(column, 3))
-				number_made = true
-				game_field[column][3] = number
-
-
-func is_possible_match():
-	# Проверка в четерех направлениях совпадения чисел
-	for i in width:
-		for j in height:
-			if game_field[i][j] != null:
-				var value = game_field[i][j].value
-				if j > 0:
-					if game_field[i][j - 1].value == value:
-						return true
-				if j < width - 1:
-					if game_field[i][j + 1].value == value:
-						return true
-				if i > 0:
-					if game_field[i -1][j].value == value:
-						return true
-				if i < width - 1:
-					if game_field[i + 1][j].value == value:
-						return true
-	return false
-
-
-func blank_space_on_board():
-	for i in width:
-		for j in height:
-			if game_field[i][j] == null:
-				return true
-	return false
-
-
-func possible_match_on_board():
-	# Есть ли на игровом поле пустое место
-	if blank_space_on_board():
-		return true
-	# Иначе проверить все поле в четырех направлениях на совпадения
-	if is_possible_match():
-		return true
-	return false
-
