@@ -1,20 +1,31 @@
 extends Control
 
 signal exit_game_button
-# Declare member variables here. Examples:
-# var a: int = 2
-# var b: String = "text"
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	setup()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-#	pass
+func setup():
+	$ExitGame.show()	
+	#$GUI_InGamePlay/CentContMessage/Message.show()
+	$CenterContainer/Label.show()
+	
+
+func update_score(text):
+	$CenterContainer/Label.text = text
 
 
+func _on_MessageTimer_timeout() -> void:
+	$CentContMessage/Message.text = ""
+	$CentContMessage/Message.hide()
 
 
+func _on_ExitGame_pressed() -> void:
+	emit_signal("exit_game_button")
+	$ExitGame.hide()	
+	$CentContMessage/Message.hide()
+	$CenterContainer/Label.hide()	
+	$TextureButton.hide()
+	

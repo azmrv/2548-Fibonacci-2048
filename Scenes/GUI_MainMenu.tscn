@@ -22,14 +22,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CentContLabel2" type="CenterContainer" parent="."]
 margin_right = 480.0
 margin_bottom = 112.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GameName" type="Label" parent="CenterContainer"]
+[node name="GameName" type="Label" parent="CentContLabel2"]
 margin_left = 56.0
 margin_top = 21.0
 margin_right = 424.0
@@ -37,7 +37,7 @@ margin_bottom = 90.0
 custom_fonts/font = SubResource( 1 )
 text = "2584 Fibonacci"
 
-[node name="CenterContainer3" type="CenterContainer" parent="."]
+[node name="CentContLabel" type="CenterContainer" parent="."]
 margin_top = 132.0
 margin_right = 480.0
 margin_bottom = 244.0
@@ -45,7 +45,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BestScore" type="Label" parent="CenterContainer3"]
+[node name="BestScore" type="Label" parent="CentContLabel"]
 margin_left = 17.0
 margin_top = 21.0
 margin_right = 462.0
@@ -53,7 +53,7 @@ margin_bottom = 90.0
 custom_fonts/font = SubResource( 1 )
 text = "Best Score = 2584"
 
-[node name="CenterContainer2" type="CenterContainer" parent="."]
+[node name="CentContButtons" type="CenterContainer" parent="."]
 anchor_top = -0.00188938
 anchor_bottom = -0.00188938
 margin_left = 2.0
@@ -64,7 +64,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer2"]
+[node name="VBoxButtons" type="VBoxContainer" parent="CentContButtons"]
 margin_left = 99.0
 margin_top = 28.0
 margin_right = 381.0
@@ -72,7 +72,7 @@ margin_bottom = 324.0
 custom_constants/separation = 20
 alignment = 1
 
-[node name="StartGame" type="Button" parent="CenterContainer2/VBoxContainer"]
+[node name="StartGame" type="Button" parent="CentContButtons/VBoxButtons"]
 margin_right = 282.0
 margin_bottom = 59.0
 theme = ExtResource( 4 )
@@ -82,7 +82,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Options" type="Button" parent="CenterContainer2/VBoxContainer"]
+[node name="Options" type="Button" parent="CentContButtons/VBoxButtons"]
 margin_top = 79.0
 margin_right = 282.0
 margin_bottom = 138.0
@@ -93,7 +93,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Credits" type="Button" parent="CenterContainer2/VBoxContainer"]
+[node name="Credits" type="Button" parent="CentContButtons/VBoxButtons"]
 margin_top = 158.0
 margin_right = 282.0
 margin_bottom = 217.0
@@ -104,7 +104,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ExitGame" type="Button" parent="CenterContainer2/VBoxContainer"]
+[node name="ExitGame" type="Button" parent="CentContButtons/VBoxButtons"]
 margin_top = 237.0
 margin_right = 282.0
 margin_bottom = 296.0
@@ -114,4 +114,7 @@ text = "Exit Game"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="CenterContainer2/VBoxContainer/StartGame" to="." method="_on_StartGame_pressed"]
+[connection signal="pressed" from="CentContButtons/VBoxButtons/StartGame" to="." method="_on_StartGame_pressed"]
+[connection signal="pressed" from="CentContButtons/VBoxButtons/Options" to="." method="_on_Options_pressed"]
+[connection signal="pressed" from="CentContButtons/VBoxButtons/Credits" to="." method="_on_Credits_pressed"]
+[connection signal="pressed" from="CentContButtons/VBoxButtons/ExitGame" to="." method="_on_ExitGame_pressed"]

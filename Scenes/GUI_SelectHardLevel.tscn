@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=1]
 size = 39
 font_data = ExtResource( 1 )
 
@@ -44,7 +44,7 @@ size_flags_vertical = 3
 [node name="Description_4x4" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer"]
 margin_right = 76.0
 margin_bottom = 591.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 1 )
 text = "Select 4x4 gamefield this is for newbie!"
 align = 1
 valign = 1
@@ -57,7 +57,7 @@ __meta__ = {
 margin_top = 595.0
 margin_right = 76.0
 margin_bottom = 652.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 1 )
 text = "4x4"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -75,7 +75,7 @@ size_flags_vertical = 3
 [node name="Description_6x6" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer2"]
 margin_right = 76.0
 margin_bottom = 699.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 1 )
 text = "Select 6x6 gamefield this is for Professionals!"
 align = 1
 valign = 1
@@ -88,7 +88,7 @@ __meta__ = {
 margin_top = 703.0
 margin_right = 76.0
 margin_bottom = 760.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 1 )
 text = "6x6"
 __meta__ = {
 "_edit_use_anchors_": false

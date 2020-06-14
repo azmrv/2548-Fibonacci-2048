@@ -15,8 +15,13 @@ __meta__ = {
 }
 
 [node name="GUI_InGamePlay" parent="." instance=ExtResource( 4 )]
+visible = false
 
 [node name="GUI_MainMenu" parent="." instance=ExtResource( 1 )]
+margin_top = -1.10803
+margin_bottom = -1.10803
 
 [node name="GUI_SelectHardLevel" parent="." instance=ExtResource( 3 )]
 visible = false
+[connection signal="exit_game_button" from="GUI_InGamePlay" to="." method="_on_GUI_InGamePlay_exit_game_button"]
+[connection signal="start_new_game" from="GUI_MainMenu" to="." method="_on_GUI_MainMenu_start_new_game"]
