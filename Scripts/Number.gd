@@ -1,11 +1,12 @@
 extends Node2D
 
 
-# var current_number
-# var number
+export (PackedScene) var Number 
 
-# export (int) var value
-# export (PackedScene) var next_piece
+var current_number
+var number
+
+
 # onready var effect = get_node("move_tween")
 # onready var destroy = get_node("destroy_tween")
 # onready var alpha = get_node("alpha_tween")

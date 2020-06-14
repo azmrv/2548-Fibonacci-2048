@@ -1,51 +1,48 @@
 extends Node2D
 
 
-var current_number
-var number
+#onready var effect = get_node("move_tween")
+#onready var destroy = get_node("destroy_tween")
+#onready var alpha = get_node("alpha_tween")
+#onready var timer = get_node("destroy_timer")
 
 
-export (int) var value
-export (PackedScene) var next_piece
-onready var effect = get_node("move_tween")
-onready var destroy = get_node("destroy_tween")
-onready var alpha = get_node("alpha_tween")
-onready var timer = get_node("destroy_timer")
+export (PackedScene) var GameField
 
-
-export (PackedScene) var tile_background
-var width = 4
-var height = 4
-var x_start = 96
-var y_start = 704
+var x_start = 0
+var y_start = 100
 
 
 func _ready():
-	enter_scene()
+#	enter_scene()
 
 #func _process(delta):
 #	# Called every frame. Delta is time since last frame.
 #	# Update game logic here.
-#	pass
+	pass
 
 func enter_scene():
-	effect.interpolate_property(self, "scale", Vector2(.3, .3), Vector2(1, 1), .6, Tween.TRANS_CIRC, Tween.EASE_OUT)
-	effect.start()
+#	effect.interpolate_property(self, "scale", Vector2(.3, .3), Vector2(1, 1), .6, Tween.TRANS_CIRC, Tween.EASE_OUT)
+#	effect.start()
+	pass
 
 func move(new_position):
-	effect.interpolate_property(self, "position", position, new_position, .3, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
-	effect.start()
+#	effect.interpolate_property(self, "position", position, new_position, .3, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
+#	effect.start()
+	pass
 
 func start_timer():
-	destroy_number()
+#	destroy_number()
+	pass
 
 func destroy_number():
-	#Use a tween to make the piece larger
-	destroy.interpolate_property(self, "scale", Vector2(1, 1), Vector2(1.4, 1.4), .6, Tween.TRANS_CUBIC, Tween.EASE_OUT)
-	destroy.start()
-	#Use a tween to make the piece disappear
-	alpha.interpolate_property(self, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), .6, Tween.TRANS_SINE, Tween.EASE_OUT)
-	alpha.start()
+#	#Use a tween to make the piece larger
+#	destroy.interpolate_property(self, "scale", Vector2(1, 1), Vector2(1.4, 1.4), .6, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+#	destroy.start()
+#	#Use a tween to make the piece disappear
+#	alpha.interpolate_property(self, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), .6, Tween.TRANS_SINE, Tween.EASE_OUT)
+#	alpha.start()
+	pass
 
 func _on_destroy_timer_timeout():
 	destroy_number()
@@ -60,14 +57,15 @@ func _on_alpha_tween_tween_completed(_object, _key):
 #	setup()
 
 func setup():
-	for i in width:
-		for j in height:
-			var bkg = tile_background.instance()
-			add_child(bkg)
-			bkg.position = Vector2(x_start + i * 128, y_start + j * -128)
-
+#	for i in width:
+#		for j in height:
+#			var bkg = tile_background.instance()
+#			add_child(bkg)
+#			bkg.position = Vector2(x_start + i * 128, y_start + j * -128)
+	pass
+	
 func _process(_delta):
-	draw_numbers()
+	#draw_numbers()
 	pass
 
 
