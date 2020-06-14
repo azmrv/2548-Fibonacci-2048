@@ -82,7 +82,11 @@ func game_over():
 	$HUD.show_game_over()	
 	get_tree().call_group("mobs", "queue_free")
 	$Background.color = Color(0.098039, 0.823529, 0.501961)
-	
+	#print("КОНЕЦ ИГРЫ", "СУММА =", summ)
+	show_message("Game Over, Score = %s" % total_score)
+	# emit signal?
+	summ = 0
+	setup()
 	
 func new_game():	
 	$Music.play()
@@ -125,13 +129,6 @@ func show_message(text):
 	$GUI/GUI_InGamePlay/MessageTimer.start()
 
 
-func game_over():
-	#print("КОНЕЦ ИГРЫ", "СУММА =", summ)
-	show_message("Game Over, Score = %s" % total_score)
-	# emit signal?
-	summ = 0
-	setup()
-				
 
 func possible_numbers(array):	
 	var kodn = 1	
