@@ -16,12 +16,14 @@ const game_field_size = 6
 
 const game_window_width = 480
 const game_window_heigth = 720
-const game_window_margin = 10
+const game_window_margin = 0
 
 const game_field_draw_size = 480
 const game_field_width = 480
 const game_field_heigth = 480
-const game_field_margin = 5
+const game_field_margin = 0
+
+var number_scene_size = game_field_width / game_field_size
 
 # Touch Variables
 var first_touch = Vector2(0, 0)
@@ -286,28 +288,26 @@ func calculate_direction():
 		fill_board()
 
 
-func draw_field():	
-	randgen.randomize()
-	var number_scene_size = 70
+func draw_field():
+	$GameField.visible = true
+	randgen.randomize()	
 	var number_scene_pos = Vector2(0,0)
 	for row in range(game_field_size):
 		for col in range(game_field_size):
 			var curr_number = CurNumber.instance()
-			$GameField.add_child(curr_number)
+			$GameField/PanelContainer.add_child(curr_number)
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
 			if game_field[row][col] == null:
 				number_scene_pos = curr_number.position
-				$GameField/Number/MarginContainer/CenterContainer/ColorRect/Label.text = "0"
-				curr_number.position.x = game_field_draw_size * number_scene_pos.x - game_field_margin
-				curr_number.position.y = game_field_draw_size * number_scene_pos.y - game_field_margin
-				number_scene_pos+=number_scene_pos
+				curr_number.set_number_text("0")
+				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
+				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
 			else:
 				number_scene_pos = curr_number.position
 				print("draw_field() %s " % game_field[row][col] as String)
-				$GameField/Number/MarginContainer/CenterContainer/ColorRect/Label.text = game_field[row][col] as String
-				curr_number.position.x = game_field_draw_size * number_scene_pos.x + game_field_margin * (number_scene_size + 1)
-				curr_number.position.y = game_field_draw_size * number_scene_pos.y + game_field_margin * (number_scene_size + 1)
-				number_scene_pos+=number_scene_pos
+				curr_number.set_number_text(game_field[row][col] as String)
+				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
+				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
 				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
 
 
