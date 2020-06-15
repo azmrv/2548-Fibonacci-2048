@@ -17,5 +17,10 @@ visible = false
 margin_top = -1.22772
 margin_right = 0.0
 margin_bottom = -1.22772
+
+[node name="InputLagTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
 [connection signal="exit_to_menu" from="GUI" to="." method="_on_GUI_exit_to_menu"]
 [connection signal="start_new_game" from="GUI" to="." method="_on_GUI_start_new_game"]
+[connection signal="timeout" from="InputLagTimer" to="." method="_on_InputLagTimer_timeout"]
