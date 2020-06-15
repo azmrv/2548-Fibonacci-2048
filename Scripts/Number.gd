@@ -3,10 +3,17 @@ extends Node2D
 
 export (PackedScene) var Number 
 
-var current_number
-var number
+var current_number = 0
+var number = 0
+var mas_coord = 0
 
+var currx_row = 0
+var curry_col = 0
 
+func set_xy(x,y):
+	currx_row = x
+	curry_col = y
+	
 
 # onready var effect = get_node("move_tween")
 # onready var destroy = get_node("destroy_tween")
