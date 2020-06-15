@@ -7,6 +7,7 @@ var current_number
 var number
 
 
+
 # onready var effect = get_node("move_tween")
 # onready var destroy = get_node("destroy_tween")
 # onready var alpha = get_node("alpha_tween")
@@ -42,6 +43,9 @@ var number
 # func _on_destroy_timer_timeout():
 # 	destroy_piece()
 
+func set_number_text(text):
+	$MarginContainer/CenterContainer/ColorRect/Label.text = text
+	
 
 # func _on_alpha_tween_tween_completed(object, key):
 # 	queue_free()

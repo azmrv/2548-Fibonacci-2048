@@ -9,12 +9,21 @@ signal exit_game
 signal save_player_data
 
 export (PackedScene) var CurNumber 
+var number = preload("res://Scenes/Number.tscn")
 
-# Grid Variables
-var x_start
-var y_start
-var offset
+# Variables
+const game_field_size = 6 
 
+const game_window_width = 480
+const game_window_heigth = 720
+const game_window_margin = 0
+
+const game_field_draw_size = 480
+const game_field_width = 480
+const game_field_heigth = 480
+const game_field_margin = 0
+
+var number_scene_size = game_field_width / game_field_size
 
 # Touch Variables
 var first_touch = Vector2(0, 0)
@@ -29,20 +38,6 @@ var hard_level = 3
 var iq_level = 0
 var new_game_numbers = 3
 
-var game_field_size = 6 
-
-var number = preload("res://Scenes/Number.tscn")
-
-
-
-const game_window_width = 480
-const game_window_heigth = 720
-const game_window_margin = 10
-
-const game_field_draw_size = 480
-const game_field_width = 480
-const game_field_heigth = 480
-const game_field_margin = 5
 
 var summ = 0
 var eend = 3
@@ -61,12 +56,13 @@ var new_game = 0
 func _ready():	
 	print("_ready()")	
 	setup()
-
+	
+	
 func _process(_delta):
 	if	new_game != 0:
-		print("_process(_delta)")
+		#print("_process(_delta)")
 		touch_input()	
-		draw_field()
+		
 	
 
 func setup():
@@ -243,23 +239,26 @@ func generate_new_number():
 
 func grid_to_pixel(grid_position):
 	print("grid_to_pixel(grid_position)")
-	var new_x = grid_position.x * offset + x_start
-	var new_y = grid_position.y * -offset + y_start
-	return (Vector2(new_x, new_y))
+	# var new_x = grid_position.x * offset + x_start
+	# var new_y = grid_position.y * -offset + y_start
+	# return (Vector2(new_x, new_y))
+	pass
 
 
 func pixel_to_grid(pixel_position):
 	print("pixel_to_grid(pixel_position)")
-	var new_x = round((pixel_position.x - x_start) / offset)
-	var new_y = round((pixel_position.y - y_start) / -offset)
-	return (Vector2(new_x, new_y))
+	# var new_x = round((pixel_position.x - x_start) / offset)
+	# var new_y = round((pixel_position.y - y_start) / -offset)
+	# return (Vector2(new_x, new_y))
+	pass
 
 
-func touch_input():
-	#print("touch_input()")
+func touch_input():	
 	if(Input.is_action_just_pressed("ui_touch")):
+		print("touch_input() - (Input.is_action_just_pressed(ui_touch))")
 		first_touch = (get_global_mouse_position())
 	if(Input.is_action_just_released("ui_touch")):
+		print("touch_input() - (Input.is_action_just_released(ui_touch))")
 		final_touch = (get_global_mouse_position())
 		calculate_direction()
 		swipe_angle()
@@ -290,21 +289,25 @@ func calculate_direction():
 
 
 func draw_field():
-	print("draw_field()")
-	randgen.randomize()
+	$GameField.visible = true
+	randgen.randomize()	
+	var number_scene_pos = Vector2(0,0)
 	for row in range(game_field_size):
 		for col in range(game_field_size):
 			var curr_number = CurNumber.instance()
-			$GameField.add_child(curr_number)
+			$GameField/PanelContainer.add_child(curr_number)
+			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
 			if game_field[row][col] == null:
-				$GameField/Number/MarginContainer/CenterContainer/ColorRect/Label.text = "0"
-				curr_number.position.x = game_field_draw_size * col + game_field_margin * (col + 1)
-				curr_number.position.y = game_field_draw_size * row + game_field_margin * (row + 1)
+				number_scene_pos = curr_number.position
+				curr_number.set_number_text("0")
+				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
+				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
 			else:
-				$GameField/Number/MarginContainer/CenterContainer/ColorRect/Label.text = str(game_field[row][col])
-				curr_number.position.x = game_field_draw_size * col + game_field_margin * (col + 1)
-				curr_number.position.y = game_field_draw_size * row + game_field_margin * (row + 1)
-				#curr_number.window_size = window_size
+				number_scene_pos = curr_number.position
+				print("draw_field() %s " % game_field[row][col] as String)
+				curr_number.set_number_text(game_field[row][col] as String)
+				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
+				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
 				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
 
 
@@ -485,6 +488,7 @@ func _on_GUI_start_new_game() -> void:
 	randgen.randomize()
 	new_game = 1
 	new_game()
+	draw_field()
 
 
 func _on_GUI_exit_to_menu() -> void:
