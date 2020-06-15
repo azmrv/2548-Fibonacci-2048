@@ -1,6 +1,6 @@
 extends Control
 
-signal exit_game_button
+signal exit_to_menu_button
 
 
 func _ready() -> void:
@@ -8,9 +8,10 @@ func _ready() -> void:
 
 
 func setup():
-	$ExitGame.show()	
+#	$ExitGame.show()	
 	#$GUI_InGamePlay/CentContMessage/Message.show()
-	$CenterContainer/Label.show()
+#	$CenterContainer/Label.show()
+	pass
 	
 
 func update_score(text):
@@ -18,14 +19,11 @@ func update_score(text):
 
 
 func _on_MessageTimer_timeout() -> void:
-	$CentContMessage/Message.text = ""
+	#$CentContMessage/Message.text = ""
 	$CentContMessage/Message.hide()
 
 
-func _on_ExitGame_pressed() -> void:
-	emit_signal("exit_game_button")
-	$ExitGame.hide()	
-	$CentContMessage/Message.hide()
-	$CenterContainer/Label.hide()	
-	$TextureButton.hide()
-	
+
+
+func _on_GUI_InGamePlay_exit_to_menu_button() -> void:
+	emit_signal("exit_to_menu_button")

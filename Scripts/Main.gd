@@ -61,7 +61,8 @@ func _ready():
 func _process(_delta):
 	if	new_game != 0:
 		#print("_process(_delta)")
-		touch_input()	
+		touch_input()
+		#draw_field()
 		
 	
 
@@ -253,7 +254,7 @@ func pixel_to_grid(pixel_position):
 	pass
 
 
-func touch_input():	
+func touch_input():
 	if(Input.is_action_just_pressed("ui_touch")):
 		print("touch_input() - (Input.is_action_just_pressed(ui_touch))")
 		first_touch = (get_global_mouse_position())
@@ -350,8 +351,8 @@ func move_right(mas):
 	while kodx2 == 1:
 		for x in range(1, game_field_size):
 			for y in range(game_field_size):
-				if mas[y][game_field_size-x-1] > 0:
-					if mas[y][game_field_size-x] == 0:
+				if mas[y][game_field_size-x-1] != null:
+					if mas[y][game_field_size-x] == null:
 						kodx2 += 1
 						mas[y][game_field_size-x] = mas[y][game_field_size-x-1]
 						mas[y][game_field_size-x-1] = 0
@@ -384,8 +385,8 @@ func move_left(mas):
 	while kodx1 == 1:
 		for x in range(1, game_field_size):
 			for y in range(game_field_size):
-				if mas[y][x] > 0:
-					if mas[y][x-1] == 0:
+				if mas[y][x] != null:
+					if mas[y][x-1] == null:
 						kodx1 += 1
 						mas[y][x-1] = mas[y][x]
 						mas[y][x] = 0
@@ -419,8 +420,8 @@ func move_up(mas):
 	while kody1 == 1:
 		for y in range(1, game_field_size):
 			for x in range(game_field_size):
-				if mas[y][x] > 0:
-					if mas[y-1][x] == 0:
+				if mas[y][x] != null:
+					if mas[y-1][x] == null:
 						kody1 += 1
 						mas[y-1][x] = mas[y][x]
 						mas[y][x] = 0
@@ -454,8 +455,8 @@ func move_down(mas):
 	while kody2 == 1:
 		for y in range(1, game_field_size):
 			for x in range(game_field_size):
-				if mas[game_field_size-y-1][x] > 0:
-					if mas[game_field_size-y][x] == 0:
+				if mas[game_field_size-y-1][x] != null:
+					if mas[game_field_size-y][x] == null:
 						kody2 += 1
 						mas[game_field_size-y][x] = mas[game_field_size-y-1][x]
 						mas[game_field_size-y-1][x] = 0
@@ -482,7 +483,7 @@ func move_down(mas):
 
 
 func _on_GUI_start_new_game() -> void:
-	print("_on_GUI_start_new_game() -> void")
+	print("_on_GUI_start_new_game() -> void")	
 	$GUI.show_main_menu(false)
 	$GUI.show_ingame_menu(true)
 	randgen.randomize()

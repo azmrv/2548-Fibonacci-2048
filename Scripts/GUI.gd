@@ -12,14 +12,14 @@ func setup():
 
 	pass
 
-func show_ingame_menu(switch: bool):
-	$GUI_InGamePlay.visible = switch
+func show_ingame_menu(state: bool):
+	$GUI_InGamePlay.visible = state
 #	$GUI_InGamePlay/ExitGame.show()	
 #	$GUI_InGamePlay/CentContMessage/Message.show()
 #	$GUI_InGamePlay/CenterContainer/Label.show()
 
-func show_main_menu(switch: bool):
-	$GUI_InGamePlay.visible = switch
+func show_main_menu(state: bool):
+	$GUI_MainMenu.visible = state
 #	$GUI_MainMenu/CentContButtons/VBoxButtons/Credits.show()
 #	$GUI_MainMenu/CentContButtons/VBoxButtons/ExitGame.show()
 #	$GUI_MainMenu/CentContButtons/VBoxButtons/Options.show()
@@ -59,9 +59,8 @@ func update_score(score):
 
 
 
-func _on_GUI_MainMenu_start_new_game() -> void:
+func _on_GUI_MainMenu_start_new_game() -> void:	
 	emit_signal("start_new_game")
 
 
-func _on_GUI_InGamePlay_exit_game_button() -> void:
-	emit_signal("exit_to_menu")
+

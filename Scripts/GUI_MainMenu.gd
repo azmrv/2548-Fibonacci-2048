@@ -15,21 +15,22 @@ func _ready() -> void:
 #func _process(delta: float) -> void:
 #	pass
 func setup():	
-	$CentContButtons/VBoxButtons/Credits.show()
-	$CentContButtons/VBoxButtons/ExitGame.show()
-	$CentContButtons/VBoxButtons/Options.show()
-	$CentContButtons/VBoxButtons/StartGame.show()
-	$CentContLabel/BestScore.show()
-	$CentContLabel2/GameName.show()
+#	$CentContButtons/VBoxButtons/Credits.show()
+#	$CentContButtons/VBoxButtons/ExitGame.show()
+#	$CentContButtons/VBoxButtons/Options.show()
+#	$CentContButtons/VBoxButtons/StartGame.show()
+#	$CentContLabel/BestScore.show()
+#	$CentContLabel2/GameName.show()
+	pass
 
 
 func _on_StartGame_pressed() -> void:	
-	$CentContButtons/VBoxButtons/Credits.hide()
-	$CentContButtons/VBoxButtons/ExitGame.hide()
-	$CentContButtons/VBoxButtons/Options.hide()
-	$CentContButtons/VBoxButtons/StartGame.hide()
-	$CentContLabel/BestScore.hide()
-	$CentContLabel2/GameName.hide()
+	# $CentContButtons/VBoxButtons/Credits.hide()
+	# $CentContButtons/VBoxButtons/ExitGame.hide()
+	# $CentContButtons/VBoxButtons/Options.hide()
+	# $CentContButtons/VBoxButtons/StartGame.hide()
+	# $CentContLabel/BestScore.hide()
+	# $CentContLabel2/GameName.hide()
 	emit_signal("start_new_game")
 	
 
