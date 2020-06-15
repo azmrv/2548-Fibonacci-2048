@@ -73,6 +73,7 @@ margin_bottom = 49.0
 theme = ExtResource( 4 )
 custom_fonts/font = SubResource( 4 )
 text = "X"
+flat = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -100,5 +101,6 @@ __meta__ = {
 
 [node name="MessageTimer" type="Timer" parent="."]
 one_shot = true
+[connection signal="exit_to_menu_button" from="." to="." method="_on_GUI_InGamePlay_exit_to_menu_button"]
 [connection signal="pressed" from="ExitGame" to="." method="_on_ExitGame_pressed"]
 [connection signal="timeout" from="MessageTimer" to="." method="_on_MessageTimer_timeout"]

@@ -16,12 +16,16 @@ __meta__ = {
 
 [node name="GUI_InGamePlay" parent="." instance=ExtResource( 4 )]
 visible = false
+margin_right = 3.00003
+margin_bottom = 6.10352e-05
 
 [node name="GUI_MainMenu" parent="." instance=ExtResource( 1 )]
-margin_top = -1.10803
-margin_bottom = -1.10803
+margin_right = 2.00003
+margin_bottom = 6.10352e-05
 
 [node name="GUI_SelectHardLevel" parent="." instance=ExtResource( 3 )]
 visible = false
-[connection signal="exit_game_button" from="GUI_InGamePlay" to="." method="_on_GUI_InGamePlay_exit_game_button"]
+margin_right = 2.00003
+margin_bottom = 6.10352e-05
+[connection signal="exit_to_menu" from="." to="." method="_on_GUI_exit_to_menu"]
 [connection signal="start_new_game" from="GUI_MainMenu" to="." method="_on_GUI_MainMenu_start_new_game"]
