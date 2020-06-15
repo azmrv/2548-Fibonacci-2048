@@ -67,11 +67,12 @@ func _process(_delta):
 	
 
 func setup():
-	print("setup()")
+	print("setup()")	
 	randgen.randomize()
 	game_field = make_2d_array()
 	new_game_field()
 	CurNumber = number
+	
 
 
 func show_ads():
@@ -99,6 +100,8 @@ func game_over():
 	# need pause before change UI
 	$GUI.show_ingame_menu(false)
 	$GUI.show_main_menu(true)
+	setup()
+	new_game()
 
 
 func new_game():
@@ -113,6 +116,8 @@ func new_game():
 
 func new_game_field():
 	print("new_game_field()")
+	$GameField/PanelContainer.get_children().clear()
+	create_field_numbers()
 	for	x in new_game_numbers:
 		if possible_match_on_board() == true:
 			possible_numbers()
@@ -217,8 +222,8 @@ func possible_match_on_board():
 	print("possible_match_on_board()")	
 	if blank_space_on_board():
 		return true	
-	if is_possible_match():
-		return true
+#	if is_possible_match():
+#		return true
 	return false
 
 
@@ -227,10 +232,11 @@ func fill_board():
 	if blank_space_on_board():
 		generate_new_number()
 	else:
-		if is_possible_match():
-			return
-		else:
-			game_over()	
+		game_over()	
+#		if is_possible_match():
+#			return
+#		else:
+#			game_over()	
 
 
 func generate_new_number():
@@ -289,17 +295,20 @@ func calculate_direction():
 		fill_board()
 
 
-func draw_field():
+func create_field_numbers():
+	print("create_field_numbers()")
+	#if $GameField/PanelContainer.get_child_count() == null or $GameField/PanelContainer.get_child_count() <= 0:
 	$GameField.visible = true
 	randgen.randomize()	
 	var number_scene_pos = Vector2(0,0)
 	for row in range(game_field_size):
 		for col in range(game_field_size):
 			var curr_number = CurNumber.instance()
-			$GameField/PanelContainer.add_child(curr_number)
+			$GameField/PanelContainer/TextureRect.add_child(curr_number)
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
 			if game_field[row][col] == null:
 				number_scene_pos = curr_number.position
+				curr_number.set_xy(row, col)
 				curr_number.set_number_text("0")
 				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
 				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
@@ -312,6 +321,32 @@ func draw_field():
 				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
 
 
+func reasign_numbers_to_field():
+	$GameField.visible = true
+	randgen.randomize()	
+	var number_scene_pos = Vector2(0,0)
+	for row in range(game_field_size):
+		for col in range(game_field_size):			
+			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
+			var children_mas = $GameField/PanelContainer/TextureRect.get_children()
+			for i in range(len(children_mas)):
+				if children_mas[i].currx_row == row and children_mas[i].curry_col == col:
+					children_mas[i].text = game_field[row][col] as String
+				
+#			if game_field[row][col] == null:
+#				#for i in range(len(children_mas)):
+#
+##				curr_number.set_number_text("0")
+##				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
+##				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
+#			else:
+#				print("draw_field() %s " % game_field[row][col] as String)
+#				curr_number.set_number_text(game_field[row][col] as String)
+#				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
+#				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
+				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
+
+
 func get_empty(mas):
 	print("func get_empty(mas)")
 	randgen.randomize()
@@ -321,7 +356,6 @@ func get_empty(mas):
 		for j in range(game_field_size):
 			if mas[i][j] == 0:
 				n_emp += 1
-
 	return n_emp
 
 
@@ -375,7 +409,7 @@ func move_right(mas):
 			fill_board()			
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
-	draw_field()		
+	reasign_numbers_to_field()		
 
 
 func move_left(mas):
@@ -410,7 +444,7 @@ func move_left(mas):
 			fill_board()
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
-	draw_field()			
+	reasign_numbers_to_field()			
 
 
 func move_up(mas):
@@ -445,7 +479,7 @@ func move_up(mas):
 			fill_board()
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
-	draw_field()	
+	reasign_numbers_to_field()	
 
 
 func move_down(mas):
@@ -479,7 +513,7 @@ func move_down(mas):
 			fill_board()
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
-	draw_field()	
+	reasign_numbers_to_field()	
 
 
 func _on_GUI_start_new_game() -> void:
@@ -489,7 +523,7 @@ func _on_GUI_start_new_game() -> void:
 	randgen.randomize()
 	new_game = 1
 	new_game()
-	draw_field()
+	
 
 
 func _on_GUI_exit_to_menu() -> void:
