@@ -8,8 +8,8 @@ signal moving_numbers
 signal exit_game
 signal save_player_data
 
-export (PackedScene) var CurNumber 
-var number = preload("res://Scenes/Number.tscn")
+#export (PackedScene) var CurNumber 
+var number_scene = preload("res://Scenes/Number.tscn")
 
 # Variables
 const game_field_size = 6 
@@ -71,14 +71,12 @@ func setup():
 	randgen.randomize()
 	game_field = make_2d_array()
 	new_game_field()
-	CurNumber = number
+	#CurNumber = number
 	
 
 
 func show_ads():
 	print("show_ads()")
-	
-	pass
 
 
 func game_over():
@@ -91,8 +89,7 @@ func game_over():
 	#$MobTimer.stop()	
 	#$HUD.show_game_over()	
 	#get_tree().call_group("mobs", "queue_free")
-	#$Background.color = Color(0.098039, 0.823529, 0.501961)
-	
+	#$Background.color = Color(0.098039, 0.823529, 0.501961)	
 	#print("КОНЕЦ ИГРЫ", "СУММА =", summ)
 	$GUI.show_message("Game Over, Score = %s" % total_score)
 	# emit signal?
@@ -111,16 +108,18 @@ func new_game():
 	current_score = 0
 	$GUI.update_score(total_score)
 	$GUI.show_message("Get Ready")
+	$GameField.visible = true
 
 
 
 func new_game_field():
 	print("new_game_field()")
 	$GameField/PanelContainer.get_children().clear()
-	create_field_numbers()
+	
 	for	x in new_game_numbers:
 		if possible_match_on_board() == true:
 			possible_numbers()
+			create_field_numbers()
 		else:
 			return
 
@@ -297,13 +296,12 @@ func calculate_direction():
 
 func create_field_numbers():
 	print("create_field_numbers()")
-	#if $GameField/PanelContainer.get_child_count() == null or $GameField/PanelContainer.get_child_count() <= 0:
-	$GameField.visible = true
+	#if $GameField/PanelContainer.get_child_count() == null or $GameField/PanelContainer.get_child_count() <= 0:	
 	randgen.randomize()	
 	var number_scene_pos = Vector2(0,0)
 	for row in range(game_field_size):
 		for col in range(game_field_size):
-			var curr_number = CurNumber.instance()
+			var curr_number = number_scene.instance()
 			$GameField/PanelContainer/TextureRect.add_child(curr_number)
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
 			if game_field[row][col] == null:
@@ -319,22 +317,26 @@ func create_field_numbers():
 				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
 				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
 				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
-
+	print(game_field)
 
 func reasign_numbers_to_field():
+
+#	Распределяет числа по сценам Number согласно массиву game_field
+#	В поиске решения 15.06.20 - 21:53
+
 	$GameField.visible = true
 	randgen.randomize()	
 	var number_scene_pos = Vector2(0,0)
 	for row in range(game_field_size):
 		for col in range(game_field_size):			
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
-			var children_mas = $GameField/PanelContainer/TextureRect.get_children()
-			for i in range(len(children_mas)):
-				if children_mas[i].currx_row == row and children_mas[i].curry_col == col:
-					children_mas[i].text = game_field[row][col] as String
+			var children_mas_number_scene = $GameField/PanelContainer/TextureRect.get_children()
+			for i in range(len(children_mas_number_scene)):
+				if children_mas_number_scene[i].currx_row == row and children_mas_number_scene[i].curry_col == col:
+					children_mas_number_scene[i].text = game_field[row][col] as String
 				
 #			if game_field[row][col] == null:
-#				#for i in range(len(children_mas)):
+#				#for i in range(len(children_mas_number_scene)):
 #
 ##				curr_number.set_number_text("0")
 ##				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
@@ -521,10 +523,15 @@ func _on_GUI_start_new_game() -> void:
 	$GUI.show_main_menu(false)
 	$GUI.show_ingame_menu(true)
 	randgen.randomize()
-	new_game = 1
+	$InputLagTimer.start()
 	new_game()
 	
 
 
 func _on_GUI_exit_to_menu() -> void:
 	get_tree().quit()
+
+
+func _on_InputLagTimer_timeout() -> void:
+	new_game = 1
+	
