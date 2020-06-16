@@ -10,10 +10,20 @@ var mas_coord = 0
 var currx_row = 0
 var curry_col = 0
 
+var text_label = ""
+
 func set_xy(x,y):
 	currx_row = x
 	curry_col = y
 	
+
+func set_text(text : String):
+	text_label = text
+	$MarginContainer/CenterContainer/ColorRect/Label.text = text
+	if text == "0":
+		current_number = 0
+	else:
+		current_number = 1
 
 # onready var effect = get_node("move_tween")
 # onready var destroy = get_node("destroy_tween")

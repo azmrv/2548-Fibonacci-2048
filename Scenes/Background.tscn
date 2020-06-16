@@ -34,8 +34,8 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="Panel"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 480.0
+margin_bottom = 720.0
 rect_pivot_offset = Vector2( -55, 416 )
 stretch_mode = 1
 __meta__ = {
