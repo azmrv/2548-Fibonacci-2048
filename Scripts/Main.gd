@@ -55,7 +55,7 @@ var new_game = 0
 
 func _ready():	
 	print("_ready()")	
-	setup()
+	
 	
 	
 func _process(_delta):
@@ -64,16 +64,27 @@ func _process(_delta):
 		touch_input()
 		#draw_field()
 		
+
+func start_new_game():
+	print("new_game()")
+	randgen.randomize()
+	setup()
+	#$Music.play()	
+	$GUI.update_score(total_score)
+	$GUI.show_message("Get Ready")
+
 	
 
 func setup():
 	print("setup()")	
-	randgen.randomize()
+	randgen.randomize()	
 	game_field = make_2d_array()
-	new_game_field()
+	current_score = 0
 	#CurNumber = number
+	create_numbers_on_game_field()
+	fill_field_with_numbers()
+	reasign_numbers_to_field()
 	
-
 
 func show_ads():
 	print("show_ads()")
@@ -82,6 +93,7 @@ func show_ads():
 func game_over():
 	print("game_over()")
 	randgen.randomize()
+	$GameField/PanelContainer.get_children().clear()
 	#$Music.stop()
 	#$DeathSound.play()
 	#$Background.color = Color(1, 0, 0, 1)
@@ -95,33 +107,11 @@ func game_over():
 	# emit signal?
 	summ = 0
 	# need pause before change UI
+	$GameField.visible = false
 	$GUI.show_ingame_menu(false)
 	$GUI.show_main_menu(true)
-	setup()
-	new_game()
-
-
-func new_game():
-	print("new_game()")
-	randgen.randomize()
-	#$Music.play()
-	current_score = 0
-	$GUI.update_score(total_score)
-	$GUI.show_message("Get Ready")
-	$GameField.visible = true
-
-
-
-func new_game_field():
-	print("new_game_field()")
-	$GameField/PanelContainer.get_children().clear()
 	
-	for	x in new_game_numbers:
-		if possible_match_on_board() == true:
-			possible_numbers()
-			create_field_numbers()
-		else:
-			return
+	
 
 
 func exit_game():
@@ -157,7 +147,7 @@ func show_message(text):
 	$GUI/GUI_InGamePlay/MessageTimer.start()
 
 
-func possible_numbers():
+func generate_new_numbers_in_array():
 	print("possible_numbers()")
 	randgen.randomize()
 	var kodn = 1	
@@ -187,115 +177,25 @@ func possible_numbers():
 				summ += 5	
 
 
-func is_possible_match():
-	print("is_possible_match()")
-	for i in game_field_size:
-		for j in game_field_size:
-			if game_field[i][j] != null:
-				var value = game_field[i][j].value
-				if j > 0:
-					if game_field[i][j - 1].value == value:
-						return true
-				if j < game_field_size - 1:
-					if game_field[i][j + 1].value == value:
-						return true
-				if i > 0:
-					if game_field[i -1][j].value == value:
-						return true
-				if i < game_field_size - 1:
-					if game_field[i + 1][j].value == value:
-						return true
-	return false
-
-
 func blank_space_on_board():
 	print("blank_space_on_board()")	
 	for i in game_field_size:
 		for j in game_field_size:
-			if game_field[i][j] == null:
+			if game_field[i][j] == null or game_field[i][j] == 0:
 				return true
 	return false
 
 
-func possible_match_on_board():
-	print("possible_match_on_board()")	
-	if blank_space_on_board():
-		return true	
-#	if is_possible_match():
-#		return true
-	return false
-
-
-func fill_board():
+func fill_field_with_numbers():
 	print("fill_board()")
 	if blank_space_on_board():
-		generate_new_number()
+		generate_new_numbers_in_array()
 	else:
 		game_over()	
-#		if is_possible_match():
-#			return
-#		else:
-#			game_over()	
 
 
-func generate_new_number():
-	print("generate_new_number()")
-	randgen.randomize()
-
-
-func grid_to_pixel(grid_position):
-	print("grid_to_pixel(grid_position)")
-	# var new_x = grid_position.x * offset + x_start
-	# var new_y = grid_position.y * -offset + y_start
-	# return (Vector2(new_x, new_y))
-	pass
-
-
-func pixel_to_grid(pixel_position):
-	print("pixel_to_grid(pixel_position)")
-	# var new_x = round((pixel_position.x - x_start) / offset)
-	# var new_y = round((pixel_position.y - y_start) / -offset)
-	# return (Vector2(new_x, new_y))
-	pass
-
-
-func touch_input():
-	if(Input.is_action_just_pressed("ui_touch")):
-		print("touch_input() - (Input.is_action_just_pressed(ui_touch))")
-		first_touch = (get_global_mouse_position())
-	if(Input.is_action_just_released("ui_touch")):
-		print("touch_input() - (Input.is_action_just_released(ui_touch))")
-		final_touch = (get_global_mouse_position())
-		calculate_direction()
-		swipe_angle()
-
-
-func swipe_angle():
-	print("swipe_angle()")
-	var difference = final_touch - first_touch
-	var angle = rad2deg(atan2(difference.x, difference.y))
-	print(angle)
-
-
-func calculate_direction():
-	print("calculate_direction()")
-	var difference = final_touch - first_touch
-	if abs(difference.x) > abs(difference.y):
-		if difference.x >= 25:
-			move_right(game_field)						
-		elif difference.x <= -25:
-			move_left(game_field)						
-	elif abs(difference.x) <= abs(difference.y):
-		if difference.y <= -25:
-			move_up(game_field)
-		elif difference.y >= 25:
-			move_down(game_field)
-	if abs(difference.x) >= 25 || abs(difference.y) >= 25:
-		fill_board()
-
-
-func create_field_numbers():
-	print("create_field_numbers()")
+func create_numbers_on_game_field():
+	print("create_numbers_on_game_field()")
 	#if $GameField/PanelContainer.get_child_count() == null or $GameField/PanelContainer.get_child_count() <= 0:	
 	randgen.randomize()	
 	var number_scene_pos = Vector2(0,0)
@@ -319,65 +219,23 @@ func create_field_numbers():
 				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
 	print(game_field)
 
+
 func reasign_numbers_to_field():
-
-#	Распределяет числа по сценам Number согласно массиву game_field
-#	В поиске решения 15.06.20 - 21:53
-
-	$GameField.visible = true
-	randgen.randomize()	
-	var number_scene_pos = Vector2(0,0)
+	print("reasign_numbers_to_field()")	
+	randgen.randomize()		
 	for row in range(game_field_size):
 		for col in range(game_field_size):			
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
 			var children_mas_number_scene = $GameField/PanelContainer/TextureRect.get_children()
 			for i in range(len(children_mas_number_scene)):
 				if children_mas_number_scene[i].currx_row == row and children_mas_number_scene[i].curry_col == col:
-					children_mas_number_scene[i].text = game_field[row][col] as String
-				
-#			if game_field[row][col] == null:
-#				#for i in range(len(children_mas_number_scene)):
-#
-##				curr_number.set_number_text("0")
-##				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
-##				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
-#			else:
-#				print("draw_field() %s " % game_field[row][col] as String)
-#				curr_number.set_number_text(game_field[row][col] as String)
-#				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
-#				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
-				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
+					if game_field[row][col] == null: 
+						children_mas_number_scene[i].set_text("0")
+					else:
+						children_mas_number_scene[i].set_text(game_field[row][col] as String)
 
 
-func get_empty(mas):
-	print("func get_empty(mas)")
-	randgen.randomize()
-	var n_emp = 0
-	for i in range(game_field_size):
-		#n_emp = 0
-		for j in range(game_field_size):
-			if mas[i][j] == 0:
-				n_emp += 1
-	return n_emp
 
-
-func fibn(k):
-	print("func fibn(k)")
-	randgen.randomize()
-	if k == 1:
-		return 0
-	if k == 2:
-		return 1
-	var sc = 0
-	var sa = 1
-	var sb = 2
-	var n = 1
-	while k > sc:
-		n += 1
-		sc = sa + sb
-		sa = sb
-		sb = sc
-	return n
 
 
 func move_right(mas):
@@ -408,7 +266,7 @@ func move_right(mas):
 			kodx2 = 1
 		else:
 			kodx2 = 0
-			fill_board()			
+			fill_field_with_numbers()			
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()		
@@ -443,7 +301,7 @@ func move_left(mas):
 			kodx1 = 1
 		else:
 			kodx1 = 0
-			fill_board()
+			fill_field_with_numbers()
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()			
@@ -478,7 +336,7 @@ func move_up(mas):
 			kody1 = 1
 		else:
 			kody1 = 0
-			fill_board()
+			fill_field_with_numbers()
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()	
@@ -512,7 +370,7 @@ func move_down(mas):
 			kody2 = 1
 		else:
 			kody2 = 0
-			fill_board()
+			fill_field_with_numbers()
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()	
@@ -522,10 +380,9 @@ func _on_GUI_start_new_game() -> void:
 	print("_on_GUI_start_new_game() -> void")	
 	$GUI.show_main_menu(false)
 	$GUI.show_ingame_menu(true)
-	randgen.randomize()
+	randgen.randomize()		
+	start_new_game()
 	$InputLagTimer.start()
-	new_game()
-	
 
 
 func _on_GUI_exit_to_menu() -> void:
@@ -533,5 +390,124 @@ func _on_GUI_exit_to_menu() -> void:
 
 
 func _on_InputLagTimer_timeout() -> void:
+	# для предотвращения ложного срабатывания перераспределения чисел на поле
 	new_game = 1
+	$GameField.visible = true
 	
+
+func touch_input():
+	if(Input.is_action_just_pressed("ui_touch")):
+		print("touch_input() - (Input.is_action_just_PREssed(ui_touch))")
+		first_touch = (get_global_mouse_position())
+	if(Input.is_action_just_released("ui_touch")):
+		print("touch_input() - (Input.is_action_just_REleased(ui_touch))")
+		final_touch = (get_global_mouse_position())
+		calculate_direction()
+		swipe_angle()
+
+
+func swipe_angle():
+	print("swipe_angle()")
+	var difference = final_touch - first_touch
+	var angle = rad2deg(atan2(difference.x, difference.y))
+	print(angle)
+
+
+func calculate_direction():
+	print("calculate_direction()")
+	var difference = final_touch - first_touch
+	if abs(difference.x) > abs(difference.y):
+		if difference.x >= 25:
+			move_right(game_field)						
+		elif difference.x <= -25:
+			move_left(game_field)						
+	elif abs(difference.x) <= abs(difference.y):
+		if difference.y <= -25:
+			move_up(game_field)
+		elif difference.y >= 25:
+			move_down(game_field)
+	if abs(difference.x) >= 25 || abs(difference.y) >= 25:
+		fill_field_with_numbers()
+
+
+
+
+func _is_possible_match():
+	print("is_possible_match()")
+	for i in game_field_size:
+		for j in game_field_size:
+			if game_field[i][j] != null:
+				var value = game_field[i][j].value
+				if j > 0:
+					if game_field[i][j - 1].value == value:
+						return true
+				if j < game_field_size - 1:
+					if game_field[i][j + 1].value == value:
+						return true
+				if i > 0:
+					if game_field[i -1][j].value == value:
+						return true
+				if i < game_field_size - 1:
+					if game_field[i + 1][j].value == value:
+						return true
+	return false
+
+func _possible_match_on_board():
+	print("possible_match_on_board()")	
+	if blank_space_on_board():
+		return true	
+	if _is_possible_match():
+		return true
+	return false
+
+func _new_game_field():
+	print("new_game_field()")	
+	
+	for	x in new_game_numbers:
+		if _possible_match_on_board() == true:
+			#possible_numbers()
+			#_create_numbers_on_game_field()
+			return
+		else:
+			return
+
+func _fibn(k):
+	print("func fibn(k)")
+	randgen.randomize()
+	if k == 1:
+		return 0
+	if k == 2:
+		return 1
+	var sc = 0
+	var sa = 1
+	var sb = 2
+	var n = 1
+	while k > sc:
+		n += 1
+		sc = sa + sb
+		sa = sb
+		sb = sc
+	return n
+
+func _get_empty(mas):
+	print("func get_empty(mas)")
+	randgen.randomize()
+	var n_emp = 0
+	for i in range(game_field_size):
+		#n_emp = 0
+		for j in range(game_field_size):
+			if mas[i][j] == 0:
+				n_emp += 1
+	return n_emp
+
+func _grid_to_pixel(_grid_position):
+	print("grid_to_pixel(grid_position)")
+	# var new_x = grid_position.x * offset + x_start
+	# var new_y = grid_position.y * -offset + y_start
+	# return (Vector2(new_x, new_y))
+	
+func _pixel_to_grid(_pixel_position):
+	print("pixel_to_grid(pixel_position)")
+	# var new_x = round((pixel_position.x - x_start) / offset)
+	# var new_y = round((pixel_position.y - y_start) / -offset)
+	# return (Vector2(new_x, new_y))
