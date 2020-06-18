@@ -93,13 +93,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Credits" type="Button" parent="CentContButtons/VBoxButtons"]
+[node name="Help" type="Button" parent="CentContButtons/VBoxButtons"]
 margin_top = 158.0
 margin_right = 282.0
 margin_bottom = 217.0
 theme = ExtResource( 4 )
 custom_fonts/font = SubResource( 2 )
-text = "Credits"
+text = "Help"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -116,5 +116,4 @@ __meta__ = {
 }
 [connection signal="pressed" from="CentContButtons/VBoxButtons/StartGame" to="." method="_on_StartGame_pressed"]
 [connection signal="pressed" from="CentContButtons/VBoxButtons/Options" to="." method="_on_Options_pressed"]
-[connection signal="pressed" from="CentContButtons/VBoxButtons/Credits" to="." method="_on_Credits_pressed"]
 [connection signal="pressed" from="CentContButtons/VBoxButtons/ExitGame" to="." method="_on_ExitGame_pressed"]

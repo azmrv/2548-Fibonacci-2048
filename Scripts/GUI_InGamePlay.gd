@@ -23,7 +23,5 @@ func _on_MessageTimer_timeout() -> void:
 	$CentContMessage/Message.hide()
 
 
-
-
-func _on_GUI_InGamePlay_exit_to_menu_button() -> void:
+func _on_ExitToMainMenu_pressed() -> void:
 	emit_signal("exit_to_menu_button")
