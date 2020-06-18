@@ -65,11 +65,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ExitGame" type="Button" parent="."]
+[node name="ExitToMainMenu" type="Button" parent="."]
 margin_left = 434.0
-margin_top = 2.0
+margin_top = 0.329803
 margin_right = 476.0
-margin_bottom = 49.0
+margin_bottom = 49.3298
 theme = ExtResource( 4 )
 custom_fonts/font = SubResource( 4 )
 text = "X"
@@ -102,5 +102,5 @@ __meta__ = {
 [node name="MessageTimer" type="Timer" parent="."]
 one_shot = true
 [connection signal="exit_to_menu_button" from="." to="." method="_on_GUI_InGamePlay_exit_to_menu_button"]
-[connection signal="pressed" from="ExitGame" to="." method="_on_ExitGame_pressed"]
+[connection signal="pressed" from="ExitToMainMenu" to="." method="_on_ExitToMainMenu_pressed"]
 [connection signal="timeout" from="MessageTimer" to="." method="_on_MessageTimer_timeout"]
