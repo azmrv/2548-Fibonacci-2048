@@ -63,4 +63,5 @@ func _on_GUI_MainMenu_start_new_game() -> void:
 	emit_signal("start_new_game")
 
 
-
+func _on_GUI_InGamePlay_exit_to_menu_button() -> void:
+	emit_signal("exit_to_menu")

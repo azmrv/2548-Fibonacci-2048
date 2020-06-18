@@ -110,8 +110,6 @@ func game_over():
 	$GameField.visible = false
 	$GUI.show_ingame_menu(false)
 	$GUI.show_main_menu(true)
-	
-	
 
 
 func exit_game():
@@ -121,7 +119,9 @@ func exit_game():
 
 func exit_to_mainmenu():
 	$GUI.show_main_menu(true)
-	$GUI.show_ingame_menu(false)
+	$GUI.show_ingame_menu(false)	
+	$GameField.visible = false
+	#get_tree().quit()
 
 
 func increase_score(amount):
@@ -235,9 +235,6 @@ func reasign_numbers_to_field():
 						children_mas_number_scene[i].set_text(game_field[row][col] as String)
 
 
-
-
-
 func move_right(mas):
 	print("func move_right(mas)")
 	randgen.randomize()
@@ -249,19 +246,19 @@ func move_right(mas):
 					if mas[y][game_field_size-x] == null:
 						kodx2 += 1
 						mas[y][game_field_size-x] = mas[y][game_field_size-x-1]
-						mas[y][game_field_size-x-1] = 0
+						mas[y][game_field_size-x-1] = null
 					elif mas[y][game_field_size-x] == 1 and mas[y][game_field_size-x-1] == 1:
 						kodx2 += 1
 						mas[y][game_field_size-x] = 2
-						mas[y][game_field_size-x-1] = 0
+						mas[y][game_field_size-x-1] = null
 					elif mas[y][game_field_size-x] < mas[y][game_field_size-x-1] and 2 * mas[y][game_field_size-x] >= mas[y][game_field_size-x-1]:
 						kodx2 += 1
 						mas[y][game_field_size-x] = mas[y][game_field_size-x] + mas[y][game_field_size-x-1]
-						mas[y][game_field_size-x-1] = 0
+						mas[y][game_field_size-x-1] = null
 					elif mas[y][game_field_size-x] > mas[y][game_field_size-x-1] and 2 * mas[y][game_field_size-x-1] >= mas[y][game_field_size-x]:
 						kodx2 += 1
 						mas[y][game_field_size-x] = mas[y][game_field_size-x] + mas[y][game_field_size-x-1]
-						mas[y][game_field_size-x-1] = 0
+						mas[y][game_field_size-x-1] = null
 		if kodx2 > 1:
 			kodx2 = 1
 		else:
@@ -283,19 +280,19 @@ func move_left(mas):
 					if mas[y][x-1] == null:
 						kodx1 += 1
 						mas[y][x-1] = mas[y][x]
-						mas[y][x] = 0
+						mas[y][x] = null
 					elif mas[y][x-1] == 1 and mas[y][x] == 1:
 						kodx1 += 1
 						mas[y][x-1] = 2
-						mas[y][x] = 0
+						mas[y][x] = null
 					elif mas[y][x-1] < mas[y][x] and 2 * mas[y][x-1] >= mas[y][x]:
 						kodx1 += 1
 						mas[y][x-1] = mas[y][x-1] + mas[y][x]
-						mas[y][x] = 0
+						mas[y][x] = null
 					elif mas[y][x-1] > mas[y][x] and 2 * mas[y][x] >= mas[y][x-1]:
 						kodx1 += 1
 						mas[y][x-1] = mas[y][x-1] + mas[y][x]
-						mas[y][x] = 0
+						mas[y][x] = null
 
 		if kodx1 > 1:
 			kodx1 = 1
@@ -318,19 +315,19 @@ func move_up(mas):
 					if mas[y-1][x] == null:
 						kody1 += 1
 						mas[y-1][x] = mas[y][x]
-						mas[y][x] = 0
+						mas[y][x] = null
 					elif mas[y-1][x] == 1 and mas[y][x] == 1:
 						kody1 += 1
 						mas[y-1][x] = 2
-						mas[y][x] = 0
+						mas[y][x] = null
 					elif mas[y-1][x] < mas[y][x] and 2 * mas[y-1][x] >= mas[y][x]:
 						kody1 += 1
 						mas[y-1][x] = mas[y-1][x] + mas[y][x]
-						mas[y][x] = 0
+						mas[y][x] = null
 					elif mas[y-1][x] > mas[y][x] and 2 * mas[y][x] >= mas[y-1][x]:
 						kody1 += 1
 						mas[y-1][x] = mas[y-1][x] + mas[y][x]
-						mas[y][x] = 0
+						mas[y][x] = null
 
 		if kody1 > 1:
 			kody1 = 1
@@ -353,19 +350,19 @@ func move_down(mas):
 					if mas[game_field_size-y][x] == null:
 						kody2 += 1
 						mas[game_field_size-y][x] = mas[game_field_size-y-1][x]
-						mas[game_field_size-y-1][x] = 0
+						mas[game_field_size-y-1][x] = null
 					elif mas[game_field_size-y][x] == 1 and mas[game_field_size-y-1][x] == 1:
 						kody2 += 1
 						mas[game_field_size-y][x] = 2
-						mas[game_field_size-y-1][x] = 0
+						mas[game_field_size-y-1][x] = null
 					elif mas[game_field_size-y][x] < mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y][x] >= mas[game_field_size-y-1][x]:
 						kody2 += 1
 						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
-						mas[game_field_size-y-1][x] = 0
+						mas[game_field_size-y-1][x] = null
 					elif mas[game_field_size-y][x] > mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y-1][x] >= mas[game_field_size-y][x]:
 						kody2 += 1
 						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
-						mas[game_field_size-y-1][x] = 0
+						mas[game_field_size-y-1][x] = null
 		if kody2 > 1:
 			kody2 = 1
 		else:
@@ -386,7 +383,8 @@ func _on_GUI_start_new_game() -> void:
 
 
 func _on_GUI_exit_to_menu() -> void:
-	get_tree().quit()
+	exit_to_mainmenu()
+	
 
 
 func _on_InputLagTimer_timeout() -> void:
@@ -431,83 +429,3 @@ func calculate_direction():
 
 
 
-
-func _is_possible_match():
-	print("is_possible_match()")
-	for i in game_field_size:
-		for j in game_field_size:
-			if game_field[i][j] != null:
-				var value = game_field[i][j].value
-				if j > 0:
-					if game_field[i][j - 1].value == value:
-						return true
-				if j < game_field_size - 1:
-					if game_field[i][j + 1].value == value:
-						return true
-				if i > 0:
-					if game_field[i -1][j].value == value:
-						return true
-				if i < game_field_size - 1:
-					if game_field[i + 1][j].value == value:
-						return true
-	return false
-
-func _possible_match_on_board():
-	print("possible_match_on_board()")	
-	if blank_space_on_board():
-		return true	
-	if _is_possible_match():
-		return true
-	return false
-
-func _new_game_field():
-	print("new_game_field()")	
-	
-	for	x in new_game_numbers:
-		if _possible_match_on_board() == true:
-			#possible_numbers()
-			#_create_numbers_on_game_field()
-			return
-		else:
-			return
-
-func _fibn(k):
-	print("func fibn(k)")
-	randgen.randomize()
-	if k == 1:
-		return 0
-	if k == 2:
-		return 1
-	var sc = 0
-	var sa = 1
-	var sb = 2
-	var n = 1
-	while k > sc:
-		n += 1
-		sc = sa + sb
-		sa = sb
-		sb = sc
-	return n
-
-func _get_empty(mas):
-	print("func get_empty(mas)")
-	randgen.randomize()
-	var n_emp = 0
-	for i in range(game_field_size):
-		#n_emp = 0
-		for j in range(game_field_size):
-			if mas[i][j] == 0:
-				n_emp += 1
-	return n_emp
-
-func _grid_to_pixel(_grid_position):
-	print("grid_to_pixel(grid_position)")
-	# var new_x = grid_position.x * offset + x_start
-	# var new_y = grid_position.y * -offset + y_start
-	# return (Vector2(new_x, new_y))
-	
-func _pixel_to_grid(_pixel_position):
-	print("pixel_to_grid(pixel_position)")
-	# var new_x = round((pixel_position.x - x_start) / offset)
-	# var new_y = round((pixel_position.y - y_start) / -offset)
-	# return (Vector2(new_x, new_y))
