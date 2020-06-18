@@ -8,6 +8,7 @@ signal moving_numbers
 signal exit_game
 signal save_player_data
 
+
 #export (PackedScene) var CurNumber 
 var number_scene = preload("res://Scenes/Number.tscn")
 
@@ -47,7 +48,7 @@ var game_field = [[],[]]
 var randgen = RandomNumberGenerator.new()
 
 var current_score = 0
-var total_score = 0
+var score = 0
 var best_score = 0
 
 var new_game = 0
@@ -62,7 +63,8 @@ func _process(_delta):
 	if	new_game != 0:
 		#print("_process(_delta)")
 		touch_input()
-		#draw_field()
+		#draw_field()		
+		
 		
 
 func start_new_game():
@@ -70,7 +72,7 @@ func start_new_game():
 	randgen.randomize()
 	setup()
 	#$Music.play()	
-	$GUI.update_score(total_score)
+	$GUI.update_score(score)
 	$GUI.show_message("Get Ready")
 
 	
@@ -79,7 +81,7 @@ func setup():
 	print("setup()")	
 	randgen.randomize()	
 	game_field = make_2d_array()
-	current_score = 0
+	score = 0
 	#CurNumber = number
 	create_numbers_on_game_field()
 	fill_field_with_numbers()
@@ -103,7 +105,7 @@ func game_over():
 	#get_tree().call_group("mobs", "queue_free")
 	#$Background.color = Color(0.098039, 0.823529, 0.501961)	
 	#print("КОНЕЦ ИГРЫ", "СУММА =", summ)
-	$GUI.show_message("Game Over, Score = %s" % total_score)
+	$GUI.show_message("Game Over, Score = %s" % score)
 	# emit signal?
 	summ = 0
 	# need pause before change UI
@@ -126,8 +128,8 @@ func exit_to_mainmenu():
 
 func increase_score(amount):
 	print("increase_score(amount)")
-	current_score += amount
-	total_score += current_score
+	score += amount
+	
 
 
 func make_2d_array():
@@ -151,12 +153,7 @@ func generate_new_numbers_in_array():
 	print("possible_numbers()")
 	randgen.randomize()
 	var kodn = 1	
-	while kodn == 1:
-		#var nx = randgen.randf()
-		#var ny = randgen.randf()
-		#var x = int(nx * game_field_size % 1)
-		#var y = int(ny * game_field_size % 1)
-		
+	while kodn == 1:		
 		var x = randgen.randi_range(0,game_field_size - 1)
 		var y = randgen.randi_range(0,game_field_size - 1)
 		print(x, y)
@@ -175,6 +172,7 @@ func generate_new_numbers_in_array():
 			else:
 				game_field[x][y] = 5
 				summ += 5	
+	
 
 
 func blank_space_on_board():
@@ -187,11 +185,12 @@ func blank_space_on_board():
 
 
 func fill_field_with_numbers():
-	print("fill_board()")
-	if blank_space_on_board():
-		generate_new_numbers_in_array()
-	else:
-		game_over()	
+	print("fill_field_with_numbers()")
+	for x in range(new_game_numbers):
+		if blank_space_on_board():
+			generate_new_numbers_in_array()
+		else:
+			game_over()	
 
 
 func create_numbers_on_game_field():
@@ -233,7 +232,8 @@ func reasign_numbers_to_field():
 						children_mas_number_scene[i].set_text("0")
 					else:
 						children_mas_number_scene[i].set_text(game_field[row][col] as String)
-
+	increase_score(summ)
+	
 
 func move_right(mas):
 	print("func move_right(mas)")
@@ -395,24 +395,24 @@ func _on_InputLagTimer_timeout() -> void:
 
 func touch_input():
 	if(Input.is_action_just_pressed("ui_touch")):
-		print("touch_input() - (Input.is_action_just_PREssed(ui_touch))")
+		#print("touch_input() - (Input.is_action_just_PREssed(ui_touch))")
 		first_touch = (get_global_mouse_position())
 	if(Input.is_action_just_released("ui_touch")):
-		print("touch_input() - (Input.is_action_just_REleased(ui_touch))")
+		#print("touch_input() - (Input.is_action_just_REleased(ui_touch))")
 		final_touch = (get_global_mouse_position())
 		calculate_direction()
 		swipe_angle()
 
 
 func swipe_angle():
-	print("swipe_angle()")
+	#print("swipe_angle()")
 	var difference = final_touch - first_touch
 	var angle = rad2deg(atan2(difference.x, difference.y))
 	print(angle)
 
 
 func calculate_direction():
-	print("calculate_direction()")
+	#print("calculate_direction()")
 	var difference = final_touch - first_touch
 	if abs(difference.x) > abs(difference.y):
 		if difference.x >= 25:
