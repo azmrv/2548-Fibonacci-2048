@@ -1,6 +1,5 @@
 extends Node2D
 
-
 # Signals
 signal new_game
 signal game_over
@@ -332,6 +331,7 @@ func move_right(mas):
 					if mas[y][x+1] == null:
 						kody1+=1
 						mas[y][x+1] = mas[y][x]
+
 						mas[y][x] = null
 					elif mas[y][x+1] == 1:
 						if mas[y][x] == 1 or mas[y][x] == 2:
@@ -342,6 +342,7 @@ func move_right(mas):
 						kody1+=1
 						mas[y][x+1] = mas[y][x+1]+mas[y][x]
 						mas[y][x] = null
+
 					elif mas[y][x+1] < mas[y][x] and mas[y][x] <= 2 * mas[y][x+1]:
 						kody1+=1
 						mas[y][x+1] = mas[y][x+1]+mas[y][x]
@@ -391,112 +392,6 @@ func move_left(mas):
 		else:
 			kody2 = 0
 			fill_field_with_numbers()
-#			if get_empty(mas) > eend:
-#				mas, summ = rand_(mas, summ)
-	reasign_numbers_to_field()	
-
-#func move_left(mas):
-#	print("func move_left(mas)")
-#	randgen.randomize()
-#	var kodx1 = 1
-#	while kodx1 == 1:
-#		for x in range(1, game_field_size):
-#			for y in range(game_field_size):
-#				if mas[y][x] != null:
-#					if mas[y][x-1] == null:
-#						kodx1 += 1
-#						mas[y][x-1] = mas[y][x]
-#						mas[y][x] = null
-#					elif mas[y][x-1] == 1 and mas[y][x] == 1:
-#						kodx1 += 1
-#						mas[y][x-1] = 2
-#						mas[y][x] = null
-#					elif mas[y][x-1] < mas[y][x] and 2 * mas[y][x-1] >= mas[y][x]:
-#						kodx1 += 1
-#						mas[y][x-1] = mas[y][x-1] + mas[y][x]
-#						mas[y][x] = null
-#					elif mas[y][x-1] > mas[y][x] and 2 * mas[y][x] >= mas[y][x-1]:
-#						kodx1 += 1
-#						mas[y][x-1] = mas[y][x-1] + mas[y][x]
-#						mas[y][x] = null
-#
-#		if kodx1 > 1:
-#			kodx1 = 1
-#		else:
-#			kodx1 = 0
-#			fill_field_with_numbers()
-#			# if get_empty(mas) > eend:
-#			# 	mas, summ = rand_(mas, summ)
-			
-
-#
-#func move_up(mas):
-#	print("func move_up(mas)")
-#	randgen.randomize()
-#	var kody1 = 1
-#	while kody1 == 1:
-#		for y in range(1, game_field_size):
-#			for x in range(game_field_size):
-#				if mas[y][x] != null:
-#					if mas[y-1][x] == null:
-#						kody1 += 1
-#						mas[y-1][x] = mas[y][x]
-#						mas[y][x] = null
-#					elif mas[y-1][x] == 1 and mas[y][x] == 1:
-#						kody1 += 1
-#						mas[y-1][x] = 2
-#						mas[y][x] = null
-#					elif mas[y-1][x] < mas[y][x] and 2 * mas[y-1][x] >= mas[y][x]:
-#						kody1 += 1
-#						mas[y-1][x] = mas[y-1][x] + mas[y][x]
-#						mas[y][x] = null
-#					elif mas[y-1][x] > mas[y][x] and 2 * mas[y][x] >= mas[y-1][x]:
-#						kody1 += 1
-#						mas[y-1][x] = mas[y-1][x] + mas[y][x]
-#						mas[y][x] = null
-#
-#		if kody1 > 1:
-#			kody1 = 1
-#		else:
-#			kody1 = 0
-#			fill_field_with_numbers()
-#			# if get_empty(mas) > eend:
-#			# 	mas, summ = rand_(mas, summ)
-#	reasign_numbers_to_field()	
-#
-#
-#func move_down(mas):
-#	print("func move_down(mas)")
-#	randgen.randomize()
-#	var kody2 = 1
-#	while kody2 == 1:
-#		for y in range(1, game_field_size):
-#			for x in range(game_field_size):
-#				if mas[game_field_size-y-1][x] != null:
-#					if mas[game_field_size-y][x] == null:
-#						kody2 += 1
-#						mas[game_field_size-y][x] = mas[game_field_size-y-1][x]
-#						mas[game_field_size-y-1][x] = null
-#					elif mas[game_field_size-y][x] == 1 and mas[game_field_size-y-1][x] == 1:
-#						kody2 += 1
-#						mas[game_field_size-y][x] = 2
-#						mas[game_field_size-y-1][x] = null
-#					elif mas[game_field_size-y][x] < mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y][x] >= mas[game_field_size-y-1][x]:
-#						kody2 += 1
-#						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
-#						mas[game_field_size-y-1][x] = null
-#					elif mas[game_field_size-y][x] > mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y-1][x] >= mas[game_field_size-y][x]:
-#						kody2 += 1
-#						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
-#						mas[game_field_size-y-1][x] = null
-#		if kody2 > 1:
-#			kody2 = 1
-#		else:
-#			kody2 = 0
-#			fill_field_with_numbers()
-#			# if get_empty(mas) > eend:
-#			# 	mas, summ = rand_(mas, summ)
-#	reasign_numbers_to_field()	
 
 
 func _on_GUI_start_new_game() -> void:
@@ -529,13 +424,6 @@ func touch_input():
 		calculate_direction()
 		#swipe_angle()
 
-#
-#func swipe_angle():
-#	print("swipe_angle()")
-#	var difference = final_touch - first_touch
-#	var angle = rad2deg(atan2(difference.x, difference.y))
-#	print(angle)
-
 
 func calculate_direction():	
 	print("calculate_direction()")
@@ -565,6 +453,4 @@ func calculate_direction():
 ##
 #	if abs(difference.x) >= 25 || abs(difference.y) >= 25:
 #		fill_field_with_numbers()
-
-
 
