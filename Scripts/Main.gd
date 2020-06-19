@@ -13,8 +13,9 @@ var number_scene = preload("res://Scenes/Number.tscn")
 # Variables
 const game_field_size = 5 
 
-const game_window_width = 480
-const game_window_heigth = 720
+var screenSize = Vector2(0,0)
+#const game_window_width = 480
+#const game_window_heigth = 720
 const game_window_margin = 0
 
 const game_field_draw_size = 480
@@ -27,6 +28,7 @@ var number_scene_size = game_field_width / game_field_size
 # Touch Variables
 var first_touch = Vector2(0, 0)
 var final_touch = Vector2(0, 0)
+var target = Vector2(0, 0)
 var last_direction = 0
 
 # Game Hard Level
@@ -58,11 +60,11 @@ func _ready():
 	
 	
 func _process(_delta):
-	if	new_game != 0:
+	#if	new_game != 0:
 		#print("_process(_delta)")
-		touch_input()
+		#touch_input()
 		#draw_field()
-		
+	pass
 
 func start_new_game():
 	print("new_game()")
@@ -83,9 +85,28 @@ func setup():
 	#CurNumber = number
 	create_numbers_on_game_field()
 	fill_field_with_numbers()
-	reasign_numbers_to_field()
+	reasign_numbers_to_field()	
+	setup_window()
 	
+	
+func setup_window():
+	#set_size(get_tree().get_root().get_rect().size) 
+	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
+	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
+	#Get the scale
+#	var newH = get_size().y
+#	var scale = newH / defH
+	
+#	var options = get_node("options") #Get the buttons to resize
+	
+#	options.set_scale(scale * options.get_scale()) #Scale to new resolution
+	#Scale the margin so it keeps the proportions
+	
+#	options.set_margin(MARGIN_LEFT, options.get_margin(MARGIN_LEFT) * scale)
+#	options.set_margin(MARGIN_TOP, options.get_margin(MARGIN_TOP) * scale)
 
+	
+	
 func show_ads():
 	print("show_ads()")
 
@@ -217,6 +238,7 @@ func create_numbers_on_game_field():
 			else:
 				number_scene_pos = curr_number.position
 				print("draw_field() %s " % game_field[row][col] as String)
+				curr_number.set_xy(row, col)
 				curr_number.set_number_text(game_field[row][col] as String)
 				curr_number.position.x = number_scene_size * col + game_field_margin * (col + 1)
 				curr_number.position.y = number_scene_size * row + game_field_margin * (row + 1)
@@ -392,6 +414,8 @@ func move_left(mas):
 		else:
 			kody2 = 0
 			fill_field_with_numbers()
+	reasign_numbers_to_field()
+	
 
 
 func _on_GUI_start_new_game() -> void:
@@ -425,6 +449,35 @@ func touch_input():
 		#swipe_angle()
 
 
+func _input(event):
+	if	new_game != 0:
+		#print("_input(event)", event)
+		if(Input.is_action_just_pressed("ui_touch")):
+			print("touch_input() - (Input.is_action_just_PREssed(ui_touch))")
+			first_touch = (get_global_mouse_position())
+		if(Input.is_action_just_released("ui_touch")):
+			print("touch_input() - (Input.is_action_just_REleased(ui_touch))")
+			final_touch = (get_global_mouse_position())
+			calculate_direction()
+		if event is InputEventScreenTouch and event.pressed:
+			print("_input(event) - (Input.is_action_just_PREssed(ui_touch))", event)
+			first_touch = event.position
+		if event is InputEventScreenTouch and event.pressed:
+			print("t_input(event) - (Input.is_action_just_REleased(ui_touch))", event)
+			final_touch = event.position
+			calculate_direction()
+			#swipe_angle()
+			
+			
+func touch_input_old():
+	if(Input.is_action_just_pressed("ui_touch")):
+		first_touch = (get_global_mouse_position())
+	if(Input.is_action_just_released("ui_touch")):
+		final_touch = (get_global_mouse_position())
+		calculate_direction()
+		#swipe_angle()
+
+
 func calculate_direction():	
 	print("calculate_direction()")
 	print("y =", final_touch.y, " x =", final_touch.x)
@@ -436,21 +489,11 @@ func calculate_direction():
 		move_down(game_field)
 	elif final_touch.y < 384:
 		move_up(game_field)
-	else:
-		fill_field_with_numbers()
-						
-#	var difference = final_touch - first_touch
-#	if abs(difference.x) > abs(difference.y):
-#		if difference.x >= 25:
-#			move_right(game_field)						
-#		elif difference.x <= -25:
-#			move_left(game_field)						
-#	elif abs(difference.x) <= abs(difference.y):
-#		if difference.y <= -25:
-#			move_up(game_field)
-#		elif difference.y >= 25:
-#			move_down(game_field)
-##
-#	if abs(difference.x) >= 25 || abs(difference.y) >= 25:
+#	else:
 #		fill_field_with_numbers()
 
+
+func swipe_angle():
+	var difference = final_touch - first_touch
+	var angle = rad2deg(atan2(difference.x, difference.y))
+	print(angle)

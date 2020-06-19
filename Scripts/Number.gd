@@ -1,11 +1,14 @@
 extends Node2D
 
+signal change_number
 
 export (PackedScene) var Number 
 
-var current_number = 0
+var exist_number = 0
 var number = 0
 var mas_coord = 0
+
+var color = []
 
 var currx_row = 0
 var curry_col = 0
@@ -21,9 +24,9 @@ func set_text(text : String):
 	text_label = text
 	$MarginContainer/CenterContainer/ColorRect/Label.text = text
 	if text == "0":
-		current_number = 0
+		exist_number = 0
 	else:
-		current_number = 1
+		exist_number = 1
 
 # onready var effect = get_node("move_tween")
 # onready var destroy = get_node("destroy_tween")
@@ -66,5 +69,6 @@ func set_number_text(text):
 
 # func _on_alpha_tween_tween_completed(object, key):
 # 	queue_free()
+
 
 
