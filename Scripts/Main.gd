@@ -353,6 +353,7 @@ func move_right(mas):
 					if mas[y][x+1] == null:
 						kody1+=1
 						mas[y][x+1] = mas[y][x]
+
 						mas[y][x] = null
 					elif mas[y][x+1] == 1:
 						if mas[y][x] == 1 or mas[y][x] == 2:
@@ -363,6 +364,7 @@ func move_right(mas):
 						kody1+=1
 						mas[y][x+1] = mas[y][x+1]+mas[y][x]
 						mas[y][x] = null
+
 					elif mas[y][x+1] < mas[y][x] and mas[y][x] <= 2 * mas[y][x+1]:
 						kody1+=1
 						mas[y][x+1] = mas[y][x+1]+mas[y][x]
@@ -414,6 +416,7 @@ func move_left(mas):
 			fill_field_with_numbers()
 	reasign_numbers_to_field()
 	
+
 
 func _on_GUI_start_new_game() -> void:
 	print("_on_GUI_start_new_game() -> void")	
@@ -488,6 +491,7 @@ func calculate_direction():
 		move_up(game_field)
 #	else:
 #		fill_field_with_numbers()
+
 
 func swipe_angle():
 	var difference = final_touch - first_touch
