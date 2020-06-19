@@ -12,7 +12,7 @@ signal save_player_data
 var number_scene = preload("res://Scenes/Number.tscn")
 
 # Variables
-const game_field_size = 6 
+const game_field_size = 5 
 
 const game_window_width = 480
 const game_window_heigth = 720
@@ -68,6 +68,7 @@ func _process(_delta):
 func start_new_game():
 	print("new_game()")
 	randgen.randomize()
+		
 	setup()
 	#$Music.play()	
 	$GUI.update_score(total_score)
@@ -77,7 +78,7 @@ func start_new_game():
 
 func setup():
 	print("setup()")	
-	randgen.randomize()	
+	randgen.randomize()
 	game_field = make_2d_array()
 	current_score = 0
 	#CurNumber = number
@@ -151,7 +152,7 @@ func generate_new_numbers_in_array():
 	print("possible_numbers()")
 	randgen.randomize()
 	var kodn = 1	
-	while kodn == 1:
+	while kodn <= 2:
 		#var nx = randgen.randf()
 		#var ny = randgen.randf()
 		#var x = int(nx * game_field_size % 1)
@@ -159,22 +160,26 @@ func generate_new_numbers_in_array():
 		
 		var x = randgen.randi_range(0,game_field_size - 1)
 		var y = randgen.randi_range(0,game_field_size - 1)
-		print(x, y)
-		if game_field[x][y] == null:
-			kodn = 0
+		print(y, x)
+		if game_field[y][x] == null:
+			kodn = kodn+1
 			var num = randgen.randf()
-			if num <= 0.45:
-				game_field[x][y] = 1
+			if num <= 0.618:
+				game_field[y][x] = 1
 				summ += 1
-			elif num <= 0.73:
-				game_field[x][y] = 2
-				summ += 2
-			elif num <= 0.9:
-				game_field[x][y] = 3
-				summ += 3
+
 			else:
-				game_field[x][y] = 5
-				summ += 5	
+				game_field[y][x] = 2
+				summ += 2
+#			if num <= 0.5:
+#				game_field[y][x] = 1
+#				summ += 1
+#			elif num <= 0.8:
+#				game_field[y][x] = 2
+#				summ += 2
+#			else:
+#				game_field[y][x] = 3
+#				summ += 3	
 
 
 func blank_space_on_board():
@@ -235,65 +240,34 @@ func reasign_numbers_to_field():
 						children_mas_number_scene[i].set_text(game_field[row][col] as String)
 
 
-func move_right(mas):
+func move_down(mas):
 	print("func move_right(mas)")
 	randgen.randomize()
-	var kodx2 = 1
-	while kodx2 == 1:
-		for x in range(1, game_field_size):
-			for y in range(game_field_size):
-				if mas[y][game_field_size-x-1] != null:
-					if mas[y][game_field_size-x] == null:
-						kodx2 += 1
-						mas[y][game_field_size-x] = mas[y][game_field_size-x-1]
-						mas[y][game_field_size-x-1] = null
-					elif mas[y][game_field_size-x] == 1 and mas[y][game_field_size-x-1] == 1:
-						kodx2 += 1
-						mas[y][game_field_size-x] = 2
-						mas[y][game_field_size-x-1] = null
-					elif mas[y][game_field_size-x] < mas[y][game_field_size-x-1] and 2 * mas[y][game_field_size-x] >= mas[y][game_field_size-x-1]:
-						kodx2 += 1
-						mas[y][game_field_size-x] = mas[y][game_field_size-x] + mas[y][game_field_size-x-1]
-						mas[y][game_field_size-x-1] = null
-					elif mas[y][game_field_size-x] > mas[y][game_field_size-x-1] and 2 * mas[y][game_field_size-x-1] >= mas[y][game_field_size-x]:
-						kodx2 += 1
-						mas[y][game_field_size-x] = mas[y][game_field_size-x] + mas[y][game_field_size-x-1]
-						mas[y][game_field_size-x-1] = null
-		if kodx2 > 1:
-			kodx2 = 1
-		else:
-			kodx2 = 0
-			fill_field_with_numbers()			
-			# if get_empty(mas) > eend:
-			# 	mas, summ = rand_(mas, summ)
-	reasign_numbers_to_field()		
-
-
-func move_left(mas):
-	print("func move_left(mas)")
-	randgen.randomize()
+ 
 	var kodx1 = 1
 	while kodx1 == 1:
-		for x in range(1, game_field_size):
-			for y in range(game_field_size):
+		for x in range(game_field_size):
+			
+			for y in range(game_field_size-1):
+				
 				if mas[y][x] != null:
-					if mas[y][x-1] == null:
+					if mas[y+1][x] == null:
 						kodx1 += 1
-						mas[y][x-1] = mas[y][x]
+						mas[y+1][x] = mas[y][x]
 						mas[y][x] = null
-					elif mas[y][x-1] == 1 and mas[y][x] == 1:
+					elif mas[y+1][x] == 1:
+						if mas[y][x] == 1 or mas[y][x] == 2:
+							kodx1 += 1
+							mas[y+1][x] = mas[y+1][x]+mas[y][x]
+							mas[y][x] = null
+					elif mas[y+1][x] > mas[y][x] and mas[y+1][x] <= 2 * mas[y][x]:
 						kodx1 += 1
-						mas[y][x-1] = 2
+						mas[y+1][x] = mas[y+1][x]+mas[y][x]
 						mas[y][x] = null
-					elif mas[y][x-1] < mas[y][x] and 2 * mas[y][x-1] >= mas[y][x]:
+					elif mas[y+1][x] < mas[y][x] and mas[y][x] <= 2 * mas[y+1][x]:
 						kodx1 += 1
-						mas[y][x-1] = mas[y][x-1] + mas[y][x]
-						mas[y][x] = null
-					elif mas[y][x-1] > mas[y][x] and 2 * mas[y][x] >= mas[y][x-1]:
-						kodx1 += 1
-						mas[y][x-1] = mas[y][x-1] + mas[y][x]
-						mas[y][x] = null
-
+						mas[y+1][x] = mas[y+1][x]+mas[y][x]
+						mas[y][x] = null						
 		if kodx1 > 1:
 			kodx1 = 1
 		else:
@@ -301,34 +275,77 @@ func move_left(mas):
 			fill_field_with_numbers()
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
-	reasign_numbers_to_field()			
-
-
+	reasign_numbers_to_field()	
+	
+	
 func move_up(mas):
 	print("func move_up(mas)")
 	randgen.randomize()
+		
+	var kodx2 = 1
+	while kodx2 == 1:
+		for x in range(game_field_size):
+			
+			for y in range(1, game_field_size):
+				
+				if mas[game_field_size-y][x] != null:
+					if  mas[game_field_size-y-1][x] == null:
+						kodx2+=1
+						mas[game_field_size-y-1][x] =  mas[game_field_size-y][x]
+						mas[game_field_size-y][x] = null
+					elif  mas[game_field_size-y-1][x] == 1:
+						if  mas[game_field_size-y][x] == 1 or  mas[game_field_size-y][x] == 2:
+							kodx2+=1
+							mas[game_field_size-y-1][x] = mas[game_field_size-y-1][x]+ mas[game_field_size-y][x]
+							mas[game_field_size-y][x] = null
+					elif  mas[game_field_size-y-1][x] > mas[game_field_size-y][x]  and  mas[game_field_size-y-1][x] <= 2 * mas[game_field_size-y][x] :
+						kodx2+=1
+						mas[game_field_size-y-1][x] =  mas[game_field_size-y-1][x]+ mas[game_field_size-y][x]
+						mas[game_field_size-y][x] = null
+					elif  mas[game_field_size-y-1][x] <  mas[game_field_size-y][x] and  mas[game_field_size-y][x] <= 2 *  mas[game_field_size-y-1][x]:
+						kodx2+=1
+						mas[game_field_size-y-1][x] =  mas[game_field_size-y-1][x] +  mas[game_field_size-y][x]
+						mas[game_field_size-y][x] = null						
+	
+
+		if kodx2 > 1:
+			kodx2 = 1
+		else:
+			kodx2 = 0
+			fill_field_with_numbers()
+			# if get_empty(mas) > eend:
+			# 	mas, summ = rand_(mas, summ)
+	reasign_numbers_to_field()	
+
+
+func move_right(mas):
+	print("func move_down(mas)")
+	randgen.randomize()
+
 	var kody1 = 1
 	while kody1 == 1:
-		for y in range(1, game_field_size):
-			for x in range(game_field_size):
+		for y in range(game_field_size):
+			
+			for x in range(game_field_size-1):
+				
 				if mas[y][x] != null:
-					if mas[y-1][x] == null:
-						kody1 += 1
-						mas[y-1][x] = mas[y][x]
+					if mas[y][x+1] == null:
+						kody1+=1
+						mas[y][x+1] = mas[y][x]
 						mas[y][x] = null
-					elif mas[y-1][x] == 1 and mas[y][x] == 1:
-						kody1 += 1
-						mas[y-1][x] = 2
+					elif mas[y][x+1] == 1:
+						if mas[y][x] == 1 or mas[y][x] == 2:
+							kody1+=1
+							mas[y][x+1] = mas[y][x+1]+mas[y][x]
+							mas[y][x] = null
+					elif mas[y][x+1] > mas[y][x] and mas[y][x+1] <= 2 * mas[y][x]:
+						kody1+=1
+						mas[y][x+1] = mas[y][x+1]+mas[y][x]
 						mas[y][x] = null
-					elif mas[y-1][x] < mas[y][x] and 2 * mas[y-1][x] >= mas[y][x]:
-						kody1 += 1
-						mas[y-1][x] = mas[y-1][x] + mas[y][x]
-						mas[y][x] = null
-					elif mas[y-1][x] > mas[y][x] and 2 * mas[y][x] >= mas[y-1][x]:
-						kody1 += 1
-						mas[y-1][x] = mas[y-1][x] + mas[y][x]
-						mas[y][x] = null
-
+					elif mas[y][x+1] < mas[y][x] and mas[y][x] <= 2 * mas[y][x+1]:
+						kody1+=1
+						mas[y][x+1] = mas[y][x+1]+mas[y][x]
+						mas[y][x] = null						
 		if kody1 > 1:
 			kody1 = 1
 		else:
@@ -337,40 +354,149 @@ func move_up(mas):
 			# if get_empty(mas) > eend:
 			# 	mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()	
-
-
-func move_down(mas):
-	print("func move_down(mas)")
+	
+	
+func move_left(mas):
+	print("func move_left(mas)")
 	randgen.randomize()
+		
 	var kody2 = 1
 	while kody2 == 1:
-		for y in range(1, game_field_size):
-			for x in range(game_field_size):
-				if mas[game_field_size-y-1][x] != null:
-					if mas[game_field_size-y][x] == null:
-						kody2 += 1
-						mas[game_field_size-y][x] = mas[game_field_size-y-1][x]
-						mas[game_field_size-y-1][x] = null
-					elif mas[game_field_size-y][x] == 1 and mas[game_field_size-y-1][x] == 1:
-						kody2 += 1
-						mas[game_field_size-y][x] = 2
-						mas[game_field_size-y-1][x] = null
-					elif mas[game_field_size-y][x] < mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y][x] >= mas[game_field_size-y-1][x]:
-						kody2 += 1
-						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
-						mas[game_field_size-y-1][x] = null
-					elif mas[game_field_size-y][x] > mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y-1][x] >= mas[game_field_size-y][x]:
-						kody2 += 1
-						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
-						mas[game_field_size-y-1][x] = null
+		for y in range(game_field_size):
+			
+			for x in range(1, game_field_size):
+				
+				if mas[y][game_field_size-x] != null:
+					if mas[y][game_field_size-x-1]== null:
+						kody2+=1
+						mas[y][game_field_size-x-1] =  mas[y][game_field_size-x]
+						mas[y][game_field_size-x] = null
+					elif mas[y][game_field_size-x-1]  == 1:
+						if  mas[y][game_field_size-x] == 1 or  mas[y][game_field_size-x] == 2:
+							kody2+=1
+							mas[y][game_field_size-x-1] = mas[y][game_field_size-x-1] + mas[y][game_field_size-x]
+							mas[y][game_field_size-x] = null
+					elif  mas[y][game_field_size-x-1] >  mas[y][game_field_size-x] and  mas[y][game_field_size-x-1] <= 2 * mas[y][game_field_size-x]  :
+						kody2+=1
+						mas[y][game_field_size-x-1] = mas[y][game_field_size-x-1] + mas[y][game_field_size-x]
+						mas[y][game_field_size-x] =  null
+						
+					elif  mas[y][game_field_size-x-1] < mas[y][game_field_size-x] and  mas[y][game_field_size-x] <= 2 * mas[y][game_field_size-x-1] :
+						kody2+=1
+						mas[y][game_field_size-x-1] = mas[y][game_field_size-x-1] + mas[y][game_field_size-x]
+						mas[y][game_field_size-x] =  null
+										
 		if kody2 > 1:
 			kody2 = 1
 		else:
 			kody2 = 0
 			fill_field_with_numbers()
-			# if get_empty(mas) > eend:
-			# 	mas, summ = rand_(mas, summ)
+#			if get_empty(mas) > eend:
+#				mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()	
+
+#func move_left(mas):
+#	print("func move_left(mas)")
+#	randgen.randomize()
+#	var kodx1 = 1
+#	while kodx1 == 1:
+#		for x in range(1, game_field_size):
+#			for y in range(game_field_size):
+#				if mas[y][x] != null:
+#					if mas[y][x-1] == null:
+#						kodx1 += 1
+#						mas[y][x-1] = mas[y][x]
+#						mas[y][x] = null
+#					elif mas[y][x-1] == 1 and mas[y][x] == 1:
+#						kodx1 += 1
+#						mas[y][x-1] = 2
+#						mas[y][x] = null
+#					elif mas[y][x-1] < mas[y][x] and 2 * mas[y][x-1] >= mas[y][x]:
+#						kodx1 += 1
+#						mas[y][x-1] = mas[y][x-1] + mas[y][x]
+#						mas[y][x] = null
+#					elif mas[y][x-1] > mas[y][x] and 2 * mas[y][x] >= mas[y][x-1]:
+#						kodx1 += 1
+#						mas[y][x-1] = mas[y][x-1] + mas[y][x]
+#						mas[y][x] = null
+#
+#		if kodx1 > 1:
+#			kodx1 = 1
+#		else:
+#			kodx1 = 0
+#			fill_field_with_numbers()
+#			# if get_empty(mas) > eend:
+#			# 	mas, summ = rand_(mas, summ)
+			
+
+#
+#func move_up(mas):
+#	print("func move_up(mas)")
+#	randgen.randomize()
+#	var kody1 = 1
+#	while kody1 == 1:
+#		for y in range(1, game_field_size):
+#			for x in range(game_field_size):
+#				if mas[y][x] != null:
+#					if mas[y-1][x] == null:
+#						kody1 += 1
+#						mas[y-1][x] = mas[y][x]
+#						mas[y][x] = null
+#					elif mas[y-1][x] == 1 and mas[y][x] == 1:
+#						kody1 += 1
+#						mas[y-1][x] = 2
+#						mas[y][x] = null
+#					elif mas[y-1][x] < mas[y][x] and 2 * mas[y-1][x] >= mas[y][x]:
+#						kody1 += 1
+#						mas[y-1][x] = mas[y-1][x] + mas[y][x]
+#						mas[y][x] = null
+#					elif mas[y-1][x] > mas[y][x] and 2 * mas[y][x] >= mas[y-1][x]:
+#						kody1 += 1
+#						mas[y-1][x] = mas[y-1][x] + mas[y][x]
+#						mas[y][x] = null
+#
+#		if kody1 > 1:
+#			kody1 = 1
+#		else:
+#			kody1 = 0
+#			fill_field_with_numbers()
+#			# if get_empty(mas) > eend:
+#			# 	mas, summ = rand_(mas, summ)
+#	reasign_numbers_to_field()	
+#
+#
+#func move_down(mas):
+#	print("func move_down(mas)")
+#	randgen.randomize()
+#	var kody2 = 1
+#	while kody2 == 1:
+#		for y in range(1, game_field_size):
+#			for x in range(game_field_size):
+#				if mas[game_field_size-y-1][x] != null:
+#					if mas[game_field_size-y][x] == null:
+#						kody2 += 1
+#						mas[game_field_size-y][x] = mas[game_field_size-y-1][x]
+#						mas[game_field_size-y-1][x] = null
+#					elif mas[game_field_size-y][x] == 1 and mas[game_field_size-y-1][x] == 1:
+#						kody2 += 1
+#						mas[game_field_size-y][x] = 2
+#						mas[game_field_size-y-1][x] = null
+#					elif mas[game_field_size-y][x] < mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y][x] >= mas[game_field_size-y-1][x]:
+#						kody2 += 1
+#						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
+#						mas[game_field_size-y-1][x] = null
+#					elif mas[game_field_size-y][x] > mas[game_field_size-y-1][x] and 2 * mas[game_field_size-y-1][x] >= mas[game_field_size-y][x]:
+#						kody2 += 1
+#						mas[game_field_size-y][x] = mas[game_field_size-y][x] + mas[game_field_size-y-1][x]
+#						mas[game_field_size-y-1][x] = null
+#		if kody2 > 1:
+#			kody2 = 1
+#		else:
+#			kody2 = 0
+#			fill_field_with_numbers()
+#			# if get_empty(mas) > eend:
+#			# 	mas, summ = rand_(mas, summ)
+#	reasign_numbers_to_field()	
 
 
 func _on_GUI_start_new_game() -> void:
@@ -401,31 +527,44 @@ func touch_input():
 		print("touch_input() - (Input.is_action_just_REleased(ui_touch))")
 		final_touch = (get_global_mouse_position())
 		calculate_direction()
-		swipe_angle()
+		#swipe_angle()
+
+#
+#func swipe_angle():
+#	print("swipe_angle()")
+#	var difference = final_touch - first_touch
+#	var angle = rad2deg(atan2(difference.x, difference.y))
+#	print(angle)
 
 
-func swipe_angle():
-	print("swipe_angle()")
-	var difference = final_touch - first_touch
-	var angle = rad2deg(atan2(difference.x, difference.y))
-	print(angle)
-
-
-func calculate_direction():
+func calculate_direction():	
 	print("calculate_direction()")
-	var difference = final_touch - first_touch
-	if abs(difference.x) > abs(difference.y):
-		if difference.x >= 25:
-			move_right(game_field)						
-		elif difference.x <= -25:
-			move_left(game_field)						
-	elif abs(difference.x) <= abs(difference.y):
-		if difference.y <= -25:
-			move_up(game_field)
-		elif difference.y >= 25:
-			move_down(game_field)
-	if abs(difference.x) >= 25 || abs(difference.y) >= 25:
+	print("y =", final_touch.y, " x =", final_touch.x)
+	if final_touch.x > 336 :
+		move_right(game_field)
+	elif final_touch.x < 144:
+		move_left(game_field)
+	elif final_touch.y > 576:
+		move_down(game_field)
+	elif final_touch.y < 384:
+		move_up(game_field)
+	else:
 		fill_field_with_numbers()
+						
+#	var difference = final_touch - first_touch
+#	if abs(difference.x) > abs(difference.y):
+#		if difference.x >= 25:
+#			move_right(game_field)						
+#		elif difference.x <= -25:
+#			move_left(game_field)						
+#	elif abs(difference.x) <= abs(difference.y):
+#		if difference.y <= -25:
+#			move_up(game_field)
+#		elif difference.y >= 25:
+#			move_down(game_field)
+##
+#	if abs(difference.x) >= 25 || abs(difference.y) >= 25:
+#		fill_field_with_numbers()
 
 
 
