@@ -3,14 +3,24 @@ extends Control
 signal start_new_game
 signal exit_to_menu
 
+
+
+var screenSize = Vector2(0,0)
+
+
+
+
 func _ready() -> void:
 	setup()
 	
 
 
 func setup():
-
-	pass
+	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
+	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
+	$CenterContainer/Panel.rect_size = screenSize
+	
+	
 
 func show_ingame_menu(state: bool):
 	$GUI_InGamePlay.visible = state
