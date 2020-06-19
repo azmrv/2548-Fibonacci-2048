@@ -1,4 +1,4 @@
-# 2584 Fibonacci
+## 2584 Fibonacci
 2584 Fibonacci aka 2048 game
 
 Фибоначчи-вариант 2048
