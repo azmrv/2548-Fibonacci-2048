@@ -331,6 +331,7 @@ func move_right(mas):
 					if mas[y][x+1] == null:
 						kody1+=1
 						mas[y][x+1] = mas[y][x]
+
 						mas[y][x] = null
 					elif mas[y][x+1] == 1:
 						if mas[y][x] == 1 or mas[y][x] == 2:
@@ -341,6 +342,7 @@ func move_right(mas):
 						kody1+=1
 						mas[y][x+1] = mas[y][x+1]+mas[y][x]
 						mas[y][x] = null
+
 					elif mas[y][x+1] < mas[y][x] and mas[y][x] <= 2 * mas[y][x+1]:
 						kody1+=1
 						mas[y][x+1] = mas[y][x+1]+mas[y][x]
@@ -391,6 +393,7 @@ func move_left(mas):
 			kody2 = 0
 			fill_field_with_numbers()
 
+
 func _on_GUI_start_new_game() -> void:
 	print("_on_GUI_start_new_game() -> void")	
 	$GUI.show_main_menu(false)
@@ -435,4 +438,19 @@ func calculate_direction():
 		move_up(game_field)
 	else:
 		fill_field_with_numbers()
+						
+#	var difference = final_touch - first_touch
+#	if abs(difference.x) > abs(difference.y):
+#		if difference.x >= 25:
+#			move_right(game_field)						
+#		elif difference.x <= -25:
+#			move_left(game_field)						
+#	elif abs(difference.x) <= abs(difference.y):
+#		if difference.y <= -25:
+#			move_up(game_field)
+#		elif difference.y >= 25:
+#			move_down(game_field)
+##
+#	if abs(difference.x) >= 25 || abs(difference.y) >= 25:
+#		fill_field_with_numbers()
 
