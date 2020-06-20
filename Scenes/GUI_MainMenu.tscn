@@ -3,7 +3,8 @@
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/GUI_MainMenu.gd" type="Script" id=2]
 [ext_resource path="res://Fonts/PT Root UI_Bold.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://2548_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Styles/2548_theme.tres" type="Theme" id=4]
+
 
 [sub_resource type="DynamicFont" id=1]
 size = 54
