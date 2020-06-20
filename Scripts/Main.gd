@@ -459,6 +459,7 @@ func move_left(mas):
 	reasign_numbers_to_field()
 
 
+
 func _on_GUI_start_new_game() -> void:
 	print("_on_GUI_start_new_game() -> void")	
 	$GUI.show_main_menu(false)
@@ -511,6 +512,7 @@ func calculate_direction():
 		move_up(game_field)
 	else:
 		fill_field_with_numbers()
+
 
 
 func swipe_angle():
