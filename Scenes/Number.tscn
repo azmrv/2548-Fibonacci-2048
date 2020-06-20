@@ -19,8 +19,6 @@ __meta__ = {
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
-margin_right = 80.0
-margin_bottom = 80.0
 use_top_left = true
 __meta__ = {
 "_edit_use_anchors_": false

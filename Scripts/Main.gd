@@ -77,7 +77,7 @@ func start_new_game():
 		
 	setup()
 	#$Music.play()	
-	$GUI.update_score(total_score)
+	
 	$GUI.show_message("Get Ready")
 
 	
@@ -117,6 +117,7 @@ func show_ads():
 
 
 func game_over():
+	
 	print("game_over()")
 	randgen.randomize()
 	$GameField/PanelContainer.get_children().clear()
@@ -129,7 +130,8 @@ func game_over():
 	#get_tree().call_group("mobs", "queue_free")
 	#$Background.color = Color(0.098039, 0.823529, 0.501961)	
 	#print("КОНЕЦ ИГРЫ", "СУММА =", summ)
-	$GUI.show_message("Game Over, Score = %s" % total_score)
+	$GUI.show_message("Game Over, Score = %s" % summ)
+	show_ads()
 	# emit signal?
 	summ = 0
 	# need pause before change UI
@@ -151,7 +153,7 @@ func exit_to_mainmenu():
 
 
 func increase_score(amount):
-	print("increase_score(amount)")
+	print("increase_score(amount)")	
 	current_score += amount
 	total_score += current_score
 
@@ -174,7 +176,7 @@ func show_message(text):
 
 
 func generate_new_numbers_in_array():
-	print("possible_numbers()")
+	print("generate_new_numbers_in_array()")
 	randgen.randomize()
 	var kodn = koldop	
 	while kodn > 0:
@@ -183,28 +185,30 @@ func generate_new_numbers_in_array():
 		#var x = int(nx * game_field_size % 1)
 		#var y = int(ny * game_field_size % 1)
 		
-		var colx = randgen.randi_range(0,game_field_size - 1)
-		var rowy = randgen.randi_range(0,game_field_size - 1)
-		print(rowy, colx)
-		if game_field[rowy][colx] == null:
-			kodn = kodn - 1
-			var num = randgen.randf()
-			if num <= 0.618:
-				game_field[rowy][colx] = 1
-				summ += 1
-
-			else:
-				game_field[rowy][colx] = 2
-				summ += 2
-#			if num <= 0.5:
-#				game_field[rowy][colx] = 1
-#				summ += 1
-#			elif num <= 0.8:
-#				game_field[rowy][colx] = 2
-#				summ += 2
-#			else:
-#				game_field[rowy][colx] = 3
-#				summ += 3	
+		# вот теперь не зависает в этом месте при попытке разместить числа на поле доп проверка на свободное место
+		if blank_space_on_board():
+			var colx = randgen.randi_range(0,game_field_size - 1)
+			var rowy = randgen.randi_range(0,game_field_size - 1)
+			#print(rowy, colx)
+			if game_field[rowy][colx] == null:
+				kodn = kodn - 1
+				var num = randgen.randf()
+				if num <= 0.618:
+					game_field[rowy][colx] = 1
+					summ += 1
+	
+				else:
+					game_field[rowy][colx] = 2
+					summ += 2
+	#			if num <= 0.5:
+	#				game_field[rowy][colx] = 1
+	#				summ += 1
+	#			elif num <= 0.8:
+	#				game_field[rowy][colx] = 2
+	#				summ += 2
+	#			else:
+	#				game_field[rowy][colx] = 3
+	#				summ += 3	
 
 
 func blank_space_on_board():
@@ -250,7 +254,7 @@ func create_numbers_on_game_field():
 				curr_number.position.x = number_scene_size * colx + game_field_margin * (colx + 1)
 				curr_number.position.y = number_scene_size * rowy + game_field_margin * (rowy + 1)
 				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
-	print(game_field)
+	#print(game_field)
 
 
 func reasign_numbers_to_field():
@@ -266,7 +270,7 @@ func reasign_numbers_to_field():
 						children_mas_number_scene[i].set_number_to_label(0)
 					else:
 						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])
-
+	$GUI.update_score(summ)
 
 func move_down(mas):
 	print("func move_right(mas)")
@@ -480,20 +484,19 @@ func _on_InputLagTimer_timeout() -> void:
 
 
 func _input(event):
-	if	new_game != 0:
-		#print("_input(event)", event)
+	if	new_game != 0:		
 		if(Input.is_action_just_pressed("ui_touch")):
-			print("touch_input() - (Input.is_action_just_PREssed(ui_touch))")
+			print("_input(event) - (Input.is_action_just_PREssed(ui_touch))")
 			first_touch = (get_global_mouse_position())
 		if(Input.is_action_just_released("ui_touch")):
-			print("touch_input() - (Input.is_action_just_REleased(ui_touch))")
+			print("_input(event) - (Input.is_action_just_REleased(ui_touch))")
 			final_touch = (get_global_mouse_position())
 			calculate_direction()
 		if event is InputEventScreenTouch and event.pressed:
-			print("_input(event) - (Input.is_action_just_PREssed(ui_touch))", event)
+			print("_input(event) - InputEventScreenTouch", event)
 			first_touch = event.position
 		if event is InputEventScreenTouch and event.pressed:
-			print("t_input(event) - (Input.is_action_just_REleased(ui_touch))", event)
+			print("_input(event) - InputEventScreenTouch", event)
 			final_touch = event.position
 			calculate_direction()
 			#swipe_angle()
