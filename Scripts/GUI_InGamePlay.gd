@@ -15,7 +15,9 @@ func setup():
 	
 
 func update_score(text):
-	$CenterContainer/Label.text = text
+	
+	pass
+	
 
 
 func _on_MessageTimer_timeout() -> void:

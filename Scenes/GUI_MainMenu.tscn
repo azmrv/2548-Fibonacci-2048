@@ -5,7 +5,6 @@
 [ext_resource path="res://Fonts/PT Root UI_Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Styles/2548_theme.tres" type="Theme" id=4]
 
-
 [sub_resource type="DynamicFont" id=1]
 size = 54
 font_data = ExtResource( 3 )
@@ -117,6 +116,10 @@ text = "Exit Game"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ShowMenuLag" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
 [connection signal="pressed" from="CentContButtons/VBoxButtons/StartGame" to="." method="_on_StartGame_pressed"]
 [connection signal="pressed" from="CentContButtons/VBoxButtons/Options" to="." method="_on_Options_pressed"]
 [connection signal="pressed" from="CentContButtons/VBoxButtons/ExitGame" to="." method="_on_ExitGame_pressed"]

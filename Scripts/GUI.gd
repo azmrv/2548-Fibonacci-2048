@@ -63,7 +63,7 @@ func show_game_over():
 	
 	
 func update_score(score):
-	$GUI_InGamePlay/CenterContainer/Score.text = str(score)
+	$GUI_InGamePlay/CenterContainer/Score.text = "Score: %s" % str(score)  
 	
 
 
