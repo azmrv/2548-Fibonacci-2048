@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://Scripts/ADs.gd" type="Script" id=1]
-[ext_resource path="res://Graphics/PNGPIX-COM-Color-Smoke-PNG-Transparent-Image-1.png" type="Texture" id=2]
 
 [node name="ADs" type="Node"]
 script = ExtResource( 1 )
@@ -11,7 +10,6 @@ script = ExtResource( 1 )
 [node name="ADImage" type="TextureRect" parent="CanvasLayer"]
 margin_right = 480.0
 margin_bottom = 720.0
-texture = ExtResource( 2 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
