@@ -19,18 +19,23 @@ __meta__ = {
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 480.0
+margin_bottom = 800.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 480, 800 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="BackgroundTexture" type="TextureRect" parent="CenterContainer"]
 visible = false
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 20.0
-margin_bottom = 20.0
+margin_left = 240.0
+margin_top = 400.0
+margin_right = 240.0
+margin_bottom = 400.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -39,6 +44,10 @@ __meta__ = {
 visible = false
 modulate = Color( 0.141176, 0.282353, 0.105882, 1 )
 self_modulate = Color( 0.27451, 0.501961, 0.215686, 1 )
+margin_left = 240.0
+margin_top = 400.0
+margin_right = 240.0
+margin_bottom = 400.0
 
 [node name="GUI_InGamePlay" parent="." instance=ExtResource( 4 )]
 visible = false
@@ -46,9 +55,8 @@ margin_right = 3.00003
 margin_bottom = 6.10352e-05
 
 [node name="GUI_MainMenu" parent="." instance=ExtResource( 1 )]
-margin_top = -1.10803
-margin_right = 2.00003
-margin_bottom = -1.10797
+margin_right = 3.05176e-05
+margin_bottom = 6.10352e-05
 
 [node name="GUI_SelectHardLevel" parent="." instance=ExtResource( 3 )]
 visible = false

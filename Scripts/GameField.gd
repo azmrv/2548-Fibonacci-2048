@@ -10,7 +10,7 @@ extends Node2D
 export (PackedScene) var GameField
 
 var x_start = 0
-var y_start = 100
+var y_start = 0
 
 
 func _ready():

@@ -26,7 +26,8 @@ func set_xy(rowy, colx):
 
 func set_number_to_label(num : int):
 	text_label = num as String
-	$MarginContainer/CenterContainer/ColorRect/Label.text = str(num)
+	#$MarginContainer/CenterContainer/ColorRect/Label.text = str(num)
+	$ColorRect/CenterContainer/Label.text = str(num)
 	if num == 0:
 		exist_number = 0
 	else:
@@ -35,18 +36,58 @@ func set_number_to_label(num : int):
 
 
 func set_rect_size(color_rect_size):
-	$MarginContainer/CenterContainer/ColorRect.rect_size = color_rect_size
-
+	#$MarginContainer/CenterContainer/ColorRect.rect_min_size = color_rect_size
+	$ColorRect.rect_min_size = color_rect_size
 
 func set_color():
-	
-	if number == 0:
-		#print("set_color() number =", number)
-		$MarginContainer/CenterContainer/ColorRect.color = Color("000000")		
+	#print("set_color() number =", number)
+	#0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711
+	if number == 0:				
+		$ColorRect.color = Color("838383")		
 	elif number == 1 :
-		$MarginContainer/CenterContainer/ColorRect.color = Color("ffffff")
+		$ColorRect.color = Color("8e7474")
+	elif number == 2 :
+		$ColorRect.color = Color("945959")
+	elif number == 3 :
+		$ColorRect.color = Color("cf5317")
+	elif number == 5 :
+		$ColorRect.color = Color("cf6917")
+	elif number == 8 :
+		$ColorRect.color = Color("cf8717")
+	elif number == 13 :
+		$ColorRect.color = Color("cfaa17")
+	elif number == 21 :
+		$ColorRect.color = Color("c1cf17")
+	elif number == 34 :
+		$ColorRect.color = Color("abcf17")
+	elif number == 55 :
+		$ColorRect.color = Color("8dcf17")
+	elif number == 89 :
+		$ColorRect.color = Color("5dcf17")
+	elif number == 144 :
+		$ColorRect.color = Color("18cf17")
+	elif number == 233 :
+		$ColorRect.color = Color("17cf4e")	
+	elif number == 377 :
+		$ColorRect.color = Color("17cf86")	
+	elif number == 610 :
+		$ColorRect.color = Color("17cfbe")	
+	elif number == 987 :
+		$ColorRect.color = Color("178ecf")	
+	elif number == 1597 :
+		$ColorRect.color = Color("1752cf")	
+	elif number == 2584 :
+		$ColorRect.color = Color("2117cf")	
+	elif number == 4181 :
+		$ColorRect.color = Color("6217cf")
+	elif number == 6765 :
+		$ColorRect.color = Color("9a17cf")
+	elif number == 10946 :
+		$ColorRect.color = Color("cf17a5")
+	elif number == 17711 :
+		$ColorRect.color = Color("cf1765")	
 	else:
-		$MarginContainer/CenterContainer/ColorRect.color = Color("aaaaaa")
+		$ColorRect.color = Color("cf1739")
 	
 
 
@@ -61,7 +102,7 @@ func _process(delta):
 
 
 func set_number_text(text):
-	$MarginContainer/CenterContainer/ColorRect/Label.text = text
+	$ColorRect/CenterContainer/Label.text = text
 	
 	
 	

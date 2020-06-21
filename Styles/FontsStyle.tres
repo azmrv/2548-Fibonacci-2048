@@ -3,5 +3,5 @@
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
 
 [resource]
-size = 55
+size = 24
 font_data = ExtResource( 1 )
