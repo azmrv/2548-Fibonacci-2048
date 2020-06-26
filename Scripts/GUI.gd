@@ -16,9 +16,12 @@ func _ready() -> void:
 
 
 func setup():
-	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
-	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
-	$CenterContainer/Panel.rect_size = screenSize
+	print("GUI script setup()")
+#	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
+#	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
+	screenSize = get_viewport().get_visible_rect().size
+	self.rect_min_size = screenSize
+	print("set screen size = %s" %  screenSize)
 	
 	
 
@@ -38,8 +41,8 @@ func show_main_menu(state: bool):
 #	$GUI_MainMenu/CentContLabel2/GameName.show()
 
 func show_message(text):
-	$GUI_InGamePlay/CentContMessage/Message.text = text
-	$GUI_InGamePlay/CentContMessage/Message.show()
+	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.text = text
+	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.show()
 	$GUI_InGamePlay/MessageTimer.start()
 	
 	
@@ -63,7 +66,7 @@ func show_game_over():
 	
 	
 func update_score(score):
-	$GUI_InGamePlay/CenterContainer/Score.text = "Score: %s" % str(score)  
+	$GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.text = "Score: %s" % str(score)  
 	
 
 

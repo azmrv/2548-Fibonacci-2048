@@ -6,16 +6,19 @@
 script = ExtResource( 1 )
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-size_flags_horizontal = 6
-size_flags_vertical = 6
+rect_min_size = Vector2( 500, 900 )
+size_flags_horizontal = 11
+size_flags_vertical = 11
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureRect" type="TextureRect" parent="CenterContainer"]
 visible = false
-margin_right = 480.0
-margin_bottom = 800.0
+margin_left = 10.0
+margin_top = 50.0
+margin_right = 490.0
+margin_bottom = 850.0
 rect_min_size = Vector2( 480, 800 )
 stretch_mode = 1
 __meta__ = {
@@ -23,8 +26,10 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="CenterContainer"]
-margin_right = 480.0
-margin_bottom = 800.0
+margin_left = 10.0
+margin_top = 50.0
+margin_right = 490.0
+margin_bottom = 850.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 480, 800 )

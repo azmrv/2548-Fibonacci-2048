@@ -17,23 +17,21 @@ var gui_scene = preload("res://Scenes/GUI.tscn")
 const game_field_size = 5 
 
 var screenSize = Vector2(0,0)
-#const game_window_width = 480
-#const game_window_heigth = 720
-const game_window_margin = 0
+var game_window_width = 500
+var game_window_heigth = 800
+var game_window_margin = 0
 
-const game_field_draw_size = 480
-const game_field_width = 480
-const game_field_heigth = 480
-const game_field_margin = 0
+var game_field_width = 500
+var game_field_margin = 0
 
-var number_scene_size = game_field_width / game_field_size
+var number_scene_size = 100
 
-# Touch Variables
+
 var first_touch = Vector2(0, 0)
 var final_touch = Vector2(0, 0)
 var target = Vector2(0, 0)
 var last_direction = 0
-var swipe = 1
+var swipe = null
 
 # Game Hard Level
 # количество цифр за ход
@@ -60,12 +58,12 @@ var best_score = 0
 
 var new_game = 0
 
-var number_rect_size = Vector2(number_scene_size, number_scene_size)
-var number_scene_pos = Vector2(0,0)	
+var number_rect_size = 0
+var number_scene_pos = 0
 
 func _ready():	
 	print("_ready()")	
-	#setup()
+	setup_window()
 	
 	
 func _process(_delta):
@@ -101,13 +99,16 @@ func setup():
 func setup_window():
 	print("setup_window()")
 	#set_size(get_tree().get_root().get_rect().size) 
-	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
-	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
+	#screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
+	#screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
+	screenSize = get_viewport().get_visible_rect().size
 	print(screenSize)
+	
 	#Get the scale
 #	var newH = get_size().y
 #	var scale = newH / defH
-	
+	number_rect_size = Vector2(number_scene_size, number_scene_size)
+	number_scene_pos = Vector2(0,0)	
 #	var options = get_node("options") #Get the buttons to resize
 	
 #	options.set_scale(scale * options.get_scale()) #Scale to new resolution
@@ -115,12 +116,23 @@ func setup_window():
 	
 #	options.set_margin(MARGIN_LEFT, options.get_margin(MARGIN_LEFT) * scale)
 #	options.set_margin(MARGIN_TOP, options.get_margin(MARGIN_TOP) * scale)
-
+	
+	game_window_width = screenSize.x
+	game_window_heigth = screenSize.y
+	game_window_margin = 0
+	
+	game_field_width = game_window_width
+	game_field_margin = 0
+	
+	number_scene_size = game_field_width / game_field_size
+	
+	
+	
 	
 	
 func show_ads():
 	print("show_ads()")
-
+	$GUI.show_message("ADs, Money blwe $$$$$$$" )
 
 func game_over():
 	
@@ -276,7 +288,7 @@ func reasign_numbers_to_field():
 						children_mas_number_scene[i].set_number_to_label(0)
 					else:
 						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])
-	swipe = 1
+	
 	$GUI.update_score(summ)
 
 
@@ -475,7 +487,8 @@ func _on_GUI_start_new_game() -> void:
 	print("_on_GUI_start_new_game() -> void")	
 	$GUI.show_main_menu(false)
 	$GUI.show_ingame_menu(true)
-	$GUI/GUI_InGamePlay/CenterContainer/Score.visible = false
+	
+	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = false
 	randgen.randomize()		
 	start_new_game()
 	$InputLagTimer.start()
@@ -489,39 +502,37 @@ func _on_InputLagTimer_timeout() -> void:
 	# для предотвращения ложного срабатывания перераспределения чисел на поле
 	new_game = 1
 	$GameField.visible = true
-	$GUI/GUI_InGamePlay/CenterContainer/Score.visible = true
+	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = true
 
 
 func _input(event):
 	
 	if	new_game != 0:
-		if swipe != 0:
-			if event is InputEventScreenDrag: 	
-				if event.relative.y > 0: 
-					print("_input(event) - event.relative.y > 0")
-					move_down(game_field)
-					swipe = 0
-				elif event.relative.y < 0: 					
-					move_up(game_field)
-					swipe = 0
-				elif event.relative.x < 0: 					
-					move_left(game_field)
-					swipe = 0
-				elif event.relative.x > 0: 					 
-					move_right(game_field)
-					swipe = 0
+		#print("_input(event)", event)
+		if(Input.is_action_just_pressed("ui_touch")):
+			print("touch_input() - (Input.is_action_just_PREssed(ui_touch))")
+			first_touch = (get_global_mouse_position())
+		if(Input.is_action_just_released("ui_touch")):
+			print("touch_input() - (Input.is_action_just_REleased(ui_touch))")
+			final_touch = (get_global_mouse_position())
+			calculate_direction()
+		if swipe == null:
+			if event is InputEventScreenDrag:
+				if event.relative.y > 0:
+					swipe = 'down'
+				elif event.relative.y < 0:
+					swipe = 'up'
+				elif event.relative.x < 0:
+					swipe = 'left'
+				elif event.relative.x > 0:
+					swipe = 'right'	
 
 		elif event is InputEventScreenTouch: # Затем обработаем событие отпускания экрана
 			if !event.pressed: # Когда игрок убирает палец с экрана
-				swipe = 1
+				calculate_swipe_direction(event)
+				swipe = null
 			
-#		if(Input.is_action_just_pressed("ui_touch")):
-#			print("_input(event) - (Input.is_action_just_PREssed(ui_touch))")
-#			first_touch = (get_global_mouse_position())
-#		if(Input.is_action_just_released("ui_touch")):
-#			print("_input(event) - (Input.is_action_just_REleased(ui_touch))")
-#			final_touch = (get_global_mouse_position())
-#			calculate_direction()
+
 #		if event is InputEventScreenTouch and event.pressed:
 #			print("_input(event) - InputEventScreenTouch", event)
 #			first_touch = event.position
@@ -539,17 +550,25 @@ func calculate_direction():
 		move_right(game_field)
 	elif final_touch.x < 144:
 		move_left(game_field)
-	elif final_touch.y > 576:
+	elif final_touch.y > 496:
 		move_down(game_field)
-	elif final_touch.y < 384:
-		move_up(game_field)
+	elif final_touch.y < 304:
+		move_up(game_field)	
+	else:
+		return
 	# не дожно происходить событий просто по клику по экрану любое случайное нажатие генерирует работу функций
-	#else:
 	#	fill_field_with_numbers()
 
 
-
-func swipe_angle():
-	var difference = final_touch - first_touch
-	var angle = rad2deg(atan2(difference.x, difference.y))
-	print(angle)
+func calculate_swipe_direction(event):	
+	print("calculate_swipe_direction(event)", event)
+	if swipe > 'down':
+		move_down(game_field)
+	elif swipe > 'up':
+		move_up(game_field)
+	elif swipe > 'left':
+		move_left(game_field)
+	elif swipe > 'right': 
+		move_right(game_field)			
+	else:
+		return

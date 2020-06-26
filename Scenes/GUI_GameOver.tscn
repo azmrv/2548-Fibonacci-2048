@@ -1,97 +1,150 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/2548_theme.tres" type="Theme" id=2]
 
+[sub_resource type="DynamicFont" id=4]
+size = 70
+font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=1]
 size = 39
 font_data = ExtResource( 1 )
 
+[sub_resource type="DynamicFontData" id=2]
+font_path = "res://Fonts/PT Sans_Regular.ttf"
+
+[sub_resource type="DynamicFont" id=3]
+size = 45
+font_data = SubResource( 2 )
+
 [node name="GUI_GameOver" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CentContGameOver" type="CenterContainer" parent="."]
 margin_right = 480.0
-margin_bottom = 720.0
+margin_bottom = 800.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 480, 800 )
+size_flags_horizontal = 11
+size_flags_vertical = 11
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxLabels" type="VBoxContainer" parent="CentContGameOver"]
-margin_left = 84.0
-margin_top = 86.0
-margin_right = 395.0
-margin_bottom = 634.0
-custom_constants/separation = 100
+[node name="VBoxLabels" type="VBoxContainer" parent="."]
+margin_right = 480.0
+margin_bottom = 800.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 480, 800 )
+size_flags_horizontal = 11
+size_flags_vertical = 11
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="VBoxLabels" type="VBoxContainer" parent="CentContGameOver/VBoxLabels"]
-margin_right = 311.0
-margin_bottom = 233.0
-custom_constants/separation = 131
+[node name="VBoxLabels" type="VBoxContainer" parent="VBoxLabels"]
+margin_right = 480.0
+margin_bottom = 737.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 11
+size_flags_vertical = 11
+size_flags_stretch_ratio = 128.0
+custom_constants/separation = 30
 alignment = 1
 
-[node name="GameName" type="Label" parent="CentContGameOver/VBoxLabels/VBoxLabels"]
-margin_right = 311.0
-margin_bottom = 51.0
-custom_fonts/font = SubResource( 1 )
-text = "2584 Fibonacci"
+[node name="GameStatus" type="Label" parent="VBoxLabels/VBoxLabels"]
+margin_top = 237.0
+margin_right = 480.0
+margin_bottom = 329.0
+custom_fonts/font = SubResource( 4 )
+text = "Game Over"
 align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ResultText" type="Label" parent="CentContGameOver/VBoxLabels/VBoxLabels"]
-margin_top = 182.0
-margin_right = 311.0
-margin_bottom = 233.0
+[node name="ResultText" type="Label" parent="VBoxLabels/VBoxLabels"]
+margin_top = 359.0
+margin_right = 480.0
+margin_bottom = 410.0
 custom_fonts/font = SubResource( 1 )
-text = "Your Score = 2548"
+text = "Your Score:"
 align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxButtons" type="VBoxContainer" parent="CentContGameOver/VBoxLabels"]
-margin_top = 333.0
-margin_right = 311.0
-margin_bottom = 548.0
-custom_constants/separation = 19
+[node name="Score" type="Label" parent="VBoxLabels/VBoxLabels"]
+margin_top = 440.0
+margin_right = 480.0
+margin_bottom = 499.0
+custom_fonts/font = SubResource( 3 )
+text = "2584"
+align = 1
+valign = 1
 
-[node name="NewGame" type="Button" parent="CentContGameOver/VBoxLabels/VBoxButtons"]
-margin_right = 311.0
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxLabels"]
+margin_top = 741.0
+margin_right = 480.0
+margin_bottom = 800.0
+rect_min_size = Vector2( 480, 50 )
+size_flags_horizontal = 11
+size_flags_vertical = 11
+size_flags_stretch_ratio = 0.0
+alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxLabels/VBoxContainer"]
+margin_right = 480.0
 margin_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 11
+size_flags_vertical = 11
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxLabels/VBoxContainer/MarginContainer"]
+margin_right = 480.0
+margin_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 11
+size_flags_vertical = 11
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer"]
+margin_left = 14.0
+margin_right = 464.0
+margin_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 450, 0 )
+size_flags_horizontal = 11
+size_flags_vertical = 11
+alignment = 1
+
+[node name="NewGame" type="Button" parent="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer"]
+margin_right = 223.0
+margin_bottom = 59.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource( 2 )
 custom_fonts/font = SubResource( 1 )
-text = "NewGame"
+text = "New Game"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Options" type="Button" parent="CentContGameOver/VBoxLabels/VBoxButtons"]
-margin_top = 78.0
-margin_right = 311.0
-margin_bottom = 137.0
+[node name="MainMen" type="Button" parent="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer"]
+margin_left = 227.0
+margin_right = 450.0
+margin_bottom = 59.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource( 2 )
 custom_fonts/font = SubResource( 1 )
-text = "Options"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Exit" type="Button" parent="CentContGameOver/VBoxLabels/VBoxButtons"]
-margin_top = 156.0
-margin_right = 311.0
-margin_bottom = 215.0
-theme = ExtResource( 2 )
-custom_fonts/font = SubResource( 1 )
-text = "Exit"
+text = "Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
