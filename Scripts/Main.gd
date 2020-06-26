@@ -488,6 +488,7 @@ func _on_GUI_start_new_game() -> void:
 	$GUI.show_main_menu(false)
 	$GUI.show_ingame_menu(true)
 	
+	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/HBoxContainer.visible = false
 	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = false
 	randgen.randomize()		
 	start_new_game()
@@ -503,6 +504,7 @@ func _on_InputLagTimer_timeout() -> void:
 	new_game = 1
 	$GameField.visible = true
 	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = true
+	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/HBoxContainer.visible = true
 
 
 func _input(event):
@@ -518,29 +520,22 @@ func _input(event):
 			calculate_direction()
 		if swipe == null:
 			if event is InputEventScreenDrag:
+				print("func _input(event)")
+				print("y =", event.relative.y, " x =", event.relative.x)
 				if event.relative.y > 0:
-					swipe = 'down'
-				elif event.relative.y < 0:
-					swipe = 'up'
-				elif event.relative.x < 0:
-					swipe = 'left'
-				elif event.relative.x > 0:
-					swipe = 'right'	
-
-		elif event is InputEventScreenTouch: # Затем обработаем событие отпускания экрана
-			if !event.pressed: # Когда игрок убирает палец с экрана
-				calculate_swipe_direction(event)
-				swipe = null
-			
-
-#		if event is InputEventScreenTouch and event.pressed:
-#			print("_input(event) - InputEventScreenTouch", event)
-#			first_touch = event.position
-#		if event is InputEventScreenTouch and event.pressed:
-#			print("_input(event) - InputEventScreenTouch", event)
-#			final_touch = event.position
-#			calculate_direction()
-			#swipe_angle()
+					swipe = "down"
+				if event.relative.y < 0:
+					swipe = "up"
+				if event.relative.x < 0:
+					swipe = "left"
+				if event.relative.x > 0:
+					swipe = "right"	
+				
+			elif event is InputEventScreenTouch: # Затем обработаем событие отпускания экрана
+				if !event.pressed: # Когда игрок убирает палец с экрана
+					print("y =", event.relative.y, " x =", event.relative.x)
+					calculate_swipe_direction()
+					swipe = null
 
 
 func calculate_direction():	
@@ -560,15 +555,15 @@ func calculate_direction():
 	#	fill_field_with_numbers()
 
 
-func calculate_swipe_direction(event):	
-	print("calculate_swipe_direction(event)", event)
-	if swipe > 'down':
+func calculate_swipe_direction():	
+	print("calculate_swipe_direction()")
+	if swipe == "down":
 		move_down(game_field)
-	elif swipe > 'up':
+	if swipe == "up":
 		move_up(game_field)
-	elif swipe > 'left':
+	if swipe == "left":
 		move_left(game_field)
-	elif swipe > 'right': 
+	if swipe == "right": 
 		move_right(game_field)			
 	else:
 		return
