@@ -22,4 +22,4 @@ margin_bottom = 500.0
 rect_min_size = Vector2( 500, 500 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
-color = Color( 0.737255, 0.654902, 0.317647, 1 )
+color = Color( 0.0431373, 0.172549, 0.0117647, 1 )

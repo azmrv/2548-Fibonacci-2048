@@ -77,9 +77,9 @@ __meta__ = {
 modulate = Color( 0.105882, 0.235294, 0.0745098, 1 )
 self_modulate = Color( 0.105882, 0.235294, 0.0745098, 1 )
 margin_left = 32.0
-margin_right = 36.0
+margin_right = 463.0
 margin_bottom = 3.0
-size_flags_horizontal = 2
+size_flags_horizontal = 3
 size_flags_vertical = 2
 theme = ExtResource( 4 )
 
@@ -131,5 +131,5 @@ __meta__ = {
 }
 [connection signal="exit_to_menu_button" from="." to="." method="_on_GUI_InGamePlay_exit_to_menu_button"]
 [connection signal="timeout" from="MessageTimer" to="." method="_on_MessageTimer_timeout"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/HelpMe" to="." method="_on_ExitToMainMenu_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/HelpMe" to="." method="_on_HelpMe_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/ExitToMainMenu" to="." method="_on_ExitToMainMenu_pressed"]
