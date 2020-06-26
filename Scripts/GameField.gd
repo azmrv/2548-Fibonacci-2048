@@ -9,17 +9,26 @@ extends Node2D
 
 export (PackedScene) var GameField
 
-var x_start = 0
-var y_start = 0
+var screenSize = Vector2(0,0)
 
 
-func _ready():
-#	enter_scene()
 
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-	pass
+func _ready() -> void:
+	setup()
+	
+
+
+func setup():
+	print("GUI script setup()")
+	#screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
+	#screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
+	screenSize = get_viewport().get_visible_rect().size
+	$VBoxContainer.rect_min_size = screenSize
+	$VBoxContainer/ColorRect.rect_min_size.x = screenSize.x
+	$VBoxContainer/ColorRect.rect_min_size.y = screenSize.x
+	print("set screen size = %s" %  screenSize)
+
+
 
 func enter_scene():
 #	effect.interpolate_property(self, "scale", Vector2(.3, .3), Vector2(1, 1), .6, Tween.TRANS_CIRC, Tween.EASE_OUT)
@@ -56,7 +65,7 @@ func _on_alpha_tween_tween_completed(_object, _key):
 #func _ready():
 #	setup()
 
-func setup():
+func setup_field():
 #	for i in width:
 #		for j in height:
 #			var bkg = tile_background.instance()

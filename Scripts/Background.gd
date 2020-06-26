@@ -7,16 +7,21 @@ extends Node2D
 # var x_start = 96
 # var y_start = 704
 
-# func _ready():
-# 	setup()
+var screenSize = Vector2(0,0)
 
-# func setup():
-# 	for i in width:
-# 		for j in height:
-# 			var bkg = Background.instance()
-# 			add_child(bkg)
-# 			bkg.position = Vector2(x_start + i * 128, y_start + j * -128)
 
+
+func _ready() -> void:
+	setup()
+
+
+func setup():
+	print("GUI script setup()")
+#	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
+#	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
+	screenSize = get_viewport().get_visible_rect().size
+	$CenterContainer/ColorRect.rect_min_size = screenSize
+	print("set screen size = %s" %  screenSize)
 
 
 #func _process(delta):

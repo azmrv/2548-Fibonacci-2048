@@ -8,23 +8,19 @@
 [node name="MainMenu" type="Node2D"]
 script = ExtResource( 5 )
 
+[node name="InputLagTimer" type="Timer" parent="."]
+wait_time = 1.2
+one_shot = true
+
 [node name="Background" parent="." instance=ExtResource( 3 )]
 
 [node name="GameField" parent="." instance=ExtResource( 2 )]
 visible = false
 
 [node name="GUI" parent="." instance=ExtResource( 4 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 480.0
-margin_bottom = 800.0
-rect_min_size = Vector2( 480, 800 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="InputLagTimer" type="Timer" parent="."]
-wait_time = 1.2
-one_shot = true
+margin_right = 500.0
+margin_bottom = 900.0
+rect_min_size = Vector2( 500, 900 )
+[connection signal="timeout" from="InputLagTimer" to="." method="_on_InputLagTimer_timeout"]
 [connection signal="exit_to_menu" from="GUI" to="." method="_on_GUI_exit_to_menu"]
 [connection signal="start_new_game" from="GUI" to="." method="_on_GUI_start_new_game"]
-[connection signal="timeout" from="InputLagTimer" to="." method="_on_InputLagTimer_timeout"]
