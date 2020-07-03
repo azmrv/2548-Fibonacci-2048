@@ -8,20 +8,28 @@ signal moving_numbers
 signal exit_game
 signal save_player_data
 
-#export (PackedScene) var CurNumber 
+#Scenes
 var number_scene = preload("res://Scenes/Number.tscn")
 var ads_scene = preload("res://Scenes/ADs.tscn")
-var gui_scene = preload("res://Scenes/GUI.tscn")
+var gamefield_scene = preload("res://Scenes/GameField.tscn")
+var background_scenes = preload("res://Scenes/Background.tscn")
 
-# Variables
-const game_field_size = 5 
+# GUI Scenes
+var gui_scene = preload("res://Scenes/GUI.tscn")
+var gui_mainmenu_scene = preload("res://Scenes/GUI_MainMenu.tscn")
+var gui_ingameplay_scene = preload("res://Scenes/GUI_InGamePlay.tscn")
+var gui_gameover_scene = preload("res://Scenes/GUI_GameOver.tscn")
+
+
+
+
 
 var screenSize = Vector2(0,0)
-var game_window_width = 500
-var game_window_heigth = 800
+var game_window_width_x = 500
+var game_window_heigth_y = 800
 var game_window_margin = 0
 
-var game_field_width = 500
+var game_field_width_x = 500
 var game_field_margin = 0
 
 var number_scene_size = 100
@@ -29,14 +37,11 @@ var number_scene_size = 100
 
 var first_touch = Vector2(0, 0)
 var final_touch = Vector2(0, 0)
-var target = Vector2(0, 0)
-var last_direction = 0
+
 var swipe = null
 
-# Game Hard Level
-# количество цифр за ход
-# начальное количество цифр на доске
-# размер доски 4х4 / 6х6 / 8х8
+const game_field_size = 5 
+
 var hard_level = 3
 var iq_level = 0
 var new_game_numbers = 3
@@ -46,7 +51,9 @@ var summ = 0
 var eend = 4
 var koldop = 2
 
-
+# for testing old value = 1, 2
+var number_one = 2584
+var number_two = 4181
 
 var game_field = [[],[]]
 
@@ -56,16 +63,26 @@ var current_score = 0
 var total_score = 0
 var best_score = 0
 
+var show_ads = false
+
 var new_game = 0
 
 var number_rect_size = 0
 var number_scene_pos = 0
 
+
 func _ready():	
 	print("_ready()")	
 	setup_window()
-	
-	
+	setup_signals()
+
+
+func setup_signals():
+	$GUI/GUI_MainMenu.connect("gui_mm_start_new_game", self, "_on_GUI_start_new_game")
+	$GUI/GUI_MainMenu.connect("gui_mm_options", self, "_on_GUI_options")
+	$GUI/GUI_MainMenu.connect("gui_mm_help", self, "_on_GUI_help")
+
+
 func _process(_delta):
 	#if	new_game != 0:
 		#print("_process(_delta)")
@@ -73,29 +90,27 @@ func _process(_delta):
 		#draw_field()
 	pass
 
+
 func start_new_game():
 	print("new_game()")
 	randgen.randomize()
-		
 	setup()
-	#$Music.play()	
-	
-	$GUI.show_message("Get Ready")
+	setup_window()
+	create_numbers_on_game_field()
+	fill_field_with_numbers()
+	reasign_numbers_to_field()
 
-	
 
 func setup():
 	print("setup()")
 	randgen.randomize()
-	game_field = make_2d_array()
-	summ = 0
-	#CurNumber = number
-	create_numbers_on_game_field()
-	fill_field_with_numbers()
-	reasign_numbers_to_field()
-	setup_window()
-	
-	
+	game_field = make_matrix()
+	summ = 0	
+	#$Music.play()	
+	$GUI.show_message("Get Ready")
+	show_ads = false
+
+
 func setup_window():
 	print("setup_window()")
 	#set_size(get_tree().get_root().get_rect().size) 
@@ -103,42 +118,33 @@ func setup_window():
 	#screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
 	screenSize = get_viewport().get_visible_rect().size
 	print(screenSize)
-	
-	#Get the scale
-#	var newH = get_size().y
-#	var scale = newH / defH
 	number_rect_size = Vector2(number_scene_size, number_scene_size)
-	number_scene_pos = Vector2(0,0)	
-#	var options = get_node("options") #Get the buttons to resize
+	number_scene_pos = Vector2(0,0)
 	
-#	options.set_scale(scale * options.get_scale()) #Scale to new resolution
-	#Scale the margin so it keeps the proportions
-	
-#	options.set_margin(MARGIN_LEFT, options.get_margin(MARGIN_LEFT) * scale)
-#	options.set_margin(MARGIN_TOP, options.get_margin(MARGIN_TOP) * scale)
-	
-	game_window_width = screenSize.x
-	game_window_heigth = screenSize.y
+	game_window_width_x = screenSize.x
+	game_window_heigth_y = screenSize.y
 	game_window_margin = 0
-	
-	game_field_width = game_window_width
+		
+	game_field_width_x = game_window_width_x
 	game_field_margin = 0
 	
-	number_scene_size = game_field_width / game_field_size
-	
-	
-	
-	
-	
+	number_scene_size = game_field_width_x / game_field_size
+
+
 func show_ads():
 	print("show_ads()")
-	$GUI.show_message("ADs, Money blwe $$$$$$$" )
+	$ADs/ADsTimer.start()
+	#$GUI.show_message("ADs, Money blwe $$$$$$$" )
+	$ADs.visible = true
 
-func game_over():
-	
+
+func game_over():	
 	print("game_over()")
 	randgen.randomize()
-	$GameField/VBoxContainer/ColorRect.get_children().clear()
+	show_ads = true
+	$GUI.show_ingame_menu(false)
+	$GameField.visible = false
+	$GameField/VBoxContainer/ColorRect.get_children().clear()	
 	#$Music.stop()
 	#$Sound.play()
 	#$Background.color = Color(1, 0, 0, 1)
@@ -148,12 +154,13 @@ func game_over():
 	#get_tree().call_group("mobs", "queue_free")
 	#$Background.color = Color(0.098039, 0.823529, 0.501961)	
 	#print("КОНЕЦ ИГРЫ", "СУММА =", summ)
-	$GUI.show_message("Game Over, Score = %s" % summ)
-	show_ads()
+	#$GUI.show_message("Game Over, Score = %s" % summ)
+	$GUI.show_gameover_menu(true)
+	$GUI/GUI_GameOver/VBoxLabels/VBoxLabels/Score.text = str(summ)
+	
 	# emit signal?
-	summ = 0
+	
 	# need pause before change UI
-	exit_to_mainmenu()
 
 
 func exit_game():
@@ -162,19 +169,12 @@ func exit_game():
 
 
 func exit_to_mainmenu():
-	$GUI.show_main_menu(true)
-	$GUI.show_ingame_menu(false)	
+	$GUI.show_ingame_menu(false)
 	$GameField.visible = false
-	#get_tree().quit()
+	$GUI.show_main_menu(true)
 
 
-func increase_score(amount):
-	print("increase_score(amount)")	
-	current_score += amount
-	total_score += current_score
-
-
-func make_2d_array():
+func make_matrix():
 	print("make_2d_array()")
 	var array = []
 	for colx in game_field_size:
@@ -209,12 +209,11 @@ func generate_new_numbers_in_array():
 			if game_field[rowy][colx] == null:
 				kodn = kodn - 1
 				var num = randgen.randf()
-				if num <= 0.618:
-					game_field[rowy][colx] = 1
-					summ += 1
-	
-				else:
-					game_field[rowy][colx] = 2
+				if num <= 0.618:					
+					game_field[rowy][colx] = number_one
+					summ += 1	
+				else:					
+					game_field[rowy][colx] = number_two
 					summ += 2
 	#			if num <= 0.5:
 	#				game_field[rowy][colx] = 1
@@ -227,10 +226,10 @@ func generate_new_numbers_in_array():
 	#				summ += 3	
 		else:
 			return
-			
+
 
 func blank_space_on_board():
-	print("blank_space_on_board()")	
+	#print("blank_space_on_board()")	
 	for colx in game_field_size:
 		for rowy in game_field_size:
 			if game_field[rowy][colx] == null or game_field[rowy][colx] == 0:
@@ -248,14 +247,11 @@ func fill_field_with_numbers():
 
 func create_numbers_on_game_field():
 	print("create_numbers_on_game_field()")
-	#if $GameField/PanelContainer.get_child_count() == null or $GameField/PanelContainer.get_child_count() <= 0:	
-	randgen.randomize()	
-	
+	randgen.randomize()		
 	for colx in range(game_field_size):
 		for rowy in range(game_field_size):
 			var curr_number = number_scene.instance()			
-			$GameField/VBoxContainer/ColorRect.add_child(curr_number)
-			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
+			$GameField/VBoxContainer/ColorRect.add_child(curr_number)			
 			if game_field[rowy][colx] == null:
 				number_scene_pos = curr_number.position
 				curr_number.set_xy(rowy, colx)
@@ -271,8 +267,6 @@ func create_numbers_on_game_field():
 				curr_number.set_number_text(game_field[rowy][colx] as String)
 				curr_number.position.x = number_scene_size * colx + game_field_margin * (colx + 1)
 				curr_number.position.y = number_scene_size * rowy + game_field_margin * (rowy + 1)
-				#curr_number.position = Vector2(rand_range(0, window_size.x), rand_range(0, window_size.y))
-	#print(game_field)
 
 
 func reasign_numbers_to_field():
@@ -287,8 +281,7 @@ func reasign_numbers_to_field():
 					if game_field[rowy][colx] == null: 
 						children_mas_number_scene[i].set_number_to_label(0)
 					else:
-						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])
-	
+						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])	
 	$GUI.update_score(summ)
 
 
@@ -334,8 +327,6 @@ func move_down(mas):
 			else:
 				koldop = 2
 			fill_field_with_numbers()
-			# if get_empty(mas) > eend:
-			# 	mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()
 
 
@@ -382,8 +373,6 @@ func move_up(mas):
 			else:
 				koldop = 2
 			fill_field_with_numbers()
-			# if get_empty(mas) > eend:
-			# 	mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()
 
 
@@ -429,8 +418,6 @@ func move_right(mas):
 			else:
 				koldop = 2
 			fill_field_with_numbers()
-			# if get_empty(mas) > eend:
-			# 	mas, summ = rand_(mas, summ)
 	reasign_numbers_to_field()	
 
 
@@ -478,29 +465,31 @@ func move_left(mas):
 			else:
 				koldop = 2
 			fill_field_with_numbers()
-#			if get_empty(mas) > eend:
-#				mas, summ = rand_(mas, summ)
+
 	reasign_numbers_to_field()
 
 
 func _on_GUI_start_new_game() -> void:
-	print("_on_GUI_start_new_game() -> void")	
-	$GUI.show_main_menu(false)
-	$GUI.show_ingame_menu(true)
-	
-	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/HBoxContainer.visible = false
-	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = false
-	randgen.randomize()		
-	start_new_game()
-	$InputLagTimer.start()
+	print("_on_GUI_start_new_game() -> void")
+	#GUI/GUI_MainMenu/VBoxContainer/CentContButtons/VBoxButtons/StartGame
+	if show_ads == true:
+		show_ads()
+	else:		
+		$GUI.show_main_menu(false)
+		$GUI.show_ingame_menu(true)		
+		$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/HBoxContainer.visible = false
+		$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = false
+		randgen.randomize()		
+		start_new_game()
+		$InputLagTimer.start()
 
 
-func _on_GUI_exit_to_menu() -> void:
+func _on_GUI_gui_exit_to_menu() -> void:
 	exit_to_mainmenu()
 
 
 func _on_InputLagTimer_timeout() -> void:
-	# для предотвращения ложного срабатывания перераспределения чисел на поле
+	# для предотвращения срабатывания перераспределения чисел на поле и запуска худа
 	new_game = 1
 	$GameField.visible = true
 	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = true
@@ -512,33 +501,34 @@ func _input(event):
 	if	new_game != 0:
 		#print("_input(event)", event)
 		if(Input.is_action_just_pressed("ui_touch")):
-			print("touch_input() - (Input.is_action_just_PREssed(ui_touch))")
+			print("_input(event) - (Input.is_action_just_PREssed(ui_touch))")
 			first_touch = (get_global_mouse_position())
 		if(Input.is_action_just_released("ui_touch")):
-			print("touch_input() - (Input.is_action_just_REleased(ui_touch))")
+			print("_input(event) - (Input.is_action_just_REleased(ui_touch))")
 			final_touch = (get_global_mouse_position())
 			calculate_direction()
 		if swipe == null:
+			# если событие это скольжение пальца по экрану то смотрим его направление
 			if event is InputEventScreenDrag:
 				print("func _input(event)")
 				print("y =", event.relative.y, " x =", event.relative.x)
 				if event.relative.y > 0:
 					swipe = "down"
-				if event.relative.y < 0:
+				elif event.relative.y < 0:
 					swipe = "up"
-				if event.relative.x < 0:
+				elif event.relative.x < 0:
 					swipe = "left"
-				if event.relative.x > 0:
+				elif event.relative.x > 0:
 					swipe = "right"	
 				
-			elif event is InputEventScreenTouch: # Затем обработаем событие отпускания экрана
-				if !event.pressed: # Когда игрок убирает палец с экрана
-					print("y =", event.relative.y, " x =", event.relative.x)
+			elif event is InputEventScreenTouch: # событие прикосновения-отпускания экрана
+				if !event.pressed: # Когда игрок убирает палец с экрана генериируем событие сдвига цифр
+					print("y =", event, " x =", event)
 					calculate_swipe_direction()
 					swipe = null
 
 
-func calculate_direction():	
+func calculate_direction_old():	
 	print("calculate_direction()")
 	print("y =", final_touch.y, " x =", final_touch.x)
 	if final_touch.x > 336 :
@@ -551,19 +541,40 @@ func calculate_direction():
 		move_up(game_field)	
 	else:
 		return
-	# не дожно происходить событий просто по клику по экрану любое случайное нажатие генерирует работу функций
-	#	fill_field_with_numbers()
+
+
+func calculate_direction():
+	# организовать привязку к игровому полю и его параметрам без учета размеров экрана игры и худа
+	var k_scr = (game_window_heigth_y - game_window_width_x)/2
+	print("calculate_direction()")
+	print("y =", final_touch.y, " x =", final_touch.x)	
+	if final_touch.x > final_touch.y-k_scr:		
+		if final_touch.x + final_touch.y-k_scr < game_window_width_x:
+			move_up(game_field)
+		else:
+			move_right(game_field)
+	else:
+		if final_touch.x + final_touch.y-k_scr < game_window_width_x:
+			move_left(game_field)
+		else:
+			move_down(game_field) 
 
 
 func calculate_swipe_direction():	
 	print("calculate_swipe_direction()")
 	if swipe == "down":
 		move_down(game_field)
-	if swipe == "up":
+	elif swipe == "up":
 		move_up(game_field)
-	if swipe == "left":
+	elif swipe == "left":
 		move_left(game_field)
-	if swipe == "right": 
-		move_right(game_field)			
+	elif swipe == "right": 
+		move_right(game_field)
 	else:
 		return
+
+
+func _on_ADs_ads_done() -> void:	
+	$GUI.show_main_menu(true)
+	$ADs.visible = false
+

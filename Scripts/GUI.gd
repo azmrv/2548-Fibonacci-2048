@@ -1,8 +1,9 @@
 extends Control
 
-signal start_new_game
-signal exit_to_menu
-
+signal gui_start_new_game
+signal gui_exit_to_menu
+signal gui_help
+signal gui_options
 
 
 var screenSize = Vector2(0,0)
@@ -16,29 +17,34 @@ func _ready() -> void:
 
 
 func setup():
-	print("GUI script setup()")
+	print("GUI setup()")
 #	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
 #	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
 	screenSize = get_viewport().get_visible_rect().size
 	self.rect_min_size = screenSize
 	print("set screen size = %s" %  screenSize)
 	
+
+
+func show_gameover_menu(state: bool):
+	$GUI_GameOver.visible = state	
 	
+
+func show_options_menu(state: bool):
+	$GUI_Options.visible = state
+	
+
+func show_help_menu(state: bool):
+	$GUI_Help.visible = state
+
 
 func show_ingame_menu(state: bool):
 	$GUI_InGamePlay.visible = state
-#	$GUI_InGamePlay/ExitGame.show()	
-#	$GUI_InGamePlay/CentContMessage/Message.show()
-#	$GUI_InGamePlay/CenterContainer/Label.show()
+
 
 func show_main_menu(state: bool):
 	$GUI_MainMenu.visible = state
-#	$GUI_MainMenu/CentContButtons/VBoxButtons/Credits.show()
-#	$GUI_MainMenu/CentContButtons/VBoxButtons/ExitGame.show()
-#	$GUI_MainMenu/CentContButtons/VBoxButtons/Options.show()
-#	$GUI_MainMenu/CentContButtons/VBoxButtons/StartGame.show()
-#	$GUI_MainMenu/CentContLabel/BestScore.show()
-#	$GUI_MainMenu/CentContLabel2/GameName.show()
+
 
 func show_message(text):
 	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.text = text
@@ -72,9 +78,6 @@ func update_score(score):
 
 
 
-func _on_GUI_MainMenu_start_new_game() -> void:	
-	emit_signal("start_new_game")
 
-
-func _on_GUI_InGamePlay_exit_to_menu_button() -> void:
-	emit_signal("exit_to_menu")
+func _on_GUI_gui_start_new_game() -> void:
+	pass # Replace with function body.

@@ -19,6 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 3 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": true
 }
 
@@ -129,7 +130,3 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="exit_to_menu_button" from="." to="." method="_on_GUI_InGamePlay_exit_to_menu_button"]
-[connection signal="timeout" from="MessageTimer" to="." method="_on_MessageTimer_timeout"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/HelpMe" to="." method="_on_HelpMe_pressed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/ExitToMainMenu" to="." method="_on_ExitToMainMenu_pressed"]
