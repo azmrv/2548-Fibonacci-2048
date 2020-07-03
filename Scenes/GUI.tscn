@@ -16,6 +16,7 @@ size_flags_horizontal = 11
 size_flags_vertical = 11
 script = ExtResource( 2 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": true
 }
 
@@ -30,6 +31,7 @@ size_flags_horizontal = 11
 size_flags_vertical = 11
 use_top_left = true
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -78,6 +80,3 @@ size_flags_vertical = 11
 visible = false
 size_flags_horizontal = 3
 size_flags_vertical = 3
-[connection signal="exit_to_menu" from="." to="." method="_on_GUI_exit_to_menu"]
-[connection signal="exit_to_menu_button" from="GUI_InGamePlay" to="." method="_on_GUI_InGamePlay_exit_to_menu_button"]
-[connection signal="start_new_game" from="GUI_MainMenu" to="." method="_on_GUI_MainMenu_start_new_game"]

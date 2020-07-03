@@ -22,6 +22,11 @@ boot_splash/image="res://Graphics/Telos_Delphia.png"
 boot_splash/bg_color=Color( 1, 1, 1, 1 )
 config/icon="res://Graphics/icon.png"
 
+[autoload]
+
+SignalManager="*res://Scripts/SignalManager.gd"
+SceneManager="*res://Scripts/SceneManager.gd"
+
 [display]
 
 window/size/width=500
@@ -39,6 +44,10 @@ ui_touch={
 , Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":3,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [rendering]
 

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/2548_theme.tres" type="Theme" id=2]
-[ext_resource path="res://Scenes/GUI_GameOver.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/GUI_GameOver.gd" type="Script" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 70
@@ -145,5 +145,3 @@ text = "Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
-[connection signal="pressed" from="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer/MainMen" to="." method="_on_MainMen_pressed"]

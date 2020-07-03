@@ -1,7 +1,7 @@
 extends Control
 
-signal exit_to_menu_button
-signal help_me
+signal gui_igp_exit_to_menu_button
+signal gui_igp_help_me
 
 var screenSize = Vector2(0,0)
 
@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func setup():
-	print("GUI_InGamePlay script setup()")
+	print("GUI_InGamePlay setup()")
 #	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
 #	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
 	screenSize = get_viewport().get_visible_rect().size
@@ -31,10 +31,3 @@ func _on_MessageTimer_timeout() -> void:
 	#$CentContMessage/Message.text = ""
 	$VBoxContainer/CentContMessage/Message.hide()
 
-
-func _on_ExitToMainMenu_pressed() -> void:
-	emit_signal("exit_to_menu_button")
-
-
-func _on_HelpMe_pressed() -> void:
-	emit_signal("help_me")

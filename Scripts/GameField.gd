@@ -19,7 +19,7 @@ func _ready() -> void:
 
 
 func setup():
-	print("GUI script setup()")
+	print("GameField setup()")
 	#screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
 	#screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
 	screenSize = get_viewport().get_visible_rect().size
