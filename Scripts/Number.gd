@@ -32,7 +32,7 @@ func set_number_to_label(num : int):
 	else:
 		exist_number = 1
 	number = num 
-
+	set_color()
 
 
 #func _ready():
@@ -41,7 +41,7 @@ func set_number_to_label(num : int):
 func _process(delta):
 	# Called every frame. Delta is time since last frame.
 	# Update game logic here.
-	set_color()
+	pass
 
 
 func set_number_fonts_size():
@@ -50,8 +50,9 @@ func set_number_fonts_size():
 
 func set_number_text(text):
 	$CenterContainer/Label.text = text
-	
-	
+	exist_number = 1
+	number = 0
+	set_color()
 	
 func setup_number_rect(size : Vector2):
 	#print("Number setup()")

@@ -269,14 +269,14 @@ func create_numbers_on_game_field():
 			if game_field[rowy][colx] == null:
 				curr_number.set_xy(rowy, colx)
 				curr_number.setup_number_rect(number_rect_size)
-				curr_number.set_number_text("0")
+				curr_number.set_number_text("")
 				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
 				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 			else:
 				print("draw_field() %s " % game_field[rowy][colx] as String)
 				curr_number.set_xy(rowy, colx)
 				curr_number.setup_number_rect(number_rect_size)
-				curr_number.set_number_text(game_field[rowy][colx] as String)
+				curr_number.set_number_to_label(game_field[rowy][colx])
 				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
 				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 
@@ -290,7 +290,7 @@ func reasign_numbers_to_field():
 			for i in range(len(children_mas_number_scene)):
 				if children_mas_number_scene[i].curry_row == rowy and children_mas_number_scene[i].currx_col == colx:
 					if game_field[rowy][colx] == null: 
-						children_mas_number_scene[i].set_number_to_label(0)
+						children_mas_number_scene[i].set_number_text("")
 					else:
 						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])	
 	$GUI.update_score(summ)
