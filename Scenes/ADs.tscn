@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/ADs.gd" type="Script" id=1]
+[ext_resource path="res://Graphics/images/Floor2.png" type="Texture" id=2]
 
 [sub_resource type="DynamicFontData" id=1]
 font_path = "res://Fonts/PT Sans_Regular.ttf"
@@ -33,10 +34,10 @@ __meta__ = {
 [node name="CanvasLayer" type="CanvasLayer" parent="CenterContainer"]
 
 [node name="ADImage" type="TextureRect" parent="CenterContainer/CanvasLayer"]
-visible = false
 margin_right = 480.0
 margin_bottom = 720.0
 rect_min_size = Vector2( 500, 900 )
+texture = ExtResource( 2 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false

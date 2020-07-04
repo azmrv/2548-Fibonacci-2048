@@ -7,8 +7,6 @@ extends Node2D
 #onready var timer = get_node("destroy_timer")
 
 
-export (PackedScene) var GameField
-
 var screenSize = Vector2(0,0)
 
 
@@ -19,14 +17,15 @@ func _ready() -> void:
 
 
 func setup():
-	print("GameField setup()")
+	#print("GameField setup()")
 	#screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
 	#screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
-	screenSize = get_viewport().get_visible_rect().size
-	$VBoxContainer.rect_min_size = screenSize
-	$VBoxContainer/ColorRect.rect_min_size.x = screenSize.x
-	$VBoxContainer/ColorRect.rect_min_size.y = screenSize.x
-	print("set screen size = %s" %  screenSize)
+	#screenSize = get_viewport().get_visible_rect().size
+	#$VBoxContainer.rect_min_size = screenSize
+	#$VBoxContainer/ColorRect.rect_min_size.x = screenSize.x
+	#$VBoxContainer/ColorRect.rect_min_size.y = screenSize.x
+	#print("set screen size = %s" %  screenSize)
+	pass
 
 
 

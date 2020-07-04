@@ -2,8 +2,7 @@ extends Node2D
 
 signal change_number
 
-export (PackedScene) var Number 
-	
+
 # onready var effect = get_node("move_tween")
 # onready var destroy = get_node("destroy_tween")
 # onready var alpha = get_node("alpha_tween")
@@ -27,7 +26,7 @@ func set_xy(rowy, colx):
 func set_number_to_label(num : int):
 	text_label = num as String
 	#$MarginContainer/CenterContainer/ColorRect/Label.text = str(num)
-	$ColorRect/CenterContainer/Label.text = str(num)
+	$CenterContainer/Label.text = str(num)
 	if num == 0:
 		exist_number = 0
 	else:
@@ -35,77 +34,33 @@ func set_number_to_label(num : int):
 	number = num 
 
 
-func set_rect_size(color_rect_size):
-	#$MarginContainer/CenterContainer/ColorRect.rect_min_size = color_rect_size
-	$ColorRect.rect_min_size = color_rect_size
 
-func set_color():
-	#print("set_color() number =", number)
-	#0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711
-	if number == 0:				
-		$ColorRect.color = Color("838383")		
-	elif number == 1 :
-		$ColorRect.color = Color("8e7474")
-	elif number == 2 :
-		$ColorRect.color = Color("945959")
-	elif number == 3 :
-		$ColorRect.color = Color("cf5317")
-	elif number == 5 :
-		$ColorRect.color = Color("cf6917")
-	elif number == 8 :
-		$ColorRect.color = Color("cf8717")
-	elif number == 13 :
-		$ColorRect.color = Color("cfaa17")
-	elif number == 21 :
-		$ColorRect.color = Color("c1cf17")
-	elif number == 34 :
-		$ColorRect.color = Color("abcf17")
-	elif number == 55 :
-		$ColorRect.color = Color("8dcf17")
-	elif number == 89 :
-		$ColorRect.color = Color("5dcf17")
-	elif number == 144 :
-		$ColorRect.color = Color("18cf17")
-	elif number == 233 :
-		$ColorRect.color = Color("17cf4e")	
-	elif number == 377 :
-		$ColorRect.color = Color("17cf86")	
-	elif number == 610 :
-		$ColorRect.color = Color("17cfbe")	
-	elif number == 987 :
-		$ColorRect.color = Color("178ecf")	
-	elif number == 1597 :
-		$ColorRect.color = Color("1752cf")	
-	elif number == 2584 :
-		$ColorRect.color = Color("2117cf")	
-	elif number == 4181 :
-		$ColorRect.color = Color("6217cf")
-	elif number == 6765 :
-		$ColorRect.color = Color("9a17cf")
-	elif number == 10946 :
-		$ColorRect.color = Color("cf17a5")
-	elif number == 17711 :
-		$ColorRect.color = Color("cf1765")	
-	else:
-		$ColorRect.color = Color("cf1739")
-	
-
-
-# func _ready():
-# 	enter_scene()
+#func _ready():
+#	enter_scene()
 
 func _process(delta):
 	# Called every frame. Delta is time since last frame.
 	# Update game logic here.
 	set_color()
-	
 
+
+func set_number_fonts_size():
+	# number
+	pass
 
 func set_number_text(text):
-	$ColorRect/CenterContainer/Label.text = text
+	$CenterContainer/Label.text = text
 	
 	
 	
+func setup_number_rect(size : Vector2):
+	#print("Number setup()")
+	$CenterContainer.rect_min_size = size	
+	$CenterContainer/ColorRect.rect_min_size = size	
+	$CenterContainer/Label.rect_min_size = size	
+	#print("set number size = %s" %  size)
+
+
 # func enter_scene():
 # 	effect.interpolate_property(self, "scale", Vector2(.3, .3), Vector2(1, 1), .6, Tween.TRANS_CIRC, Tween.EASE_OUT)
 # 	effect.start()
@@ -280,5 +235,60 @@ func set_color_mas():
 	"yellowgreen = Color( 0.6, 0.8, 0.2, 1 )",
 	]
 
+
+func select_node_to_color(color : Color):
+	$CenterContainer/ColorRect.color = color
+
+
+func set_color():
+	#print("set_color() number =", number)
+	#0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711
+	if number == 0:				
+		select_node_to_color("838383")
+	elif number == 1 :
+		select_node_to_color("8e7474")
+	elif number == 2 :
+		select_node_to_color("945959")
+	elif number == 3 :
+		select_node_to_color("cf5317")
+	elif number == 5 :
+		select_node_to_color("cf6917")
+	elif number == 8 :
+		select_node_to_color("cf8717")
+	elif number == 13 :
+		select_node_to_color("cfaa17")
+	elif number == 21 :
+		select_node_to_color("c1cf17")
+	elif number == 34 :
+		select_node_to_color("abcf17")
+	elif number == 55 :
+		select_node_to_color("8dcf17")
+	elif number == 89 :
+		select_node_to_color("5dcf17")
+	elif number == 144 :
+		select_node_to_color("18cf17")
+	elif number == 233 :
+		select_node_to_color("17cf4e")	
+	elif number == 377 :
+		select_node_to_color("17cf86")	
+	elif number == 610 :
+		select_node_to_color("17cfbe")	
+	elif number == 987 :
+		select_node_to_color("178ecf")	
+	elif number == 1597 :
+		select_node_to_color("1752cf")	
+	elif number == 2584 :
+		select_node_to_color("2117cf")	
+	elif number == 4181 :
+		select_node_to_color("6217cf")
+	elif number == 6765 :
+		select_node_to_color("9a17cf")
+	elif number == 10946 :
+		select_node_to_color("cf17a5")
+	elif number == 17711 :
+		select_node_to_color("cf1765")	
+	else:
+		select_node_to_color("cf1739")
 	
+
 

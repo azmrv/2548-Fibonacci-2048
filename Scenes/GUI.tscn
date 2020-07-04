@@ -1,82 +1,180 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Scenes/GUI_MainMenu.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Styles/FontsStyle.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scripts/GUI.gd" type="Script" id=2]
-[ext_resource path="res://Scenes/GUI_SelectHardLevel.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scenes/GUI_InGamePlay.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Scenes/GUI_Options.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Scenes/GUI_Help.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Scenes/GUI_GameOver.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Styles/new_styleboxflat.tres" type="StyleBox" id=3]
+[ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Styles/GUI.tres" type="StyleBox" id=5]
+[ext_resource path="res://Scenes/GameField.tscn" type="PackedScene" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 25
+outline_color = Color( 0.145098, 0.145098, 0.145098, 1 )
+font_data = ExtResource( 4 )
 
 [node name="GUI" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-rect_min_size = Vector2( 480, 800 )
+rect_min_size = Vector2( 500, 900 )
 size_flags_horizontal = 11
 size_flags_vertical = 11
 script = ExtResource( 2 )
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": true
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
-visible = false
-margin_right = 480.0
-margin_bottom = 800.0
-grow_horizontal = 2
-grow_vertical = 2
-rect_min_size = Vector2( 480, 800 )
-size_flags_horizontal = 11
-size_flags_vertical = 11
-use_top_left = true
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="BackgroundTexture" type="TextureRect" parent="CenterContainer"]
-visible = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Panel" type="Panel" parent="CenterContainer"]
-visible = false
-modulate = Color( 0.141176, 0.282353, 0.105882, 1 )
-self_modulate = Color( 0.27451, 0.501961, 0.215686, 1 )
-
-[node name="GUI_InGamePlay" parent="." instance=ExtResource( 4 )]
-visible = false
-margin_right = 3.00003
-margin_bottom = 6.10352e-05
-size_flags_horizontal = 11
-size_flags_vertical = 11
-
-[node name="GUI_MainMenu" parent="." instance=ExtResource( 1 )]
-margin_right = 3.05176e-05
-margin_bottom = 6.10352e-05
-size_flags_horizontal = 11
-size_flags_vertical = 11
-
-[node name="GUI_SelectHardLevel" parent="." instance=ExtResource( 3 )]
-visible = false
-margin_right = 2.00003
-margin_bottom = 6.10352e-05
-size_flags_horizontal = 11
-size_flags_vertical = 11
-
-[node name="GUI_Options" parent="." instance=ExtResource( 5 )]
-visible = false
-size_flags_horizontal = 11
-size_flags_vertical = 11
-
-[node name="GUI_Help" parent="." instance=ExtResource( 6 )]
-visible = false
-size_flags_horizontal = 11
-size_flags_vertical = 11
-
-[node name="GUI_GameOver" parent="." instance=ExtResource( 7 )]
-visible = false
+[node name="VBoxC" type="VBoxContainer" parent="."]
+margin_right = 500.0
+margin_bottom = 900.0
+rect_min_size = Vector2( 500, 900 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TelosAds" type="VBoxContainer" parent="VBoxC"]
+margin_right = 500.0
+margin_bottom = 77.0
+size_flags_horizontal = 3
+
+[node name="Psyontech" type="LinkButton" parent="VBoxC/TelosAds"]
+margin_left = 301.0
+margin_right = 500.0
+margin_bottom = 33.0
+hint_tooltip = "http://games.psyon.tech New game every month"
+size_flags_horizontal = 8
+size_flags_vertical = 3
+custom_styles/focus = ExtResource( 5 )
+custom_fonts/font = SubResource( 1 )
+text = "Games.Psyon.Tech"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="2584Fib" type="Label" parent="VBoxC/TelosAds"]
+margin_top = 37.0
+margin_right = 500.0
+margin_bottom = 77.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/normal = ExtResource( 3 )
+custom_fonts/font = ExtResource( 1 )
+text = "2584 Fibonacci +"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Menu" type="HBoxContainer" parent="VBoxC"]
+margin_top = 81.0
+margin_right = 500.0
+margin_bottom = 185.0
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="VBoxC/Menu"]
+margin_right = 500.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Score" type="HBoxContainer" parent="VBoxC/Menu/VBox"]
+margin_right = 500.0
+margin_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
+
+[node name="Score" type="Label" parent="VBoxC/Menu/VBox/Score"]
+margin_top = 5.0
+margin_right = 189.0
+margin_bottom = 45.0
+custom_styles/normal = ExtResource( 3 )
+custom_fonts/font = ExtResource( 1 )
+text = "Score: 123456"
+align = 1
+valign = 1
+
+[node name="Container" type="Container" parent="VBoxC/Menu/VBox/Score"]
+margin_left = 193.0
+margin_right = 322.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+
+[node name="Best" type="Label" parent="VBoxC/Menu/VBox/Score"]
+margin_left = 326.0
+margin_right = 500.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_styles/normal = ExtResource( 3 )
+custom_fonts/font = ExtResource( 1 )
+text = "Best: 123456"
+align = 1
+valign = 1
+
+[node name="Buttons" type="HBoxContainer" parent="VBoxC/Menu/VBox"]
+margin_left = 400.0
+margin_top = 54.0
+margin_right = 500.0
+margin_bottom = 104.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 8
+size_flags_vertical = 11
+
+[node name="Menu" type="OptionButton" parent="VBoxC/Menu/VBox/Buttons"]
+margin_right = 100.0
+margin_bottom = 50.0
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "Menu"
+
+[node name="GFContainer" type="CenterContainer" parent="VBoxC"]
+margin_top = 189.0
+margin_right = 500.0
+margin_bottom = 689.0
+rect_min_size = Vector2( 500, 500 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameField" parent="VBoxC/GFContainer" instance=ExtResource( 6 )]
+
+[node name="ColorHelp" type="CenterContainer" parent="VBoxC"]
+margin_top = 693.0
+margin_right = 500.0
+margin_bottom = 743.0
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
+
+[node name="Help" type="CenterContainer" parent="VBoxC"]
+margin_top = 747.0
+margin_right = 500.0
+margin_bottom = 900.0
+rect_min_size = Vector2( 0, 100 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxC/Help"]
+margin_top = 6.0
+margin_right = 500.0
+margin_bottom = 146.0
+rect_min_size = Vector2( 500, 140 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = " the movement of numbers on the playing field on four sides, by clicking on the edge of the field or by swipe.
+Fibonacci numbers - elements of a numerical sequence 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, ..., in which the first two numbers are either 1 and 1, or 0 and 1, and each subsequent number is equal to the sum of the two previous numbers.
+The adjacent numbers of the Fibonacci series are interconnected. Fibonacci numbers are formed by adding the two previous numbers.
+The first digits of the series are 1, 2, 3, 5, 8, 13, 21, 33, 54 ...... and so on, according to the textbook."
+valign = 3
+autowrap = true
+clip_text = true
+[connection signal="pressed" from="VBoxC/TelosAds/Psyontech" to="." method="_on_Psyontech_pressed"]

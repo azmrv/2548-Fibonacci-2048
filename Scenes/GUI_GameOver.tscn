@@ -47,7 +47,7 @@ __meta__ = {
 
 [node name="VBoxLabels" type="VBoxContainer" parent="VBoxLabels"]
 margin_right = 500.0
-margin_bottom = 837.0
+margin_bottom = 816.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 11
@@ -57,9 +57,9 @@ custom_constants/separation = 30
 alignment = 1
 
 [node name="GameStatus" type="Label" parent="VBoxLabels/VBoxLabels"]
-margin_top = 287.0
+margin_top = 277.0
 margin_right = 500.0
-margin_bottom = 379.0
+margin_bottom = 369.0
 custom_fonts/font = SubResource( 1 )
 text = "Game Over"
 align = 1
@@ -69,9 +69,9 @@ __meta__ = {
 }
 
 [node name="ResultText" type="Label" parent="VBoxLabels/VBoxLabels"]
-margin_top = 409.0
+margin_top = 399.0
 margin_right = 500.0
-margin_bottom = 460.0
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 2 )
 text = "Your Score:"
 align = 1
@@ -81,19 +81,19 @@ __meta__ = {
 }
 
 [node name="Score" type="Label" parent="VBoxLabels/VBoxLabels"]
-margin_top = 490.0
+margin_top = 480.0
 margin_right = 500.0
-margin_bottom = 549.0
+margin_bottom = 539.0
 custom_fonts/font = SubResource( 4 )
 text = "2584"
 align = 1
 valign = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxLabels"]
-margin_top = 841.0
+margin_top = 820.0
 margin_right = 500.0
 margin_bottom = 900.0
-rect_min_size = Vector2( 500, 50 )
+rect_min_size = Vector2( 500, 80 )
 size_flags_horizontal = 3
 size_flags_vertical = 11
 size_flags_stretch_ratio = 0.0
@@ -101,20 +101,20 @@ alignment = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxLabels/VBoxContainer"]
 margin_right = 500.0
-margin_bottom = 59.0
+margin_bottom = 80.0
 size_flags_horizontal = 11
 size_flags_vertical = 11
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxLabels/VBoxContainer/MarginContainer"]
 margin_right = 500.0
-margin_bottom = 59.0
+margin_bottom = 80.0
 rect_min_size = Vector2( 500, 0 )
 size_flags_horizontal = 11
 size_flags_vertical = 11
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer"]
 margin_right = 500.0
-margin_bottom = 59.0
+margin_bottom = 80.0
 rect_min_size = Vector2( 500, 0 )
 size_flags_horizontal = 11
 size_flags_vertical = 11
@@ -122,8 +122,9 @@ custom_constants/separation = 20
 alignment = 2
 
 [node name="NewGame" type="Button" parent="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer"]
-margin_right = 240.0
-margin_bottom = 59.0
+margin_right = 500.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 2 )
@@ -133,15 +134,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MainMen" type="Button" parent="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 260.0
-margin_right = 500.0
-margin_bottom = 59.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = ExtResource( 2 )
-custom_fonts/font = SubResource( 2 )
-text = "Menu"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="WaitForADs" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+[connection signal="pressed" from="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
+[connection signal="timeout" from="WaitForADs" to="." method="_on_WaitForADs_timeout"]

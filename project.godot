@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="2584 Fibonacci 2048"
-config/description="2584 aka 2048 in Fibonacci numbers"
+config/description="2584 aka 2048 with Fibonacci numbers and sequence logic"
 run/main_scene="res://Scenes/MainMenu.tscn"
 boot_splash/image="res://Graphics/Telos_Delphia.png"
 boot_splash/bg_color=Color( 1, 1, 1, 1 )
@@ -26,6 +26,7 @@ config/icon="res://Graphics/icon.png"
 
 SignalManager="*res://Scripts/SignalManager.gd"
 SceneManager="*res://Scripts/SceneManager.gd"
+Main="*res://Scripts/Main.gd"
 
 [display]
 
@@ -48,6 +49,10 @@ ui_touch={
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[locale]
+
+locale_filter=[ 0, [ "af", "ar", "cs", "da", "de", "el", "en", "eo", "es", "fr", "he", "hi", "hu", "it", "ja", "ko", "nl", "ru", "sd_IN", "tr", "ur", "zh" ] ]
 
 [rendering]
 
