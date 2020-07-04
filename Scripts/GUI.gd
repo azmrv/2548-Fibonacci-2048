@@ -4,16 +4,32 @@ signal gui_start_new_game
 signal gui_exit_to_menu
 signal gui_help
 signal gui_options
+signal gui_psyontech
 
 
 var screenSize = Vector2(0,0)
-
-
-
+var showMenuLag = null
 
 func _ready() -> void:
 	setup()
+	setup_signals()
+	setup_nodes()
 	
+	
+
+func setup_nodes():
+	showMenuLag = Timer.new()
+	showMenuLag.wait_time = 1.2
+	showMenuLag.one_shot = true
+	self.add_child(showMenuLag)
+	
+	
+#Description
+#Dialog for confirmation of actions. This dialog inherits from AcceptDialog, but has by default an OK and Cancel button (in host OS order).
+#
+#To get cancel action, you can use:
+#
+#get_cancel().connect("pressed", self, "cancelled").
 
 
 func setup():
@@ -22,34 +38,17 @@ func setup():
 #	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
 	screenSize = get_viewport().get_visible_rect().size
 	self.rect_min_size = screenSize
+	$VBoxC.rect_min_size = screenSize
 	print("set screen size = %s" %  screenSize)
-	
 
 
-func show_gameover_menu(state: bool):
-	$GUI_GameOver.visible = state	
-	
-
-func show_options_menu(state: bool):
-	$GUI_Options.visible = state
-	
-
-func show_help_menu(state: bool):
-	$GUI_Help.visible = state
-
-
-func show_ingame_menu(state: bool):
-	$GUI_InGamePlay.visible = state
-
-
-func show_main_menu(state: bool):
-	$GUI_MainMenu.visible = state
 
 
 func show_message(text):
-	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.text = text
-	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.show()
-	$GUI_InGamePlay/MessageTimer.start()
+	print("show_message()")
+#	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.text = text
+#	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.show()
+#	$GUI_InGamePlay/MessageTimer.start()
 	
 	
 func show_game_over():
@@ -72,12 +71,16 @@ func show_game_over():
 	
 	
 func update_score(score):
-	$GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.text = "Score: %s" % str(score)  
-	
+	print("update_score(score)")
+	$VBoxC/Menu/VBox/Score/Score.text = "Score: %s" % str(score)  
+
+
+func setup_signals():
+	print("setup_signals()")
 
 
 
 
-
-func _on_GUI_gui_start_new_game() -> void:
-	pass # Replace with function body.
+func _on_Psyontech_pressed() -> void:
+	emit_signal("gui_psyontech")
+	OS.shell_open("http://games.psyon.tech/")

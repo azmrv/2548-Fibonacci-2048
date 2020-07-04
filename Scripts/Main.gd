@@ -16,11 +16,12 @@ var background_scenes = preload("res://Scenes/Background.tscn")
 
 # GUI Scenes
 var gui_scene = preload("res://Scenes/GUI.tscn")
-var gui_mainmenu_scene = preload("res://Scenes/GUI_MainMenu.tscn")
-var gui_ingameplay_scene = preload("res://Scenes/GUI_InGamePlay.tscn")
+#var gui_mainmenu_scene = preload("res://Scenes/GUI_MainMenu.tscn")
+#var gui_ingameplay_scene = preload("res://Scenes/GUI_InGamePlay.tscn")
 var gui_gameover_scene = preload("res://Scenes/GUI_GameOver.tscn")
 
-
+#Nodes
+var inputLagTimer = null
 
 
 
@@ -32,7 +33,7 @@ var game_window_margin = 0
 var game_field_width_x = 500
 var game_field_margin = 0
 
-var number_scene_size = 100
+var number_size = 80
 
 
 var first_touch = Vector2(0, 0)
@@ -46,14 +47,24 @@ var hard_level = 3
 var iq_level = 0
 var new_game_numbers = 3
 
+var curr_color_them = "light"
+var main_background_color ="73947A"
+var plate_background_color ="5E7478"
+var menu_machground = "A5B48C"
+var text_color = "363636"
+
 
 var summ = 0
 var eend = 4
 var koldop = 2
 
 # for testing old value = 1, 2
-var number_one = 2584
-var number_two = 4181
+var number_one = 1
+var number_two = 2
+var number_three = 3
+var number_four = 4
+var number_five = 5
+
 
 var game_field = [[],[]]
 
@@ -65,23 +76,37 @@ var best_score = 0
 
 var show_ads = false
 
-var new_game = 0
+var new_game = 1
 
-var number_rect_size = 0
+var number_rect_size = null
 var number_scene_pos = 0
 
-
-func _ready():	
-	print("_ready()")	
+func _ready():
+	print("_ready()")
+	setup_scenes()
+	setup_nodes()
 	setup_window()
 	setup_signals()
+	new_game()
 
+func setup_nodes():
+	print("setup_nodes()")
+	inputLagTimer = Timer.new()
+	inputLagTimer.wait_time = 1.2
+	inputLagTimer.one_shot = true
+	inputLagTimer.name = "InputLagTimer"
+	self.add_child(inputLagTimer)	
+	self.add_child(gui_scene.instance())
+
+func setup_scenes():
+	print("setup_scenes()")
 
 func setup_signals():
-	$GUI/GUI_MainMenu.connect("gui_mm_start_new_game", self, "_on_GUI_start_new_game")
-	$GUI/GUI_MainMenu.connect("gui_mm_options", self, "_on_GUI_options")
-	$GUI/GUI_MainMenu.connect("gui_mm_help", self, "_on_GUI_help")
-
+	print("setup_signals()")
+#	gui_scene.connect("gui_mm_start_new_game", self, "_on_GUI_start_new_game")
+#	gui_scene.connect("gui_mm_options", self, "_on_GUI_options")
+#	gui_scene.connect("gui_mm_help", self, "_on_GUI_help")
+	pass
 
 func _process(_delta):
 	#if	new_game != 0:
@@ -90,26 +115,23 @@ func _process(_delta):
 		#draw_field()
 	pass
 
-
-func start_new_game():
+func new_game():
 	print("new_game()")
 	randgen.randomize()
+	$GUI.visible = true
 	setup()
-	setup_window()
 	create_numbers_on_game_field()
 	fill_field_with_numbers()
 	reasign_numbers_to_field()
-
+	inputLagTimer.start()
 
 func setup():
 	print("setup()")
 	randgen.randomize()
 	game_field = make_matrix()
-	summ = 0	
-	#$Music.play()	
-	$GUI.show_message("Get Ready")
-	show_ads = false
-
+	summ = 0
+	#$Music.play()
+	#$GUI.show_message("Get Ready")
 
 func setup_window():
 	print("setup_window()")
@@ -118,7 +140,7 @@ func setup_window():
 	#screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
 	screenSize = get_viewport().get_visible_rect().size
 	print(screenSize)
-	number_rect_size = Vector2(number_scene_size, number_scene_size)
+	
 	number_scene_pos = Vector2(0,0)
 	
 	game_window_width_x = screenSize.x
@@ -128,51 +150,48 @@ func setup_window():
 	game_field_width_x = game_window_width_x
 	game_field_margin = 0
 	
-	number_scene_size = game_field_width_x / game_field_size
+	number_size = game_field_width_x / game_field_size
+	number_rect_size = Vector2(number_size, number_size)
 
-
-func show_ads():
+func show_ads(show : bool):
 	print("show_ads()")
+	$GUI.visible = false
+	show_ads = show
+	self.add_child(ads_scene.instance())
 	$ADs/ADsTimer.start()
 	#$GUI.show_message("ADs, Money blwe $$$$$$$" )
 	$ADs.visible = true
 
-
-func game_over():	
+func game_over():
 	print("game_over()")
 	randgen.randomize()
-	show_ads = true
-	$GUI.show_ingame_menu(false)
-	$GameField.visible = false
-	$GameField/VBoxContainer/ColorRect.get_children().clear()	
+	$GUI.visible = false
+	self.add_child(gui_gameover_scene.instance())
+	#$GUI.show_ingame_menu(false)
+	#$GameField.visible = false
+	$GUI/VBoxC/GFContainer/GameField.get_children().clear()
 	#$Music.stop()
 	#$Sound.play()
 	#$Background.color = Color(1, 0, 0, 1)
 	#$ScoreTimer.stop()
-	#$MobTimer.stop()	
-	#$HUD.show_game_over()	
+	#$MobTimer.stop()
+	#$HUD.show_game_over()
 	#get_tree().call_group("mobs", "queue_free")
-	#$Background.color = Color(0.098039, 0.823529, 0.501961)	
+	#$Background.color = Color(0.098039, 0.823529, 0.501961)
 	#print("КОНЕЦ ИГРЫ", "СУММА =", summ)
 	#$GUI.show_message("Game Over, Score = %s" % summ)
-	$GUI.show_gameover_menu(true)
-	$GUI/GUI_GameOver/VBoxLabels/VBoxLabels/Score.text = str(summ)
+	#$GUI.show_gameover_menu(true)
 	
-	# emit signal?
-	
-	# need pause before change UI
-
+	$GUI.update_score(summ)
 
 func exit_game():
 	print("exit_game()")
 	get_tree().quit()
 
-
 func exit_to_mainmenu():
 	$GUI.show_ingame_menu(false)
 	$GameField.visible = false
 	$GUI.show_main_menu(true)
-
 
 func make_matrix():
 	print("make_2d_array()")
@@ -183,24 +202,21 @@ func make_matrix():
 			array[colx].append(null)
 	return array
 
-
 func show_message(text):
 	print("show_message(text)")
 	$GUI/GUI_InGamePlay/Message.text = text
 	$GUI/GUI_InGamePlay/Message.show()
 	$GUI/GUI_InGamePlay/MessageTimer.start()
 
-
 func generate_new_numbers_in_array():
 	print("generate_new_numbers_in_array()")
 	randgen.randomize()
-	var kodn = koldop	
+	var kodn = koldop
 	while kodn > 0:
 		#var nx = randgen.randf()
 		#var ny = randgen.randf()
 		#var x = int(nx * game_field_size % 1)
 		#var y = int(ny * game_field_size % 1)
-		
 		# вот теперь не зависает в этом месте при попытке разместить числа на поле доп проверка на свободное место
 		if blank_space_on_board():
 			var colx = randgen.randi_range(0,game_field_size - 1)
@@ -209,10 +225,10 @@ func generate_new_numbers_in_array():
 			if game_field[rowy][colx] == null:
 				kodn = kodn - 1
 				var num = randgen.randf()
-				if num <= 0.618:					
+				if num <= 0.618:
 					game_field[rowy][colx] = number_one
-					summ += 1	
-				else:					
+					summ += 1
+				else:
 					game_field[rowy][colx] = number_two
 					summ += 2
 	#			if num <= 0.5:
@@ -227,55 +243,50 @@ func generate_new_numbers_in_array():
 		else:
 			return
 
-
 func blank_space_on_board():
-	#print("blank_space_on_board()")	
+	#print("blank_space_on_board()")
 	for colx in game_field_size:
 		for rowy in game_field_size:
 			if game_field[rowy][colx] == null or game_field[rowy][colx] == 0:
 				return true
 	return false
 
-
 func fill_field_with_numbers():
 	print("fill_board()")
 	if blank_space_on_board():
 		generate_new_numbers_in_array()
 	else:
-		game_over()	
-
+		game_over()
 
 func create_numbers_on_game_field():
 	print("create_numbers_on_game_field()")
-	randgen.randomize()		
+	randgen.randomize()
 	for colx in range(game_field_size):
 		for rowy in range(game_field_size):
-			var curr_number = number_scene.instance()			
-			$GameField/VBoxContainer/ColorRect.add_child(curr_number)			
+			var curr_number = number_scene.instance()
+			#$GUI/VBoxC/GFContainer/GameField/VBoxContainer/ColorRect
+			$GUI/VBoxC/GFContainer/GameField.add_child(curr_number)
 			if game_field[rowy][colx] == null:
-				number_scene_pos = curr_number.position
 				curr_number.set_xy(rowy, colx)
-				curr_number.set_rect_size(number_rect_size)
+				curr_number.setup_number_rect(number_rect_size)
 				curr_number.set_number_text("0")
-				curr_number.position.x = number_scene_size * colx + game_field_margin * (colx + 1)
-				curr_number.position.y = number_scene_size * rowy + game_field_margin * (rowy + 1)
+				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
+				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 			else:
-				number_scene_pos = curr_number.position
 				print("draw_field() %s " % game_field[rowy][colx] as String)
 				curr_number.set_xy(rowy, colx)
-				curr_number.set_rect_size(number_rect_size)				
+				curr_number.setup_number_rect(number_rect_size)
 				curr_number.set_number_text(game_field[rowy][colx] as String)
-				curr_number.position.x = number_scene_size * colx + game_field_margin * (colx + 1)
-				curr_number.position.y = number_scene_size * rowy + game_field_margin * (rowy + 1)
-
+				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
+				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 
 func reasign_numbers_to_field():
-	print("reasign_numbers_to_field()")	
-	randgen.randomize()		
+	print("reasign_numbers_to_field()")
+	randgen.randomize()
 	for colx in range(game_field_size):
-		for rowy in range(game_field_size):			
+		for rowy in range(game_field_size):
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
-			var children_mas_number_scene = $GameField/VBoxContainer/ColorRect.get_children()
+			var children_mas_number_scene =  $GUI/VBoxC/GFContainer/GameField.get_children()
 			for i in range(len(children_mas_number_scene)):
 				if children_mas_number_scene[i].curry_row == rowy and children_mas_number_scene[i].currx_col == colx:
 					if game_field[rowy][colx] == null: 
@@ -283,7 +294,6 @@ func reasign_numbers_to_field():
 					else:
 						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])	
 	$GUI.update_score(summ)
-
 
 func move_down(mas):
 	print("func move_right(mas)")
@@ -328,7 +338,6 @@ func move_down(mas):
 				koldop = 2
 			fill_field_with_numbers()
 	reasign_numbers_to_field()
-
 
 func move_up(mas):
 	print("func move_up(mas)")
@@ -375,7 +384,6 @@ func move_up(mas):
 			fill_field_with_numbers()
 	reasign_numbers_to_field()
 
-
 func move_right(mas):
 	print("func move_down(mas)")
 	randgen.randomize()
@@ -419,7 +427,6 @@ func move_right(mas):
 				koldop = 2
 			fill_field_with_numbers()
 	reasign_numbers_to_field()	
-
 
 func move_left(mas):
 	print("func move_left(mas)")
@@ -468,36 +475,19 @@ func move_left(mas):
 
 	reasign_numbers_to_field()
 
-
-func _on_GUI_start_new_game() -> void:
+func _on_GUI_new_game() -> void:
 	print("_on_GUI_start_new_game() -> void")
-	#GUI/GUI_MainMenu/VBoxContainer/CentContButtons/VBoxButtons/StartGame
-	if show_ads == true:
-		show_ads()
-	else:		
-		$GUI.show_main_menu(false)
-		$GUI.show_ingame_menu(true)		
-		$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/HBoxContainer.visible = false
-		$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = false
-		randgen.randomize()		
-		start_new_game()
-		$InputLagTimer.start()
-
+	new_game()
 
 func _on_GUI_gui_exit_to_menu() -> void:
 	exit_to_mainmenu()
-
 
 func _on_InputLagTimer_timeout() -> void:
 	# для предотвращения срабатывания перераспределения чисел на поле и запуска худа
 	new_game = 1
 	$GameField.visible = true
-	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/Score.visible = true
-	$GUI/GUI_InGamePlay/VBoxContainer/VBoxContainer/HBoxContainer.visible = true
-
 
 func _input(event):
-	
 	if	new_game != 0:
 		#print("_input(event)", event)
 		if(Input.is_action_just_pressed("ui_touch")):
@@ -527,7 +517,6 @@ func _input(event):
 					calculate_swipe_direction()
 					swipe = null
 
-
 func calculate_direction_old():	
 	print("calculate_direction()")
 	print("y =", final_touch.y, " x =", final_touch.x)
@@ -541,7 +530,6 @@ func calculate_direction_old():
 		move_up(game_field)	
 	else:
 		return
-
 
 func calculate_direction():
 	# организовать привязку к игровому полю и его параметрам без учета размеров экрана игры и худа
@@ -559,7 +547,6 @@ func calculate_direction():
 		else:
 			move_down(game_field) 
 
-
 func calculate_swipe_direction():	
 	print("calculate_swipe_direction()")
 	if swipe == "down":
@@ -573,8 +560,20 @@ func calculate_swipe_direction():
 	else:
 		return
 
+func _on_ADs_ads_done() -> void:		
+	ads_scene.queue_free()
+	gui_gameover_scene.queue_free()
 
-func _on_ADs_ads_done() -> void:	
-	$GUI.show_main_menu(true)
-	$ADs.visible = false
-
+func colors_thems(curr_color_them : String):
+	if curr_color_them == "light":
+		main_background_color ="73947A"
+		plate_background_color ="5E7478"
+		menu_machground = "A5B48C"
+		text_color = "363636"		
+	elif curr_color_them == "dark":
+		main_background_color ="011606"
+		plate_background_color ="0C1618"
+		menu_machground = "1D2411"
+		text_color = "9E9E9E"		
+	else:
+		return

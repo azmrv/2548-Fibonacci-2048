@@ -14,7 +14,12 @@ func _ready() -> void:
 func setup_signals():
 	print("setup_signals()")
 	#$VBoxContainer/CentContButtons/VBoxButtons/StartGame.connect("gui_mm_start_new_game", self, "_on_StartGame_pressed")
-	
+
+
+func setup_scenes():
+	pass
+
+
 
 func setup():
 	print("GUI_MainMenu setup()")
