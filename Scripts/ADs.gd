@@ -28,7 +28,7 @@ func _process(delta: float) -> void:
 
 
 func _on_ADsTimer_timeout() -> void:	
-	$Button.visible = true
+	Main.show_gui()
 	
 
 

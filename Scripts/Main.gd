@@ -35,10 +35,12 @@ var game_field_margin = 0
 
 var number_size = 80
 
+var clickInput = false
 
 var first_touch = Vector2(0, 0)
 var final_touch = Vector2(0, 0)
-
+var swipe_start = null
+var minimum_drag = 100
 var swipe = null
 
 const game_field_size = 5 
@@ -59,8 +61,8 @@ var eend = 4
 var koldop = 2
 
 # for testing old value = 1, 2
-var number_one = 1
-var number_two = 2
+var number_one = 123456
+var number_two = 123456
 var number_three = 3
 var number_four = 4
 var number_five = 5
@@ -83,10 +85,7 @@ var number_scene_pos = 0
 
 func _ready():
 	print("_ready()")
-	setup_scenes()
-	setup_nodes()
-	setup_window()
-	setup_signals()
+	setup()
 	new_game()
 
 func setup_nodes():
@@ -117,21 +116,31 @@ func _process(_delta):
 
 func new_game():
 	print("new_game()")
-	randgen.randomize()
+	randgen.randomize()	
 	$GUI.visible = true
-	setup()
+	game_field = make_matrix()
+	summ = 0
 	create_numbers_on_game_field()
 	fill_field_with_numbers()
 	reasign_numbers_to_field()
-	inputLagTimer.start()
+	#inputLagTimer.start()
+	new_game = 1
 
 func setup():
 	print("setup()")
 	randgen.randomize()
-	game_field = make_matrix()
-	summ = 0
+	setup_scenes()
+	setup_nodes()
+	setup_window()
+	setup_signals()
+	setup_thems()
 	#$Music.play()
 	#$GUI.show_message("Get Ready")
+
+func setup_thems():
+	$GUI/VBoxC/Menu/VBox/Score/Best
+	pass
+
 
 func setup_window():
 	print("setup_window()")
@@ -162,8 +171,15 @@ func show_ads(show : bool):
 	#$GUI.show_message("ADs, Money blwe $$$$$$$" )
 	$ADs.visible = true
 
+
+func show_gui():
+	self.visible = true
+	$GUI.visible = true
+
+
 func game_over():
 	print("game_over()")
+	new_game = 0
 	randgen.randomize()
 	$GUI.visible = false
 	self.add_child(gui_gameover_scene.instance())
@@ -488,7 +504,7 @@ func _on_InputLagTimer_timeout() -> void:
 	$GameField.visible = true
 
 func _input(event):
-	if	new_game != 0:
+	if	(new_game != 0) && (clickInput == true):
 		#print("_input(event)", event)
 		if(Input.is_action_just_pressed("ui_touch")):
 			print("_input(event) - (Input.is_action_just_PREssed(ui_touch))")
@@ -497,39 +513,34 @@ func _input(event):
 			print("_input(event) - (Input.is_action_just_REleased(ui_touch))")
 			final_touch = (get_global_mouse_position())
 			calculate_direction()
-		if swipe == null:
-			# если событие это скольжение пальца по экрану то смотрим его направление
-			if event is InputEventScreenDrag:
-				print("func _input(event)")
-				print("y =", event.relative.y, " x =", event.relative.x)
-				if event.relative.y > 0:
-					swipe = "down"
-				elif event.relative.y < 0:
-					swipe = "up"
-				elif event.relative.x < 0:
-					swipe = "left"
-				elif event.relative.x > 0:
-					swipe = "right"	
-				
-			elif event is InputEventScreenTouch: # событие прикосновения-отпускания экрана
-				if !event.pressed: # Когда игрок убирает палец с экрана генериируем событие сдвига цифр
-					print("y =", event, " x =", event)
-					calculate_swipe_direction()
-					swipe = null
+	elif new_game != 0:
+		if event is InputEventScreenTouch:
+			if event.pressed:
+			  swipe_start = event.get_position()
+			else:
+			  _calculate_swipe(event.get_position())
 
-func calculate_direction_old():	
-	print("calculate_direction()")
-	print("y =", final_touch.y, " x =", final_touch.x)
-	if final_touch.x > 336 :
-		move_right(game_field)
-	elif final_touch.x < 144:
-		move_left(game_field)
-	elif final_touch.y > 496:
-		move_down(game_field)
-	elif final_touch.y < 304:
-		move_up(game_field)	
-	else:
+
+#func _unhandled_input(event):
+#	if event.is_action_pressed("click"):
+#		swipe_start = event.get_position()
+#	if event.is_action_released("click"):
+#		_calculate_swipe(event.get_position())
+	
+func _calculate_swipe(swipe_end):
+	if swipe_start == null: 
 		return
+	var swipe = swipe_end - swipe_start
+	if abs(swipe.x) > minimum_drag:
+		if swipe.x > 0:
+			move_right(game_field)
+		if swipe.x < 0:
+			move_left(game_field)
+	if abs(swipe.y) > minimum_drag:
+		if swipe.y > 0:
+			move_down(game_field)
+		if swipe.y < 0:
+			move_up(game_field)
 
 func calculate_direction():
 	# организовать привязку к игровому полю и его параметрам без учета размеров экрана игры и худа
@@ -547,20 +558,9 @@ func calculate_direction():
 		else:
 			move_down(game_field) 
 
-func calculate_swipe_direction():	
-	print("calculate_swipe_direction()")
-	if swipe == "down":
-		move_down(game_field)
-	elif swipe == "up":
-		move_up(game_field)
-	elif swipe == "left":
-		move_left(game_field)
-	elif swipe == "right": 
-		move_right(game_field)
-	else:
-		return
 
-func _on_ADs_ads_done() -> void:		
+func _on_ADs_ads_done() -> void:
+	print("_on_ADs_ads_done()")
 	ads_scene.queue_free()
 	gui_gameover_scene.queue_free()
 

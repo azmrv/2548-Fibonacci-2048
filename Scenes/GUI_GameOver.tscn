@@ -32,7 +32,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxLabels" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="."]
 margin_right = 500.0
 margin_bottom = 900.0
 grow_horizontal = 2
@@ -45,7 +45,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxLabels" type="VBoxContainer" parent="VBoxLabels"]
+[node name="VBoxLabels" type="VBoxContainer" parent="VBox"]
 margin_right = 500.0
 margin_bottom = 816.0
 grow_horizontal = 2
@@ -56,7 +56,7 @@ size_flags_stretch_ratio = 128.0
 custom_constants/separation = 30
 alignment = 1
 
-[node name="GameStatus" type="Label" parent="VBoxLabels/VBoxLabels"]
+[node name="GameStatus" type="Label" parent="VBox/VBoxLabels"]
 margin_top = 277.0
 margin_right = 500.0
 margin_bottom = 369.0
@@ -68,7 +68,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ResultText" type="Label" parent="VBoxLabels/VBoxLabels"]
+[node name="ResultText" type="Label" parent="VBox/VBoxLabels"]
 margin_top = 399.0
 margin_right = 500.0
 margin_bottom = 450.0
@@ -80,7 +80,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Score" type="Label" parent="VBoxLabels/VBoxLabels"]
+[node name="Score" type="Label" parent="VBox/VBoxLabels"]
 margin_top = 480.0
 margin_right = 500.0
 margin_bottom = 539.0
@@ -89,7 +89,7 @@ text = "2584"
 align = 1
 valign = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxLabels"]
+[node name="VBoxB" type="VBoxContainer" parent="VBox"]
 margin_top = 820.0
 margin_right = 500.0
 margin_bottom = 900.0
@@ -99,20 +99,20 @@ size_flags_vertical = 11
 size_flags_stretch_ratio = 0.0
 alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxLabels/VBoxContainer"]
+[node name="MC" type="MarginContainer" parent="VBox/VBoxB"]
 margin_right = 500.0
 margin_bottom = 80.0
 size_flags_horizontal = 11
 size_flags_vertical = 11
 
-[node name="CenterContainer" type="CenterContainer" parent="VBoxLabels/VBoxContainer/MarginContainer"]
+[node name="CenterC" type="CenterContainer" parent="VBox/VBoxB/MC"]
 margin_right = 500.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 500, 0 )
 size_flags_horizontal = 11
 size_flags_vertical = 11
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer"]
+[node name="HBox" type="HBoxContainer" parent="VBox/VBoxB/MC/CenterC"]
 margin_right = 500.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 500, 0 )
@@ -121,7 +121,7 @@ size_flags_vertical = 11
 custom_constants/separation = 20
 alignment = 2
 
-[node name="NewGame" type="Button" parent="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer"]
+[node name="NewGame" type="Button" parent="VBox/VBoxB/MC/CenterC/HBox"]
 margin_right = 500.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 0, 80 )
@@ -137,5 +137,5 @@ __meta__ = {
 [node name="WaitForADs" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
-[connection signal="pressed" from="VBoxLabels/VBoxContainer/MarginContainer/CenterContainer/HBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
+[connection signal="pressed" from="VBox/VBoxB/MC/CenterC/HBox/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="timeout" from="WaitForADs" to="." method="_on_WaitForADs_timeout"]

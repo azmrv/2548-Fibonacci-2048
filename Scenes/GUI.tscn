@@ -4,12 +4,16 @@
 [ext_resource path="res://Scripts/GUI.gd" type="Script" id=2]
 [ext_resource path="res://Styles/new_styleboxflat.tres" type="StyleBox" id=3]
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=4]
-[ext_resource path="res://Styles/GUI.tres" type="StyleBox" id=5]
 [ext_resource path="res://Scenes/GameField.tscn" type="PackedScene" id=6]
 
 [sub_resource type="DynamicFont" id=1]
-size = 25
+size = 20
 outline_color = Color( 0.145098, 0.145098, 0.145098, 1 )
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 14
+outline_color = Color( 0.0392157, 0.0705882, 0.0313726, 1 )
 font_data = ExtResource( 4 )
 
 [node name="GUI" type="Control"]
@@ -33,48 +37,49 @@ __meta__ = {
 
 [node name="TelosAds" type="VBoxContainer" parent="VBoxC"]
 margin_right = 500.0
-margin_bottom = 77.0
+margin_bottom = 64.0
 size_flags_horizontal = 3
 
 [node name="Psyontech" type="LinkButton" parent="VBoxC/TelosAds"]
-margin_left = 301.0
+margin_left = 342.0
 margin_right = 500.0
-margin_bottom = 33.0
+margin_bottom = 27.0
 hint_tooltip = "http://games.psyon.tech New game every month"
 size_flags_horizontal = 8
 size_flags_vertical = 3
-custom_styles/focus = ExtResource( 5 )
 custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.619608, 0.619608, 0.619608, 1 )
 text = "Games.Psyon.Tech"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="2584Fib" type="Label" parent="VBoxC/TelosAds"]
-margin_top = 37.0
+[node name="GameName" type="Label" parent="VBoxC/TelosAds"]
+margin_top = 31.0
 margin_right = 500.0
-margin_bottom = 77.0
+margin_bottom = 64.0
 grow_horizontal = 0
 grow_vertical = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/normal = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
-text = "2584 Fibonacci +"
+custom_colors/font_color = Color( 0.772549, 0.772549, 0.772549, 1 )
+text = "2584 Fibonacci Premium"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Menu" type="HBoxContainer" parent="VBoxC"]
-margin_top = 81.0
+margin_top = 68.0
 margin_right = 500.0
-margin_bottom = 185.0
+margin_bottom = 162.0
 size_flags_horizontal = 3
 
 [node name="VBox" type="VBoxContainer" parent="VBoxC/Menu"]
 margin_right = 500.0
-margin_bottom = 104.0
+margin_bottom = 94.0
 size_flags_horizontal = 3
 alignment = 1
 
@@ -87,55 +92,86 @@ rect_min_size = Vector2( 0, 50 )
 size_flags_horizontal = 3
 
 [node name="Score" type="Label" parent="VBoxC/Menu/VBox/Score"]
-margin_top = 5.0
-margin_right = 189.0
-margin_bottom = 45.0
+margin_top = 8.0
+margin_right = 156.0
+margin_bottom = 41.0
 custom_styles/normal = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.772549, 0.772549, 0.772549, 1 )
 text = "Score: 123456"
 align = 1
 valign = 1
 
 [node name="Container" type="Container" parent="VBoxC/Menu/VBox/Score"]
-margin_left = 193.0
-margin_right = 322.0
+margin_left = 160.0
+margin_right = 351.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 
 [node name="Best" type="Label" parent="VBoxC/Menu/VBox/Score"]
-margin_left = 326.0
+margin_left = 355.0
+margin_top = 8.0
 margin_right = 500.0
-margin_bottom = 50.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
+margin_bottom = 41.0
 custom_styles/normal = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.772549, 0.772549, 0.772549, 1 )
 text = "Best: 123456"
 align = 1
 valign = 1
 
 [node name="Buttons" type="HBoxContainer" parent="VBoxC/Menu/VBox"]
-margin_left = 400.0
+margin_left = -3.05176e-05
 margin_top = 54.0
 margin_right = 500.0
-margin_bottom = 104.0
+margin_bottom = 94.0
 grow_horizontal = 2
 grow_vertical = 2
-rect_min_size = Vector2( 0, 50 )
+rect_min_size = Vector2( 500, 40 )
 size_flags_horizontal = 8
 size_flags_vertical = 11
 
-[node name="Menu" type="OptionButton" parent="VBoxC/Menu/VBox/Buttons"]
-margin_right = 100.0
-margin_bottom = 50.0
-size_flags_vertical = 3
+[node name="Button" type="Button" parent="VBoxC/Menu/VBox/Buttons"]
+margin_right = 65.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+hint_tooltip = "Avaible after some ADs"
+custom_styles/hover = ExtResource( 3 )
+custom_styles/pressed = ExtResource( 3 )
+custom_styles/focus = ExtResource( 3 )
+custom_styles/disabled = ExtResource( 3 )
+custom_styles/normal = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.772549, 0.772549, 0.772549, 1 )
+text = "UNDO"
+
+[node name="Container" type="Container" parent="VBoxC/Menu/VBox/Buttons"]
+margin_left = 69.0
+margin_right = 396.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Menu" type="OptionButton" parent="VBoxC/Menu/VBox/Buttons"]
+margin_left = 400.0
+margin_right = 500.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 100, 40 )
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 3 )
+custom_styles/pressed = ExtResource( 3 )
+custom_styles/focus = ExtResource( 3 )
+custom_styles/disabled = ExtResource( 3 )
+custom_styles/normal = ExtResource( 3 )
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.772549, 0.772549, 0.772549, 1 )
 text = "Menu"
+align = 1
 
 [node name="GFContainer" type="CenterContainer" parent="VBoxC"]
-margin_top = 189.0
+margin_top = 166.0
 margin_right = 500.0
-margin_bottom = 689.0
+margin_bottom = 666.0
 rect_min_size = Vector2( 500, 500 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -146,14 +182,14 @@ __meta__ = {
 [node name="GameField" parent="VBoxC/GFContainer" instance=ExtResource( 6 )]
 
 [node name="ColorHelp" type="CenterContainer" parent="VBoxC"]
-margin_top = 693.0
+margin_top = 670.0
 margin_right = 500.0
-margin_bottom = 743.0
+margin_bottom = 720.0
 rect_min_size = Vector2( 0, 50 )
 size_flags_horizontal = 3
 
 [node name="Help" type="CenterContainer" parent="VBoxC"]
-margin_top = 747.0
+margin_top = 724.0
 margin_right = 500.0
 margin_bottom = 900.0
 rect_min_size = Vector2( 0, 100 )
@@ -164,16 +200,21 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VBoxC/Help"]
-margin_top = 6.0
+margin_top = 18.0
 margin_right = 500.0
-margin_bottom = 146.0
+margin_bottom = 158.0
+grow_horizontal = 2
+grow_vertical = 2
 rect_min_size = Vector2( 500, 140 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.619608, 0.619608, 0.619608, 1 )
 text = " the movement of numbers on the playing field on four sides, by clicking on the edge of the field or by swipe.
 Fibonacci numbers - elements of a numerical sequence 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, ..., in which the first two numbers are either 1 and 1, or 0 and 1, and each subsequent number is equal to the sum of the two previous numbers.
 The adjacent numbers of the Fibonacci series are interconnected. Fibonacci numbers are formed by adding the two previous numbers.
 The first digits of the series are 1, 2, 3, 5, 8, 13, 21, 33, 54 ...... and so on, according to the textbook."
+align = 3
 valign = 3
 autowrap = true
 clip_text = true
