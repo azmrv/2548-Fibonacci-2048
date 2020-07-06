@@ -21,13 +21,17 @@ func setup():
 	print("set screen size = %s" %  screenSize)
 
 
+
 func update_score(score):
 	print("update_score(score)")
 	$VBoxLabels/VBoxLabels/Score.text = "Score: %s" % str(score)  
 
 
-func _on_NewGame_pressed() -> void:
+func _on_NewGame_pressed() -> void:	
+	$VBox/VBoxB.visible = false
+	#show timer on screen
 	$WaitForADs.start()
+	
 
 
 

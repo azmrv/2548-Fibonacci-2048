@@ -56,9 +56,9 @@ func set_number_text(text):
 	
 func setup_number_rect(size : Vector2):
 	#print("Number setup()")
-	$CenterContainer.rect_min_size = size	
-	$CenterContainer/ColorRect.rect_min_size = size	
-	$CenterContainer/Label.rect_min_size = size	
+	$CenterContainer.rect_min_size = (size - Vector2(4,4))
+	$CenterContainer/ColorRect.rect_min_size = (size - Vector2(4,4))
+	$CenterContainer/Label.rect_min_size = (size - Vector2(4,4))
 	#print("set number size = %s" %  size)
 
 

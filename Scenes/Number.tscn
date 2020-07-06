@@ -18,8 +18,8 @@ script = ExtResource( 1 )
 one_shot = true
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-margin_right = 80.0
-margin_bottom = 80.0
+margin_left = 2.0
+margin_top = 2.0
 rect_min_size = Vector2( 80, 80 )
 rect_clip_content = true
 size_flags_horizontal = 3
