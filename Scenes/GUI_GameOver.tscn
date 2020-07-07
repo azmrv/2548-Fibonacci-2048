@@ -1,8 +1,13 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/2548_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/GUI_GameOver.gd" type="Script" id=3]
+[ext_resource path="res://Styles/styleboxflat_normal.tres" type="StyleBox" id=4]
+[ext_resource path="res://Styles/styleboxflat_focus.tres" type="StyleBox" id=5]
+[ext_resource path="res://Styles/styleboxflat_pressed.tres" type="StyleBox" id=6]
+[ext_resource path="res://Styles/styleboxflat_disabled.tres" type="StyleBox" id=7]
+[ext_resource path="res://Styles/styleboxflat_hover.tres" type="StyleBox" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 70
@@ -128,8 +133,13 @@ rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 2 )
+custom_styles/hover = ExtResource( 8 )
+custom_styles/pressed = ExtResource( 6 )
+custom_styles/focus = ExtResource( 5 )
+custom_styles/disabled = ExtResource( 7 )
+custom_styles/normal = ExtResource( 4 )
 custom_fonts/font = SubResource( 2 )
-text = "New Game"
+text = "Try Again!"
 __meta__ = {
 "_edit_use_anchors_": false
 }

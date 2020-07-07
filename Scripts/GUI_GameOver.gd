@@ -28,7 +28,7 @@ func update_score(score):
 
 
 func _on_NewGame_pressed() -> void:	
-	$VBox/VBoxB.visible = false
+	Main.show_gameover_scene(false)
 	#show timer on screen
 	$WaitForADs.start()
 	

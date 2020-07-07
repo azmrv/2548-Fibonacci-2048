@@ -27,8 +27,9 @@ func _process(delta: float) -> void:
 	$CenterContainer/Label.text = str($ADsTimer.time_left)
 
 
-func _on_ADsTimer_timeout() -> void:	
-	Main.show_gui()
+func _on_ADsTimer_timeout() -> void:
+	Main.show_ads_scene(false)
+	Main.show_gui_scene(true)
 	
 
 

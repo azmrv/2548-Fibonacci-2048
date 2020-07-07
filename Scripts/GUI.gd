@@ -5,6 +5,7 @@ signal gui_exit_to_menu
 signal gui_help
 signal gui_options
 signal gui_psyontech
+signal gui_undo
 
 
 var screenSize = Vector2(0,0)
@@ -14,7 +15,7 @@ func _ready() -> void:
 	setup()
 	setup_signals()
 	setup_nodes()
-	
+	add_menu_items()
 	
 
 func setup_nodes():
@@ -41,8 +42,16 @@ func setup():
 	$VBoxC.rect_min_size = screenSize
 	print("set screen size = %s" %  screenSize)
 
-
-
+func add_menu_items():
+#	$VBoxC/Menu/VBox/Buttons/Menu.add_item("New Game",1)#	
+#	$VBoxC/Menu/VBox/Buttons/Menu.add_item("5 x 5",5))
+#	$VBoxC/Menu/VBox/Buttons/Menu.add_item("8 x 8",8)
+#	$VBoxC/Menu/VBox/Buttons/Menu.add_item("Share",10)
+#	$VBoxC/Menu/VBox/Buttons/Menu.add_item("Toggle Click Mode",2)
+#	$VBoxC/Menu/VBox/Buttons/Menu.add_item("Change Theme",3)
+#	$VBoxC/Menu/VBox/Buttons/Menu.add_item("Toggle AI",13)
+#	$VBoxC/Menu/VBox/Buttons/Menu.add_item("Options",9)
+	pass
 
 func show_message(text):
 	print("show_message()")
@@ -84,3 +93,45 @@ func setup_signals():
 func _on_Psyontech_pressed() -> void:
 	emit_signal("gui_psyontech")
 	OS.shell_open("http://games.psyon.tech/")
+
+func _on_Undo_pressed() -> void:
+	emit_signal("gui_undo")
+
+func _on_MenuB_pressed() -> void:
+	$Menu.show()
+
+
+func _on_Restart_pressed() -> void:
+	$Menu.hide()
+
+
+func _on_8x8_pressed() -> void:
+	$Menu.hide()
+
+
+func _on_5x5_pressed() -> void:
+	$Menu.hide()
+
+
+func _on_ToggleTheme_pressed() -> void:
+	$Menu.hide()
+
+
+func _on_ClickMode_pressed() -> void:
+	$Menu.hide()
+
+
+func _on_Options_pressed() -> void:
+	$Menu.hide()
+
+
+func _on_AI_pressed() -> void:
+	$Menu.hide()
+
+
+func _on_Share_pressed() -> void:
+	$Menu.hide()
+
+
+func _on_Close_pressed() -> void:
+	$Menu.hide()
