@@ -67,7 +67,7 @@ var number_three = 3
 var number_four = 4
 var number_five = 5
 
-
+var undo_game_field = [[],[]]
 var game_field = [[],[]]
 
 var randgen = RandomNumberGenerator.new()
@@ -142,6 +142,16 @@ func setup_thems():
 	pass
 
 
+func show_gui_scene(lever:bool):
+	$GUI.visible = lever
+	
+	
+func show_ads_scene(lever:bool):
+	$ADs.visible = lever
+
+func show_gameover_scene(lever:bool):
+	$GUI_GameOver.visible = lever
+
 func setup_window():
 	print("setup_window()")
 	#set_size(get_tree().get_root().get_rect().size) 
@@ -163,18 +173,12 @@ func setup_window():
 	number_rect_size = Vector2(number_size, number_size)
 
 func show_ads(show : bool):
-	print("show_ads()")
-	$GUI.visible = false
+	print("show_ads()")	
 	show_ads = show
 	self.add_child(ads_scene.instance())
+	$ADs.visible = true
 	$ADs/ADsTimer.start()
 	#$GUI.show_message("ADs, Money blwe $$$$$$$" )
-	$ADs.visible = true
-
-
-func show_gui():
-	self.visible = true
-	$GUI.visible = true
 
 
 func game_over():
@@ -314,7 +318,7 @@ func reasign_numbers_to_field():
 func move_down(mas):
 	print("func move_right(mas)")
 	randgen.randomize()
- 
+	undo_game_field = mas
 	var kodx1 = 1
 	while kodx1 == 1:
 		var sempty = 0
@@ -358,7 +362,7 @@ func move_down(mas):
 func move_up(mas):
 	print("func move_up(mas)")
 	randgen.randomize()
-		
+	undo_game_field = mas
 	var kodx2 = 1
 	while kodx2 == 1:
 		var sempty = 0
@@ -403,7 +407,7 @@ func move_up(mas):
 func move_right(mas):
 	print("func move_down(mas)")
 	randgen.randomize()
-
+	undo_game_field = mas
 	var kody1 = 1
 	while kody1 == 1:
 		var sempty = 0
@@ -447,7 +451,7 @@ func move_right(mas):
 func move_left(mas):
 	print("func move_left(mas)")
 	randgen.randomize()
-		
+	undo_game_field = mas
 	var kody2 = 1
 	while kody2 == 1:
 		var sempty = 0
@@ -488,20 +492,20 @@ func move_left(mas):
 			else:
 				koldop = 2
 			fill_field_with_numbers()
-
 	reasign_numbers_to_field()
+
+func undo(lever:bool):
+	$GUI/VBoxC/Menu/VBox/Buttons/Undo.disabled = true
+	if lever == true:
+		game_field = undo_game_field
+	else:
+		$GUI/VBoxC/Menu/VBox/Buttons/Undo.disabled = false
+
 
 func _on_GUI_new_game() -> void:
 	print("_on_GUI_start_new_game() -> void")
 	new_game()
 
-func _on_GUI_gui_exit_to_menu() -> void:
-	exit_to_mainmenu()
-
-func _on_InputLagTimer_timeout() -> void:
-	# для предотвращения срабатывания перераспределения чисел на поле и запуска худа
-	new_game = 1
-	$GameField.visible = true
 
 func _input(event):
 	if	(new_game != 0) && (clickInput == true):

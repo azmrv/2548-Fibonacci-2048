@@ -10,6 +10,8 @@ rect_min_size = Vector2( 500, 900 )
 size_flags_horizontal = 11
 size_flags_vertical = 11
 __meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -31,7 +33,7 @@ margin_bottom = 900.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 500, 900 )
-color = Color( 0.0392157, 0.0705882, 0.0313726, 1 )
+color = Color( 0.0431373, 0.172549, 0.0117647, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
