@@ -1,15 +1,21 @@
-extends Control
+extends Node2D
 
 
 signal gui_go_exit_to_menu_button
 signal gui_go_new_game
 
 var screenSize = Vector2(0,0)
-
+var background_scenes = preload("res://Scenes/Background.tscn")
 
 
 func _ready() -> void:
 	setup()
+
+
+func _process(delta: float) -> void:
+	if $WaitForADs.get_time_left() != 0:
+		$PopUp/TimeToADs.text = str($WaitForADs.time_left)
+	
 
 
 func setup():
@@ -17,23 +23,27 @@ func setup():
 #	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
 #	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
 	screenSize = get_viewport().get_visible_rect().size
-	self.rect_min_size = screenSize
+#	self.rect_min_size = screenSize
+#	var background_node = background_scenes.instance()
+#	self.add_child(background_node)	
+#	background_node.set_visible(true)
+	$VBox.rect_min_size = screenSize	
 	print("set screen size = %s" %  screenSize)
+#	$WaitForADs.connect("timeout", self, "_on_WaitForADs_timeout")
 
 
-
-func update_score(score):
+func update_score():
 	print("update_score(score)")
-	$VBoxLabels/VBoxLabels/Score.text = "Score: %s" % str(score)  
-
-
-func _on_NewGame_pressed() -> void:	
-	Main.show_gameover_scene(false)
-	#show timer on screen
-	$WaitForADs.start()
+	$VBox/VBoxLabels/Score.text = "Score: %s" % str(Main.current_score)  
 	
 
-
+func _on_NewGame_pressed() -> void:
+	$VBox.visible = false
+	$PopUp.visible = true
+	$WaitForADs.wait_time = 0.5
+	$WaitForADs.one_shot = true
+	$WaitForADs.start()
 
 func _on_WaitForADs_timeout() -> void:
-	Main.show_ads(true)
+	$PopUp.visible = false
+	Main.show_ads()

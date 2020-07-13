@@ -41,10 +41,9 @@ __meta__ = {
 
 [node name="TextureRect" type="TextureRect" parent="CenterContainer"]
 visible = false
-margin_left = 40.0
-margin_top = 40.0
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 80.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 80, 80 )
 texture = SubResource( 1 )
 expand = true
 __meta__ = {

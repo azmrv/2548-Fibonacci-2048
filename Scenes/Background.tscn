@@ -3,15 +3,18 @@
 [ext_resource path="res://Scripts/Background.gd" type="Script" id=1]
 
 [node name="Background" type="Node2D"]
+show_behind_parent = true
+light_mask = 0
 script = ExtResource( 1 )
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
+show_behind_parent = true
+light_mask = 0
 rect_min_size = Vector2( 500, 900 )
-size_flags_horizontal = 11
-size_flags_vertical = 11
+rect_clip_content = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
-"_edit_group_": true,
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -28,11 +31,16 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="CenterContainer"]
+show_behind_parent = true
+light_mask = 0
 margin_right = 500.0
 margin_bottom = 900.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 500, 900 )
+rect_clip_content = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
 color = Color( 0.0431373, 0.172549, 0.0117647, 1 )
 __meta__ = {
 "_edit_use_anchors_": false

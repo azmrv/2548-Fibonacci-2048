@@ -5,7 +5,7 @@
 [ext_resource path="res://Styles/new_styleboxflat.tres" type="StyleBox" id=3]
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Styles/dynamicfont_numbers.tres" type="DynamicFont" id=5]
-[ext_resource path="res://Scenes/GameField.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scripts/GameField.gd" type="Script" id=6]
 [ext_resource path="res://Styles/styleboxflat_focus.tres" type="StyleBox" id=7]
 [ext_resource path="res://Styles/styleboxflat_pressed.tres" type="StyleBox" id=8]
 [ext_resource path="res://Styles/styleboxflat_normal.tres" type="StyleBox" id=9]
@@ -19,16 +19,12 @@ size = 20
 outline_color = Color( 0.145098, 0.145098, 0.145098, 1 )
 font_data = ExtResource( 4 )
 
-[node name="GUI" type="Control"]
-rect_min_size = Vector2( 500, 900 )
-size_flags_horizontal = 11
-size_flags_vertical = 11
+[node name="GUI" type="Node2D"]
+show_behind_parent = true
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="VBoxC" type="VBoxContainer" parent="."]
+show_behind_parent = true
 margin_right = 500.0
 margin_bottom = 900.0
 rect_min_size = Vector2( 500, 900 )
@@ -39,6 +35,7 @@ __meta__ = {
 }
 
 [node name="TelosAds" type="VBoxContainer" parent="VBoxC"]
+show_behind_parent = true
 margin_right = 500.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
@@ -75,6 +72,7 @@ __meta__ = {
 }
 
 [node name="Menu" type="HBoxContainer" parent="VBoxC"]
+show_behind_parent = true
 margin_top = 68.0
 margin_right = 500.0
 margin_bottom = 162.0
@@ -174,6 +172,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="MenuB" type="Button" parent="VBoxC/Menu/VBox/Buttons"]
+show_behind_parent = true
 margin_left = 376.0
 margin_right = 476.0
 margin_bottom = 40.0
@@ -197,6 +196,7 @@ rect_min_size = Vector2( 20, 0 )
 size_flags_vertical = 3
 
 [node name="GFContainer" type="CenterContainer" parent="VBoxC"]
+show_behind_parent = true
 margin_top = 166.0
 margin_right = 500.0
 margin_bottom = 666.0
@@ -207,7 +207,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GameField" parent="VBoxC/GFContainer" instance=ExtResource( 6 )]
+[node name="GameField" type="Node2D" parent="VBoxC/GFContainer"]
+show_behind_parent = true
+script = ExtResource( 6 )
 
 [node name="ColorHelp" type="CenterContainer" parent="VBoxC"]
 margin_top = 670.0
@@ -228,9 +230,9 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VBoxC/Help"]
-margin_top = 2.0
+margin_top = 3.0
 margin_right = 500.0
-margin_bottom = 172.0
+margin_bottom = 173.0
 rect_min_size = Vector2( 500, 170 )
 size_flags_horizontal = 3
 size_flags_vertical = 11
@@ -244,6 +246,7 @@ autowrap = true
 clip_text = true
 
 [node name="Menu" type="PopupMenu" parent="."]
+light_mask = 0
 margin_left = 400.0
 margin_top = 122.0
 margin_right = 420.0
@@ -251,6 +254,9 @@ margin_bottom = 142.0
 rect_min_size = Vector2( 10, 10 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CRect" type="ColorRect" parent="Menu"]
 margin_left = -374.786
@@ -288,14 +294,15 @@ __meta__ = {
 
 [node name="Container2" type="Container" parent="Menu/CRect/CenterContainer/VBox"]
 margin_right = 400.0
-margin_bottom = 22.0
+margin_bottom = 197.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="AI" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
-margin_top = 32.0
+visible = false
+margin_top = 172.0
 margin_right = 400.0
-margin_bottom = 92.0
+margin_bottom = 232.0
 rect_min_size = Vector2( 0, 60 )
 custom_styles/hover = ExtResource( 11 )
 custom_styles/pressed = ExtResource( 8 )
@@ -306,6 +313,7 @@ custom_fonts/font = ExtResource( 5 )
 text = "AI"
 
 [node name="Options" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
+visible = false
 margin_top = 102.0
 margin_right = 400.0
 margin_bottom = 162.0
@@ -319,6 +327,7 @@ custom_fonts/font = ExtResource( 5 )
 text = "Options"
 
 [node name="ToggleTheme" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
+visible = false
 margin_top = 172.0
 margin_right = 400.0
 margin_bottom = 232.0
@@ -332,9 +341,9 @@ custom_fonts/font = ExtResource( 5 )
 text = "Toggle Theme"
 
 [node name="ClickMode" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
-margin_top = 242.0
+margin_top = 207.0
 margin_right = 400.0
-margin_bottom = 302.0
+margin_bottom = 267.0
 rect_min_size = Vector2( 0, 60 )
 custom_styles/hover = ExtResource( 11 )
 custom_styles/pressed = ExtResource( 8 )
@@ -345,6 +354,7 @@ custom_fonts/font = ExtResource( 5 )
 text = "Toggle Click Mode"
 
 [node name="5x5" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
+visible = false
 margin_top = 312.0
 margin_right = 400.0
 margin_bottom = 372.0
@@ -358,6 +368,7 @@ custom_fonts/font = ExtResource( 5 )
 text = "5 x 5"
 
 [node name="8x8" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
+visible = false
 margin_top = 382.0
 margin_right = 400.0
 margin_bottom = 442.0
@@ -371,9 +382,9 @@ custom_fonts/font = ExtResource( 5 )
 text = "8 x 8"
 
 [node name="Share" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
-margin_top = 452.0
+margin_top = 277.0
 margin_right = 400.0
-margin_bottom = 512.0
+margin_bottom = 337.0
 rect_min_size = Vector2( 0, 60 )
 custom_styles/hover = ExtResource( 11 )
 custom_styles/pressed = ExtResource( 8 )
@@ -384,9 +395,9 @@ custom_fonts/font = ExtResource( 5 )
 text = "Share"
 
 [node name="Restart" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
-margin_top = 522.0
+margin_top = 347.0
 margin_right = 400.0
-margin_bottom = 582.0
+margin_bottom = 407.0
 rect_min_size = Vector2( 0, 60 )
 custom_styles/hover = ExtResource( 11 )
 custom_styles/pressed = ExtResource( 8 )
@@ -397,7 +408,7 @@ custom_fonts/font = ExtResource( 5 )
 text = "Restart"
 
 [node name="Container3" type="Container" parent="Menu/CRect/CenterContainer/VBox"]
-margin_top = 592.0
+margin_top = 417.0
 margin_right = 400.0
 margin_bottom = 614.0
 size_flags_horizontal = 3
