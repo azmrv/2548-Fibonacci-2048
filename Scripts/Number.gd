@@ -38,10 +38,10 @@ func set_number_to_label(num : int):
 #func _ready():
 #	enter_scene()
 
-func _process(delta):
-	# Called every frame. Delta is time since last frame.
-	# Update game logic here.
-	pass
+#func _process(delta):
+#	# Called every frame. Delta is time since last frame.
+#	# Update game logic here.
+#	pass
 
 
 func set_number_fonts_size():
@@ -239,6 +239,14 @@ func set_color_mas():
 
 func select_node_to_color(color : Color):
 	$CenterContainer/ColorRect.color = color
+
+
+func set_color_dyn():
+	# три цвета
+	# контрастность
+	# насыщенность
+	pass
+
 
 
 func set_color():

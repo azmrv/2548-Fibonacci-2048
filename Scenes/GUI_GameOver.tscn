@@ -1,7 +1,7 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Styles/2548_theme.tres" type="Theme" id=2]
+[ext_resource path="res://Styles/FontsStyle.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Scripts/GUI_GameOver.gd" type="Script" id=3]
 [ext_resource path="res://Styles/styleboxflat_normal.tres" type="StyleBox" id=4]
 [ext_resource path="res://Styles/styleboxflat_focus.tres" type="StyleBox" id=5]
@@ -24,18 +24,15 @@ font_path = "res://Fonts/PT Sans_Regular.ttf"
 size = 45
 font_data = SubResource( 3 )
 
-[node name="GUI_GameOver" type="Control"]
-margin_right = 500.0
-margin_bottom = 900.0
-grow_horizontal = 2
-grow_vertical = 2
-rect_min_size = Vector2( 500, 900 )
-size_flags_horizontal = 11
-size_flags_vertical = 11
+[sub_resource type="DynamicFont" id=5]
+size = 33
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 1 )
+
+[node name="GUI_GameOver" type="Node2D"]
+show_behind_parent = true
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBox" type="VBoxContainer" parent="."]
 margin_right = 500.0
@@ -51,6 +48,7 @@ __meta__ = {
 }
 
 [node name="VBoxLabels" type="VBoxContainer" parent="VBox"]
+show_behind_parent = true
 margin_right = 500.0
 margin_bottom = 816.0
 grow_horizontal = 2
@@ -95,6 +93,7 @@ align = 1
 valign = 1
 
 [node name="VBoxB" type="VBoxContainer" parent="VBox"]
+show_behind_parent = true
 margin_top = 820.0
 margin_right = 500.0
 margin_bottom = 900.0
@@ -104,20 +103,8 @@ size_flags_vertical = 11
 size_flags_stretch_ratio = 0.0
 alignment = 2
 
-[node name="MC" type="MarginContainer" parent="VBox/VBoxB"]
-margin_right = 500.0
-margin_bottom = 80.0
-size_flags_horizontal = 11
-size_flags_vertical = 11
-
-[node name="CenterC" type="CenterContainer" parent="VBox/VBoxB/MC"]
-margin_right = 500.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 500, 0 )
-size_flags_horizontal = 11
-size_flags_vertical = 11
-
-[node name="HBox" type="HBoxContainer" parent="VBox/VBoxB/MC/CenterC"]
+[node name="HBox" type="HBoxContainer" parent="VBox/VBoxB"]
+show_behind_parent = true
 margin_right = 500.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 500, 0 )
@@ -126,13 +113,12 @@ size_flags_vertical = 11
 custom_constants/separation = 20
 alignment = 2
 
-[node name="NewGame" type="Button" parent="VBox/VBoxB/MC/CenterC/HBox"]
+[node name="NewGame" type="Button" parent="VBox/VBoxB/HBox"]
 margin_right = 500.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = ExtResource( 2 )
 custom_styles/hover = ExtResource( 8 )
 custom_styles/pressed = ExtResource( 6 )
 custom_styles/focus = ExtResource( 5 )
@@ -145,7 +131,39 @@ __meta__ = {
 }
 
 [node name="WaitForADs" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 3.0
 one_shot = true
-[connection signal="pressed" from="VBox/VBoxB/MC/CenterC/HBox/NewGame" to="." method="_on_NewGame_pressed"]
+
+[node name="PopUp" type="PopupMenu" parent="."]
+show_behind_parent = true
+light_mask = 0
+margin_right = 20.0
+margin_bottom = 20.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="TimeToADs" type="Label" parent="PopUp"]
+margin_left = 56.0
+margin_top = 208.0
+margin_right = 456.0
+margin_bottom = 626.0
+custom_fonts/font = SubResource( 5 )
+text = "PLZ SEE ADS"
+align = 1
+valign = 1
+autowrap = true
+clip_text = true
+
+[node name="Label" type="Label" parent="PopUp"]
+margin_left = 68.0
+margin_top = 76.0
+margin_right = 424.0
+margin_bottom = 292.0
+custom_fonts/font = ExtResource( 2 )
+text = "УРА РЕКЛАМА !!!"
+align = 1
+valign = 1
+autowrap = true
+clip_text = true
+[connection signal="pressed" from="VBox/VBoxB/HBox/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="timeout" from="WaitForADs" to="." method="_on_WaitForADs_timeout"]

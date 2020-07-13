@@ -1,4 +1,4 @@
-extends Control
+extends Node2D
 
 signal gui_start_new_game
 signal gui_exit_to_menu
@@ -7,7 +7,8 @@ signal gui_options
 signal gui_psyontech
 signal gui_undo
 
-
+var background_scenes = preload("res://Scenes/Background.tscn")
+var number_scene = preload("res://Scenes/Number.tscn")
 var screenSize = Vector2(0,0)
 var showMenuLag = null
 
@@ -38,8 +39,12 @@ func setup():
 #	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width
 #	screenSize.y = get_viewport().get_visible_rect().size.y # Get Height
 	screenSize = get_viewport().get_visible_rect().size
-	self.rect_min_size = screenSize
+#	self.rect_min_size = screenSize
+#	var background_node = background_scenes.instance()
+#	self.add_child(background_node)
+#	background_node.set_visible(true)
 	$VBoxC.rect_min_size = screenSize
+#	create_numbers_on_game_field()
 	print("set screen size = %s" %  screenSize)
 
 func add_menu_items():
@@ -79,15 +84,48 @@ func show_game_over():
 	pass
 	
 	
-func update_score(score):
+func update_score():
 	print("update_score(score)")
-	$VBoxC/Menu/VBox/Score/Score.text = "Score: %s" % str(score)  
+	$VBoxC/Menu/VBox/Score/Score.text = "Score: %s" % str(Main.current_score)  
 
 
 func setup_signals():
 	print("setup_signals()")
 
+func create_numbers_on_game_field():
+	print("create_numbers_on_game_field()")
+	for colx in range(Main.game_field_size):
+		for rowy in range(Main.game_field_size):
+			var curr_number = number_scene.instance()
+			#$GUI/VBoxC/GFContainer/GameField/VBoxContainer/ColorRect
+			$VBoxC/GFContainer/GameField.add_child(curr_number)
+			if Main.game_field[rowy][colx] == null:
+				curr_number.set_xy(rowy, colx)
+				curr_number.setup_number_rect(Main.number_rect_size)
+				curr_number.set_number_text("")
+				curr_number.position.x = Main.number_size * colx + Main.game_field_margin * (colx + 1)
+				curr_number.position.y = Main.number_size * rowy + Main.game_field_margin * (rowy + 1)
+			else:
+				print("draw_field() %s " % Main.game_field[rowy][colx] as String)
+				curr_number.set_xy(rowy, colx)
+				curr_number.setup_number_rect(Main.number_rect_size)
+				curr_number.set_number_to_label(Main.game_field[rowy][colx])
+				curr_number.position.x = Main.number_size * colx + Main.game_field_margin * (colx + 1)
+				curr_number.position.y = Main.number_size * rowy + Main.game_field_margin * (rowy + 1)
 
+func reasign_numbers_to_field():
+	print("reasign_numbers_to_field()")
+	for colx in range(Main.game_field_size):
+		for rowy in range(Main.game_field_size):
+			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
+			var children_mas_number_scene =  $VBoxC/GFContainer/GameField.get_children()
+			for i in range(len(children_mas_number_scene)):
+				if children_mas_number_scene[i].curry_row == rowy and children_mas_number_scene[i].currx_col == colx:
+					if Main.game_field[rowy][colx] == null: 
+						children_mas_number_scene[i].set_number_text("")
+					else:
+						children_mas_number_scene[i].set_number_to_label(Main.game_field[rowy][colx])	
+	update_score()
 
 
 func _on_Psyontech_pressed() -> void:
@@ -102,6 +140,7 @@ func _on_MenuB_pressed() -> void:
 
 
 func _on_Restart_pressed() -> void:
+	Main.new_game()
 	$Menu.hide()
 
 
@@ -118,6 +157,13 @@ func _on_ToggleTheme_pressed() -> void:
 
 
 func _on_ClickMode_pressed() -> void:
+	print("Change click mode")
+	if Main.clickInput == true:
+		Main.clickInput = false
+		print("Mode %s" % Main.clickInput)
+	elif Main.clickInput == false:
+		Main.clickInput = true
+		print("Mode %s" % Main.clickInput)
 	$Menu.hide()
 
 
