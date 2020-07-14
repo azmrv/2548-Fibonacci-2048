@@ -9,8 +9,11 @@ signal gui_undo
 
 var background_scenes = preload("res://Scenes/Background.tscn")
 var number_scene = preload("res://Scenes/Number.tscn")
+var game_field_scene = preload("res://Scenes/GameField.tscn")
 var screenSize = Vector2(0,0)
 var showMenuLag = null
+
+var game_field
 
 func _ready() -> void:
 	setup()
@@ -23,8 +26,10 @@ func setup_nodes():
 	showMenuLag = Timer.new()
 	showMenuLag.wait_time = 1.2
 	showMenuLag.one_shot = true
+	showMenuLag.name = "ShowMenuLag"
 	self.add_child(showMenuLag)
-	
+	game_field = game_field_scene.instance()
+	$VBoxC/GFContainer.add_child(game_field)
 	
 #Description
 #Dialog for confirmation of actions. This dialog inherits from AcceptDialog, but has by default an OK and Cancel button (in host OS order).
@@ -98,7 +103,7 @@ func create_numbers_on_game_field():
 		for rowy in range(Main.game_field_size):
 			var curr_number = number_scene.instance()
 			#$GUI/VBoxC/GFContainer/GameField/VBoxContainer/ColorRect
-			$VBoxC/GFContainer/GameField.add_child(curr_number)
+			game_field.add_child(curr_number)
 			if Main.game_field[rowy][colx] == null:
 				curr_number.set_xy(rowy, colx)
 				curr_number.setup_number_rect(Main.number_rect_size)
@@ -118,7 +123,7 @@ func reasign_numbers_to_field():
 	for colx in range(Main.game_field_size):
 		for rowy in range(Main.game_field_size):
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
-			var children_mas_number_scene =  $VBoxC/GFContainer/GameField.get_children()
+			var children_mas_number_scene =  game_field.get_children()
 			for i in range(len(children_mas_number_scene)):
 				if children_mas_number_scene[i].curry_row == rowy and children_mas_number_scene[i].currx_col == colx:
 					if Main.game_field[rowy][colx] == null: 

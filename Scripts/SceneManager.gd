@@ -5,7 +5,38 @@ var loader
 var wait_frames
 var time_max = 100 # msec
 
+var queue
 
+func queue():
+	# Initialize.
+	queue = preload("res://Scripts/resource_queue.gd").new()
+	queue.start()
+	
+	# Suppose your game starts with a 10 second cutscene, during which the user
+	# can't interact with the game.
+	# For that time, we know they won't use the pause menu, so we can queue it
+	# to load during the cutscene:
+	queue.queue_resource("res://pause_menu.tres")
+#	start_cutscene()
+	
+	# Later, when the user presses the pause button for the first time:
+#	pause_menu = queue.get_resource("res://pause_menu.tres").instance()
+#	pause_menu.show()
+	
+	# When you need a new scene:
+	queue.queue_resource("res://level_1.tscn", true)
+	# Use "true" as the second argument to put it at the front of the queue,
+	# pausing the load of any other resource.
+	
+	# To check progress.
+	if queue.is_ready("res://level_1.tscn"):
+		print()
+#		show_new_level(queue.get_resource("res://level_1.tscn"))
+	else:
+#		update_progress(queue.get_progress("res://level_1.tscn"))
+		print()
+	# When the user walks away from the trigger zone in your Metroidvania game:
+	queue.cancel_resource("res://zone_2.tscn")
 
 func _ready():
 	var root = get_tree().get_root()
@@ -23,8 +54,8 @@ func goto_scene(path):
 	call_deferred("_deferred_goto_scene", path)
 
 	loader = ResourceLoader.load_interactive(path)
-	if loader == null: # check for errors
-		show_error()
+	if loader == null: 
+		show_error("goto_scene(path)  loader = null")
 		return
 	set_process(true)
 
@@ -71,7 +102,7 @@ func _process(time):
 		elif err == OK:
 			update_progress()
 		else: # error during loading
-			show_error()
+			show_error(" _process(time) error during loading")
 			loader = null
 			break
 			
@@ -92,5 +123,5 @@ func set_new_scene(scene_resource):
 	get_node("/root").add_child(current_scene)
 	
 	
-func show_error():
-	pass
+func show_error(error):
+	print(str(error))

@@ -24,6 +24,7 @@ var swipe = null
 
 func _ready() -> void:
 	setup()
+	Main.new_game()
 
 
 func setup():
@@ -244,20 +245,20 @@ func _input(event):
 			print("_input(event) - (Input.is_action_just_REleased(ui_touch))")
 			final_touch = (get_global_mouse_position())
 			calculate_direction()
-#	elif (Main.new_game != 0) && (Main.clickInput == false):
-#		if event is InputEventScreenTouch:
-#			if event.pressed:
-#			  swipe_start = event.get_position()
-#			else:
-#			  _calculate_swipe(event.get_position())
-
-func _unhandled_input(event):
-	if (Main.new_game != 0) && (Main.clickInput == false):
+	elif (Main.new_game != 0) && (Main.clickInput == false):
 		if event is InputEventScreenTouch:
 			if event.pressed:
 			  swipe_start = event.get_position()
 			else:
 			  _calculate_swipe(event.get_position())
+
+#func _unhandled_input(event):
+#	if (Main.new_game != 0) && (Main.clickInput == false):
+#		if event is InputEventScreenTouch:
+#			if event.pressed:
+#			  swipe_start = event.get_position()
+#			else:
+#			  _calculate_swipe(event.get_position())
 
 func _calculate_swipe(swipe_end):
 	if swipe_start == null: 

@@ -9,12 +9,10 @@ signal exit_game
 signal save_player_data
 
 #Scenes
-
-var mainWindow_scenes = preload("res://Scenes/MainWindow.tscn")
 #var number_scene = preload("res://Scenes/Number.tscn")
 var ads_scene = preload("res://Scenes/ADs.tscn")
 var gamefield_scene = preload("res://Scenes/GameField.tscn")
-var background_scenes = preload("res://Scenes/Background.tscn")
+var background_scene = preload("res://Scenes/Background.tscn")
 
 # GUI Scenes
 var gui_scene = preload("res://Scenes/GUI.tscn")
@@ -22,6 +20,22 @@ var gui_gameover_scene = preload("res://Scenes/GUI_GameOver.tscn")
 
 #Nodes
 var inputLagTimer = null
+#var number = null 
+var ads = null
+var gamefield = null
+var background = null
+var gui = null
+var gui_gameover = null
+
+#Scripts
+#var mainWindow_script = preload("res://Scripts/MainWindow.gd").new()
+#var number_script = preload("res://Scripts/Number.gd").new()
+#var ads_script = preload("res://Scripts/ADs.gd").new()
+#var gamefield_script = preload("res://Scripts/GameField.gd").new()
+#var background_script = preload("res://Scripts/Background.gd").new()
+#var gui_script = preload("res://Scripts/GUI.gd").new()
+#var gui_gameover_script = preload("res://Scripts/GUI_GameOver.gd").new()
+
 var gui_node = null
 var ads_node = null
 var gui_gameover_node = null
@@ -82,18 +96,18 @@ var number_scene_pos = 0
 func _ready():
 #	print("_ready()")
 	setup()
-	new_game()
+
 
 
 func setup_scenes():
-#	print("setup_scenes()")
-	mainWindow_node = mainWindow_scenes.instance()
-	background_node = background_scenes.instance()
-	gui_node = gui_scene.instance()
-	ads_node = ads_scene.instance()
-	gui_gameover_node = gui_gameover_scene.instance()
-	
-	
+	print("setup_scenes()")
+#	SceneManager.set_scene(mainWindow_scene)
+#	mainWindow = preload("res://Scripts/MainWindow.gd").new()
+#	mainWindow.queue_resource(mainWindow_scene)
+#	mainWindow.get_resource(mainWindow_scene).instance()
+#	get_tree().get_root().add_scene(background_scene)
+#	get_tree().get_root().get_node("/root").add_scene(gui_scene)
+
 func setup_nodes():
 	print("setup_nodes()")
 	# сцены добавленные рукаи в облочке, добавляются как-то не так, не полностью, правильно работают только если добавлять в коде
@@ -101,20 +115,22 @@ func setup_nodes():
 	inputLagTimer.wait_time = 1.2
 	inputLagTimer.one_shot = true
 	inputLagTimer.name = "InputLagTimer"
-	mainWindow_node.add_child(inputLagTimer)
+	get_node("/root/MainWindow").add_child(inputLagTimer)
 #   Had to change the get_node to get_tree().get_root().get_node()	
-	show_gui_node(false)	
-	show_gameover_node(false)
-	show_ads_node(false)
-	
+	gui_node = gui_scene.instance()
+	ads_node = ads_scene.instance()
+	gui_gameover_node = gui_gameover_scene.instance()
+	background_node = background_scene.instance()
+
 
 #func setup_signals():
 ##	print("setup_signals()")
-##	gui_scene.connect("gui_mm_start_new_game", self, "_on_GUI_start_new_game")
-##	gui_scene.connect("gui_mm_options", self, "_on_GUI_options")
-##	gui_scene.connect("gui_mm_help", self, "_on_GUI_help")
+##	SignalManager.connect("gui_mm_start_new_game", self, "_on_GUI_start_new_game")
+##	SignalManager.connect("gui_mm_options", self, "_on_GUI_options")
+##	SignalManager.connect("gui_mm_help", self, "_on_GUI_help")
 #	pass
-	
+
+
 #func _process(_delta):
 #	#if	new_game != 0:
 #		#print("_process(_delta)")
@@ -122,37 +138,35 @@ func setup_nodes():
 #		#draw_field()
 #	pass
 
+
 func new_game():
 	print("new_game()")
 	randgen.randomize()
-	new_game = 1
-	setup()
-	mainWindow_node.add_child(background_node)
-	show_background_node(true)
-	mainWindow_node.add_child(gui_node)
-	gui_gameover_node.free()
+	new_game = 1	
+	get_node("/root/MainWindow").add_child(gui_node)
 	game_field = make_matrix()
 	summ = 0
 	gui_node.create_numbers_on_game_field()
 	fill_field_with_numbers()
 	gui_node.reasign_numbers_to_field()
 	#inputLagTimer.start()
-	show_gui_node(true)
-	
-	
+#	get_tree().change_scene()
+
+
 func game_over():
 	print("game_over()")
 	if new_game == 1:
 		new_game = 0
-		setup()
-		show_gui_node(false)
-		mainWindow_node.add_child(gui_gameover_node)
+#		setup()
+		gui_node.set_visible(false)
+		get_node("/root/MainWindow").add_child(gui_gameover_node)
 	#	background_node.free()
 	#	gui_node.free()
-		$CN/GUI/VBoxC/GFContainer/GameField.get_children().clear()	
+#		gui_node.clear_gamefield()
 		gui_gameover_node.update_score()
-		show_gameover_node(true)
-	
+		gui_gameover_node.set_visible(true)
+
+
 func setup():
 	print("setup()")
 	randgen.randomize()
@@ -186,10 +200,9 @@ func setup_window():
 func show_ads():
 	print("show_ads()")
 	show_ads = true
-	mainWindow_node.add_child(ads_node)
-	show_gameover_node(false)
-	show_background_node(false)
-	show_ads_node(true)
+	get_node("/root/MainWindow").add_child(ads_node)
+#	show_background_node(false)
+#	show_ads_node(true)
 	ads_node.start_ads_timer()
 	#$GUI.show_message("ADs, Money blwe $$$$$$$" )
 
