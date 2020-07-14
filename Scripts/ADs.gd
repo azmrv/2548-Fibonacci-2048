@@ -43,4 +43,5 @@ func _on_Button_pressed() -> void:
 	print("ADs _on_Button_pressed()")
 	emit_signal("ads_done")
 	Main.ads_node.hide()
+	Main.new_game()
 	Main.gui_node.show()
