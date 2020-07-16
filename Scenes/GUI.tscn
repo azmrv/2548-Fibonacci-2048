@@ -19,11 +19,10 @@ outline_color = Color( 0.145098, 0.145098, 0.145098, 1 )
 font_data = ExtResource( 4 )
 
 [node name="GUI" type="Node2D"]
-show_behind_parent = true
+z_as_relative = false
 script = ExtResource( 2 )
 
 [node name="VBoxC" type="VBoxContainer" parent="."]
-show_behind_parent = true
 margin_right = 500.0
 margin_bottom = 900.0
 rect_min_size = Vector2( 500, 900 )
@@ -40,6 +39,7 @@ margin_bottom = 64.0
 size_flags_horizontal = 3
 
 [node name="Psyontech" type="LinkButton" parent="VBoxC/TelosAds"]
+show_behind_parent = true
 margin_left = 342.0
 margin_right = 500.0
 margin_bottom = 27.0
@@ -54,6 +54,7 @@ __meta__ = {
 }
 
 [node name="GameName" type="Label" parent="VBoxC/TelosAds"]
+show_behind_parent = true
 margin_top = 31.0
 margin_right = 500.0
 margin_bottom = 64.0
@@ -78,12 +79,14 @@ margin_bottom = 162.0
 size_flags_horizontal = 3
 
 [node name="VBox" type="VBoxContainer" parent="VBoxC/Menu"]
+show_behind_parent = true
 margin_right = 500.0
 margin_bottom = 94.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="Score" type="HBoxContainer" parent="VBoxC/Menu/VBox"]
+show_behind_parent = true
 margin_right = 500.0
 margin_bottom = 50.0
 grow_horizontal = 2
@@ -133,6 +136,7 @@ margin_bottom = 50.0
 size_flags_horizontal = 3
 
 [node name="Buttons" type="HBoxContainer" parent="VBoxC/Menu/VBox"]
+show_behind_parent = true
 margin_top = 54.0
 margin_right = 500.0
 margin_bottom = 94.0
@@ -207,6 +211,7 @@ __meta__ = {
 }
 
 [node name="ColorHelp" type="CenterContainer" parent="VBoxC"]
+show_behind_parent = true
 margin_top = 670.0
 margin_right = 500.0
 margin_bottom = 720.0
@@ -214,6 +219,7 @@ rect_min_size = Vector2( 0, 50 )
 size_flags_horizontal = 3
 
 [node name="Help" type="CenterContainer" parent="VBoxC"]
+show_behind_parent = true
 margin_top = 724.0
 margin_right = 500.0
 margin_bottom = 900.0
@@ -233,15 +239,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 11
 custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color = Color( 0.392157, 0.392157, 0.392157, 1 )
-text = " the movement of numbers on the playing field on four sides, by clicking on the edge of the field or by swipe.
-Fibonacci numbers - elements of a numerical sequence 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, ..., in which the first two numbers are either 1 and 1, or 0 and 1, and each subsequent number is equal to the sum of the two previous numbers.
-The adjacent numbers of the Fibonacci series are interconnected. Fibonacci numbers are formed by adding the two previous numbers.
-The first digits of the series are 1, 2, 3, 5, 8, 13, 21, 33, 54 ...... and so on, according to the textbook."
+text = "The movement of numbers on the playing field for four sides, does by swipe.
+The adjacent numbers of the Fibonacci series are interconnected. 
+Example: 2 connected with 3, 3 - 5, 5 - 8, 8 - 13, 13 - 21, 21 - 34, 34 - 55 &etc.
+Fibonacci  sequence 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, ..., in which the first two numbers are either 1 and 1, or 0 and 1, and each subsequent number is equal to the sum of the two previous numbers."
 autowrap = true
 clip_text = true
 
 [node name="Menu" type="PopupMenu" parent="."]
-light_mask = 0
+light_mask = -2147483647
 margin_left = 400.0
 margin_top = 122.0
 margin_right = 420.0
@@ -346,7 +352,8 @@ custom_styles/focus = ExtResource( 7 )
 custom_styles/disabled = ExtResource( 10 )
 custom_styles/normal = ExtResource( 9 )
 custom_fonts/font = ExtResource( 5 )
-text = "Toggle Click Mode"
+toggle_mode = true
+text = "Click Mode OFF"
 
 [node name="5x5" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
 visible = false

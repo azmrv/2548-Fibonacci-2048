@@ -44,7 +44,7 @@ func setup():
 
 
 func move_down(mas):
-	print("func move_down(mas)")
+#	print("func move_down(mas)")
 	Main.randgen.randomize()
 	Main.undo_game_field = mas
 	var kodx1 = 1
@@ -80,8 +80,9 @@ func move_down(mas):
 			kodx1 = 0
 			if sempty == 0:
 				# после окончания игры прододжает выполнять fill_field_with_numbers()
-#				Main.game_over()
-				Main.fill_field_with_numbers()
+				Main.update_score()
+				Main.game_over()
+				return
 			elif sempty <= 4:
 				koldop = 1
 			else:
@@ -92,7 +93,7 @@ func move_down(mas):
 	Main.update_score()
 
 func move_up(mas):
-	print("func move_up(mas)")
+#	print("func move_up(mas)")
 	Main.randgen.randomize()
 	Main.undo_game_field = mas
 	var kodx2 = 1
@@ -128,8 +129,9 @@ func move_up(mas):
 		else:
 			kodx2 = 0
 			if sempty == 0:
-				Main.fill_field_with_numbers()
-#				Main.game_over()
+				Main.update_score()
+				Main.game_over()
+				return
 			elif sempty <= 4:
 				koldop = 1
 			else:
@@ -140,7 +142,7 @@ func move_up(mas):
 	Main.update_score()
 	
 func move_right(mas):
-	print("func move_right(mas)")
+#	print("func move_right(mas)")
 	Main.randgen.randomize()
 	Main.undo_game_field = mas
 	var kody1 = 1
@@ -175,8 +177,9 @@ func move_right(mas):
 		else:
 			kody1 = 0
 			if sempty == 0:
-				Main.fill_field_with_numbers()
-#				Main.game_over()
+				Main.update_score()
+				Main.game_over()
+				return
 			elif sempty <= 4:
 				koldop = 1
 			else:
@@ -187,7 +190,7 @@ func move_right(mas):
 	Main.update_score()
 
 func move_left(mas):
-	print("func move_left(mas)")
+#	print("func move_left(mas)")
 	Main.randgen.randomize()
 	Main.undo_game_field = mas
 	var kody2 = 1
@@ -224,8 +227,9 @@ func move_left(mas):
 		else:
 			kody2 = 0
 			if sempty == 0:
-				Main.fill_field_with_numbers()
-#				Main.game_over()
+				Main.update_score()
+				Main.game_over()
+				return
 			elif sempty <= 4:
 				koldop = 1
 			else:
@@ -277,8 +281,8 @@ func _calculate_swipe(swipe_end):
 
 func calculate_direction():
 	var k_scr = (game_window_heigth_y - game_window_width_x)/2
-	print("calculate_direction()")
-	print("y =", final_touch.y, " x =", final_touch.x)	
+#	print("calculate_direction()")
+#	print("y =", final_touch.y, " x =", final_touch.x)	
 	if final_touch.x > final_touch.y-k_scr:		
 		if final_touch.x + final_touch.y-k_scr < game_window_width_x:
 			move_up(Main.game_field)

@@ -23,11 +23,13 @@ func setup():
 	
 func ads_set_timer():
 	print("ADs ads_set_timer()")
-	$ADsTimer.wait_time = 2
+	$ADsTimer.wait_time = 3
 	$ADsTimer.one_shot = true
 
 func start_ads_timer():
 	print("ADs start_ads_timer()")
+	$TimerTime.visible = true
+	$CloseADs.visible = false
 	$ADsTimer.start()
 
 func _process(delta: float) -> void:
@@ -44,4 +46,4 @@ func _on_Button_pressed() -> void:
 	emit_signal("ads_done")
 	Main.ads_node.hide()
 	Main.new_game()
-	Main.gui_node.show()
+
