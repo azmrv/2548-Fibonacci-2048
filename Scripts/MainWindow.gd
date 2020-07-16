@@ -86,7 +86,7 @@ func move_down(mas):
 				Main.koldop = 2
 			Main.fill_field_with_numbers()
 	if Main.gui_node != null && Main.new_game != 0:
-		Main.reasign_numbers_to_field()
+		Main.reasign_numbers_on_gamefield()
 	Main.update_score()
 
 func move_up(mas):
@@ -135,7 +135,7 @@ func move_up(mas):
 				Main.koldop = 2
 			Main.fill_field_with_numbers()
 	if Main.gui_node != null && Main.new_game != 0:
-		Main.reasign_numbers_to_field()
+		Main.reasign_numbers_on_gamefield()
 	Main.update_score()
 	
 func move_right(mas):
@@ -183,7 +183,7 @@ func move_right(mas):
 				Main.koldop = 2
 			Main.fill_field_with_numbers()
 	if Main.gui_node != null && Main.new_game != 0:
-		Main.reasign_numbers_to_field()
+		Main.reasign_numbers_on_gamefield()
 	Main.update_score()
 
 func move_left(mas):
@@ -233,7 +233,7 @@ func move_left(mas):
 				Main.koldop = 2
 			Main.fill_field_with_numbers()
 	if Main.gui_node != null && Main.new_game != 0:
-		Main.reasign_numbers_to_field()
+		Main.reasign_numbers_on_gamefield()
 	Main.update_score()
 
 func _input(event):
