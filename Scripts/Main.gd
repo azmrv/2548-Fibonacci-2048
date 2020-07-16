@@ -9,10 +9,11 @@ signal exit_game
 signal save_player_data
 
 #Scenes
-#var number_scene = preload("res://Scenes/Number.tscn")
+var number_scene = preload("res://Scenes/Number.tscn")
 var ads_scene = preload("res://Scenes/ADs.tscn")
 var gamefield_scene = preload("res://Scenes/GameField.tscn")
 var background_scene = preload("res://Scenes/Background.tscn")
+var game_field_scene = preload("res://Scenes/GameField.tscn")
 
 # GUI Scenes
 var gui_scene = preload("res://Scenes/GUI.tscn")
@@ -26,6 +27,7 @@ var ads_node = null
 var gui_gameover_node = null
 var background_node = null
 var mainWindow_node = null
+var gamefield_node = null
 
 #Scripts
 #var mainWindow_script = preload("res://Scripts/MainWindow.gd").new()
@@ -117,13 +119,15 @@ func setup_nodes():
 	gui_node = gui_scene.instance()
 	get_node("/root/MainWindow").add_child(gui_node)
 	gui_node.set_visible(false)
+	gamefield_node = game_field_scene.instance()
+	get_node("/root/MainWindow/GUI/VBoxC/GFContainer").add_child(gamefield_node)
 	ads_node = ads_scene.instance()
 	get_node("/root/MainWindow").add_child(ads_node)
 	ads_node.set_visible(false)
 	gui_gameover_node = gui_gameover_scene.instance()
 	get_node("/root/MainWindow").add_child(gui_gameover_node)
 	gui_gameover_node.set_visible(false)
-
+	
 #	if gui_node.get_parent() != get_node("/root/MainWindow"):
 #		get_node("/root/MainWindow").add_child(gui_node)
 #		gui_node.set_visible(false)
@@ -163,9 +167,9 @@ func new_game():
 	game_field = make_matrix()
 	summ = 0
 	current_score = summ
-	gui_node.create_numbers_on_game_field()
+	create_numbers_on_game_field()
 	fill_field_with_numbers()
-	gui_node.reasign_numbers_to_field()
+	reasign_numbers_to_field()
 	gui_node.set_visible(true)
 	gui_node.update_score()
 #	gui_gameover_node.queue_free()
@@ -349,7 +353,7 @@ func make_matrix():
 
 
 func generate_new_numbers_in_array():
-#	print("Main generate_new_numbers_in_array()")
+	print("Main generate_new_numbers_in_array()")
 	randgen.randomize()
 	var kodn = koldop
 	while kodn > 0:
@@ -357,32 +361,64 @@ func generate_new_numbers_in_array():
 		#var ny = randgen.randf()
 		#var x = int(nx * game_field_size % 1)
 		#var y = int(ny * game_field_size % 1)
-		# вот теперь не зависает в этом месте при попытке разместить числа на поле доп проверка на свободное место
-		if blank_space_on_board():
-			var colx = randgen.randi_range(0,game_field_size - 1)
-			var rowy = randgen.randi_range(0,game_field_size - 1)
-			#print(rowy, colx)
-			if game_field[rowy][colx] == null:
-				kodn = kodn - 1
-				var num = randgen.randf()
-				if num <= 0.618:
-					game_field[rowy][colx] = number_one
-					summ += 1
-				else:
-					game_field[rowy][colx] = number_two
-					summ += 2
-	#			if num <= 0.5:
-	#				game_field[rowy][colx] = 1
-	#				summ += 1
-	#			elif num <= 0.8:
-	#				game_field[rowy][colx] = 2
-	#				summ += 2
-	#			else:
-	#				game_field[rowy][colx] = 3
-	#				summ += 3	
-		else:
-			return
+		# вот теперь не зависает в этом месте при попытке разместить числа на поле доп проверка на свободное место		
+		var colx = randgen.randi_range(0,game_field_size - 1)
+		var rowy = randgen.randi_range(0,game_field_size - 1)
+		#print(rowy, colx)
+		if game_field[rowy][colx] == null:
+			kodn = kodn - 1
+			var num = randgen.randf()
+			if num <= 0.618:
+				game_field[rowy][colx] = number_one
+				summ += 1
+			else:
+				game_field[rowy][colx] = number_two
+				summ += 2
+#			if num <= 0.5:
+#				game_field[rowy][colx] = 1
+#				summ += 1
+#			elif num <= 0.8:
+#				game_field[rowy][colx] = 2
+#				summ += 2
+#			else:
+#				game_field[rowy][colx] = 3
+#				summ += 3	
 
+func create_numbers_on_game_field():
+#	print("create_numbers_on_game_field()")
+	for colx in range(game_field_size):
+		for rowy in range(game_field_size):
+			var curr_number = number_scene.instance()
+			#$GUI/VBoxC/GFContainer/GameField/VBoxContainer/ColorRect
+			gamefield_node.add_child(curr_number)
+			if game_field[rowy][colx] == null:
+				curr_number.set_xy(rowy, colx)
+				curr_number.setup_number_rect(number_rect_size)
+				curr_number.set_number_text("")
+				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
+				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
+			else:
+				print("draw_field() %s " % Main.game_field[rowy][colx] as String)
+				curr_number.set_xy(rowy, colx)
+				curr_number.setup_number_rect(number_rect_size)
+				curr_number.set_number_to_label(game_field[rowy][colx])
+				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
+				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
+
+
+func reasign_numbers_to_field():
+#	print("reasign_numbers_to_field()")
+	for colx in range(game_field_size):
+		for rowy in range(game_field_size):
+			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
+			var children_mas_number_scene =  gamefield_node.get_children()
+			for i in range(len(children_mas_number_scene)):
+				if children_mas_number_scene[i].curry_row == rowy and children_mas_number_scene[i].currx_col == colx:
+					if game_field[rowy][colx] == null: 
+						children_mas_number_scene[i].set_number_text("")
+					else:
+						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])	
+	update_score()
 
 func blank_space_on_board():
 #	print("Main blank_space_on_board()")	

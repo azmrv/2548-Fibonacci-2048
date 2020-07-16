@@ -23,8 +23,13 @@ config/icon="res://Graphics/icon.png"
 [autoload]
 
 Main="*res://Scripts/Main.gd"
-SignalManager="res://Scripts/SignalManager.gd"
-SceneManager="res://Scripts/SceneManager.gd"
+
+[debug]
+
+gdscript/warnings/unsafe_property_access=true
+gdscript/warnings/unsafe_method_access=true
+gdscript/warnings/unsafe_cast=true
+gdscript/warnings/unsafe_call_argument=true
 
 [display]
 
@@ -56,5 +61,6 @@ file_logging/enable_file_logging=true
 [rendering]
 
 quality/driver/driver_name="GLES2"
+quality/driver/fallback_to_gles2=true
 vram_compression/import_etc=true
 vram_compression/import_etc2=false

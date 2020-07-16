@@ -9,8 +9,7 @@ var game_window_margin = 0
 var game_field_width_x = 500
 var game_field_margin = 0
 
-var eend = 4
-var koldop = 2
+
 var game_field_size = 5
 
 
@@ -37,8 +36,6 @@ func setup():
 	game_window_width_x = screenSize.x
 	game_window_heigth_y = screenSize.y
 	game_field_width_x = game_window_width_x
-	eend = Main.eend
-	koldop = Main.koldop
 	print("set screen size = %s" %  screenSize)
 
 
@@ -84,12 +81,12 @@ func move_down(mas):
 				Main.game_over()
 				return
 			elif sempty <= 4:
-				koldop = 1
+				Main.koldop = 1
 			else:
-				koldop = 2
+				Main.koldop = 2
 			Main.fill_field_with_numbers()
 	if Main.gui_node != null && Main.new_game != 0:
-		Main.gui_node.reasign_numbers_to_field()
+		Main.reasign_numbers_to_field()
 	Main.update_score()
 
 func move_up(mas):
@@ -133,12 +130,12 @@ func move_up(mas):
 				Main.game_over()
 				return
 			elif sempty <= 4:
-				koldop = 1
+				Main.koldop = 1
 			else:
-				koldop = 2
+				Main.koldop = 2
 			Main.fill_field_with_numbers()
 	if Main.gui_node != null && Main.new_game != 0:
-		Main.gui_node.reasign_numbers_to_field()
+		Main.reasign_numbers_to_field()
 	Main.update_score()
 	
 func move_right(mas):
@@ -181,12 +178,12 @@ func move_right(mas):
 				Main.game_over()
 				return
 			elif sempty <= 4:
-				koldop = 1
+				Main.koldop = 1
 			else:
-				koldop = 2
+				Main.koldop = 2
 			Main.fill_field_with_numbers()
 	if Main.gui_node != null && Main.new_game != 0:
-		Main.gui_node.reasign_numbers_to_field()
+		Main.reasign_numbers_to_field()
 	Main.update_score()
 
 func move_left(mas):
@@ -231,12 +228,12 @@ func move_left(mas):
 				Main.game_over()
 				return
 			elif sempty <= 4:
-				koldop = 1
+				Main.koldop = 1
 			else:
-				koldop = 2
+				Main.koldop = 2
 			Main.fill_field_with_numbers()
 	if Main.gui_node != null && Main.new_game != 0:
-		Main.gui_node.reasign_numbers_to_field()
+		Main.reasign_numbers_to_field()
 	Main.update_score()
 
 func _input(event):
