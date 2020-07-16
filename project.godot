@@ -23,8 +23,8 @@ config/icon="res://Graphics/icon.png"
 [autoload]
 
 Main="*res://Scripts/Main.gd"
-SignalManager="*res://Scripts/SignalManager.gd"
-SceneManager="*res://Scripts/SceneManager.gd"
+SignalManager="res://Scripts/SignalManager.gd"
+SceneManager="res://Scripts/SceneManager.gd"
 
 [display]
 

@@ -72,9 +72,9 @@ func setup_field():
 #			bkg.position = Vector2(x_start + i * 128, y_start + j * -128)
 	pass
 	
-func _process(_delta):
-	#draw_numbers()
-	pass
+#func _process(_delta):
+#	#draw_numbers()
+#	pass
 
 
 func draw_numbers():

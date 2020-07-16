@@ -4,4 +4,5 @@
 
 [node name="MainWindow" type="Node2D"]
 show_behind_parent = true
+z_as_relative = false
 script = ExtResource( 1 )

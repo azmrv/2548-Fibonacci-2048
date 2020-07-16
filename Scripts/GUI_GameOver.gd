@@ -15,7 +15,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if $WaitForADs.get_time_left() != 0:
 		$PopUp/TimeToADs.text = str($WaitForADs.time_left)
-	
+
 
 
 func setup():
@@ -27,13 +27,14 @@ func setup():
 #	var background_node = background_scenes.instance()
 #	self.add_child(background_node)	
 #	background_node.set_visible(true)
+#	Main.gui_gameover_node.set_visible(true)
 	$VBox.rect_min_size = screenSize	
 	print("set screen size = %s" %  screenSize)
 #	$WaitForADs.connect("timeout", self, "_on_WaitForADs_timeout")
 
 
 func update_score():
-	print("update_score(score)")
+	print("GUI_GameOver update_score(score)")
 	$VBox/VBoxLabels/Score.text = "Score: %s" % str(Main.current_score)  
 	
 
@@ -46,4 +47,6 @@ func _on_NewGame_pressed() -> void:
 
 func _on_WaitForADs_timeout() -> void:
 	$PopUp.visible = false
+	$VBox.visible = true
+	Main.gui_gameover_node.set_visible(false)
 	Main.show_ads()
