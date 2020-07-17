@@ -66,6 +66,7 @@ var text_color = "363636"
 var summ = 0
 var eend = 4
 var koldop = 2
+var kodn
 
 # for testing old value = 1, 2
 var number_one = 1
@@ -152,7 +153,7 @@ func new_game():
 	new_game = 1	
 	game_field = make_matrix()
 	summ = 0
-	current_score = summ	
+	current_score = summ
 	fill_field_with_numbers()
 	reasign_numbers_on_gamefield()
 	gui_node.set_visible(true)
@@ -165,8 +166,9 @@ func new_game():
 
 
 func game_over():
-	print("Main game_over()")	
+	print("Main game_over()")
 	if new_game == 1:
+		print("Main game_over() do smthng")
 		new_game = 0
 		gui_node.set_visible(false)
 		gui_gameover_node.update_score()
@@ -182,7 +184,8 @@ func setup():
 #	setup_signals()
 #	setup_thems()	
 	game_field = make_matrix()	
-	create_gamefield_with_plates()
+	call_deferred("create_gamefield_with_plates")
+#	create_gamefield_with_plates()
 
 
 func setup_thems():
@@ -241,6 +244,23 @@ func undo(lever:bool):
 		game_field = undo_game_field
 	else:
 		$MainWindow/GUI/VBoxC/Menu/VBox/Buttons/Undo.disabled = false
+
+
+func ai_turns(turns:int):
+	for i in range(turns):
+		if new_game == 1:
+			yield(get_tree().create_timer(0.01), "timeout")
+			get_node("/root/MainWindow").call_deferred("move_right",game_field)
+			yield(get_tree().create_timer(0.01), "timeout")
+			get_node("/root/MainWindow").call_deferred("move_down",game_field)
+			yield(get_tree().create_timer(0.01), "timeout")
+			get_node("/root/MainWindow").call_deferred("move_left",game_field)
+			yield(get_tree().create_timer(0.01), "timeout")
+			get_node("/root/MainWindow").call_deferred("move_up",game_field)
+		else:
+			return
+
+
 
 
 func save():
@@ -339,37 +359,36 @@ func make_matrix():
 
 
 func generate_new_numbers_in_array():
-	print("Main generate_new_numbers_in_array()")
+#	print("Main generate_new_numbers_in_array()")
 	randgen.randomize()
-	var kodn = koldop
+	kodn = koldop
 	while kodn > 0:
 		#var nx = randgen.randf()
 		#var ny = randgen.randf()
 		#var x = int(nx * game_field_size % 1)
-		#var y = int(ny * game_field_size % 1)
-		# вот теперь не зависает в этом месте при попытке разместить числа на поле доп проверка на свободное место	
-		if check_space_for_numbers():	
-			var colx = randgen.randi_range(0,game_field_size - 1)
-			var rowy = randgen.randi_range(0,game_field_size - 1)
-			#print(rowy, colx)
-			if game_field[rowy][colx] == null:
-				kodn = kodn - 1
-				var num = randgen.randf()
-				if num <= 0.618:
-					game_field[rowy][colx] = number_one
-					summ += 1
-				else:
-					game_field[rowy][colx] = number_two
-					summ += 2
-	#			if num <= 0.5:
-	#				game_field[rowy][colx] = 1
-	#				summ += 1
-	#			elif num <= 0.8:
-	#				game_field[rowy][colx] = 2
-	#				summ += 2
-	#			else:
-	#				game_field[rowy][colx] = 3
-	#				summ += 3	
+		#var y = int(ny * game_field_size % 1)	
+		var colx = randgen.randi_range(0,game_field_size - 1)
+		var rowy = randgen.randi_range(0,game_field_size - 1)	
+		#print(rowy, colx)
+		if game_field[rowy][colx] == null:
+			kodn = kodn - 1
+			var num = randgen.randf()
+			if num <= 0.618:
+				game_field[rowy][colx] = number_one
+				summ += 1
+			else:
+				game_field[rowy][colx] = number_two
+				summ += 2
+#			if num <= 0.5:
+#				game_field[rowy][colx] = 1
+#				summ += 1
+#			elif num <= 0.8:
+#				game_field[rowy][colx] = 2
+#				summ += 2
+#			else:
+#				game_field[rowy][colx] = 3
+#				summ += 3	
+
 
 func create_gamefield_with_plates():
 #	print("create_gamefield_with_plates()")
@@ -384,7 +403,7 @@ func create_gamefield_with_plates():
 				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
 				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 			else:
-				print("draw_field() %s " % game_field[rowy][colx] as String)
+#				print("draw_field() %s " % game_field[rowy][colx] as String)
 				curr_number.set_xy(rowy, colx)
 				curr_number.setup_number_rect(number_rect_size)
 				curr_number.set_number_to_label(game_field[rowy][colx])
@@ -395,25 +414,37 @@ func create_gamefield_with_plates():
 
 func reasign_numbers_on_gamefield():
 #	print("reasign_numbers_on_gamefield()")
+	var children_mas_number_scene = gamefield_node.get_children()
 	for colx in range(game_field_size):
 		for rowy in range(game_field_size):
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
-			var children_mas_number_scene =  gamefield_node.get_children()
+			
 			for i in range(len(children_mas_number_scene)):
 				if children_mas_number_scene[i].curry_row == rowy and children_mas_number_scene[i].currx_col == colx:
 					if game_field[rowy][colx] == null: 
-						children_mas_number_scene[i].set_number_text("")
+						children_mas_number_scene[i].set_number_text("")					
 					else:
 						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])	
+					if children_mas_number_scene[i].number == 2584:
+						call_deferred("do_graz_2584")
+					if children_mas_number_scene[i].number == 7778742049:
+						call_deferred("do_graz_adsoff")
 	gui_node.update_score()
 
+
 func check_space_for_numbers():
-#	print("Main blank_space_on_board()")	
+#	print("Main blank_space_on_board()")
+	var space = 0
 	for colx in game_field_size:
 		for rowy in game_field_size:
 			if game_field[rowy][colx] == null or game_field[rowy][colx] == 0:
-				return true
-	return false
+				space += 1
+	if space >= 2:
+		return true
+	elif space < 4:
+		kodn = 0
+	else:
+		return false
 
 
 func fill_field_with_numbers():
@@ -422,6 +453,17 @@ func fill_field_with_numbers():
 		generate_new_numbers_in_array()
 	else:
 		game_over()
+
+
+func do_graz_2584():
+	print("pozdr s 2584")
+	# играть музыку играть фонариками запускать фейерверки 
+
+
+func do_graz_adsoff():
+	print("pozdr s 7778742049 no ads for you")
+	# играть музыку играть фонариками запускать фейерверки 
+
 
 
 func show_gui_node(bl:bool):

@@ -18,7 +18,7 @@ _global_script_class_icons={
 config/name="2584 Fibonacci 2048"
 config/description="2584 aka 2048 with Fibonacci numbers and sequence logic"
 run/main_scene="res://Scenes/MainWindow.tscn"
-config/icon="res://Graphics/icon.png"
+config/icon="res://Graphics/2584 Fibonacci ICON.jpg"
 
 [autoload]
 
