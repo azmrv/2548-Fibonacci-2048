@@ -300,7 +300,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="AI" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
-visible = false
 margin_top = 172.0
 margin_right = 400.0
 margin_bottom = 232.0
@@ -311,7 +310,7 @@ custom_styles/focus = ExtResource( 7 )
 custom_styles/disabled = ExtResource( 10 )
 custom_styles/normal = ExtResource( 9 )
 custom_fonts/font = ExtResource( 5 )
-text = "AI"
+text = "AI 10 turns"
 
 [node name="Options" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
 visible = false

@@ -161,7 +161,10 @@ func _on_Options_pressed() -> void:
 
 func _on_AI_pressed() -> void:
 	Main.new_game = 1
+	$Menu/CRect/CenterContainer/VBox/AI.text = "10 turns for AI"
 	$Menu.hide()
+	Main.ai_turns(10)
+	
 
 
 func _on_Share_pressed() -> void:
