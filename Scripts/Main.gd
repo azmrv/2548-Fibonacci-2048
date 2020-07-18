@@ -69,8 +69,8 @@ var koldop = 2
 var kodn
 
 # for testing old value = 1, 2
-var number_one = 1
-var number_two = 2
+var number_one = 123456
+var number_two = 234567
 var number_three = 3
 var number_four = 4
 var number_five = 5
@@ -150,6 +150,7 @@ func setup_nodes():
 func new_game():
 	print("Main new_game()")
 	randgen.randomize()
+	background_node.set_visible(true)
 	new_game = 1	
 	game_field = make_matrix()
 	summ = 0
@@ -215,10 +216,14 @@ func setup_window():
 func show_ads():
 	print("Main show_ads()")
 	show_ads = true
-	ads_node.set_visible(true)
+#	get_node("/root/MainWindow").rewardedvideo_show()
+	get_node("/root/MainWindow").interstitial_show()
+#	AdsManager.showInterstitial()
+#	ads_node.set_visible(true)
 #	show_background_node(false)
+#	background_node.set_visible(false)
 #	show_ads_node(true)
-	ads_node.start_ads_timer()
+#	ads_node.start_ads_timer()
 	#$GUI.show_message("ADs, Money blwe $$$$$$$" )
 
 
@@ -453,6 +458,77 @@ func fill_field_with_numbers():
 		generate_new_numbers_in_array()
 	else:
 		game_over()
+
+func fibn(k):
+	if k == 1:
+		 return 0
+	if k == 2:
+		return 1
+	var sc = 0
+	var sa = 1
+	var sb = 2
+	var n = 1
+	while k > sc:
+		n += 1
+		var c = sa + sb
+		var a = sb
+		sb = sc
+	return n
+
+#static bool IsFib(long T, out long idx)
+#{
+#    double root5 = Math.Sqrt(5);
+#    double phi = (1 + root5) / 2;
+#
+#    idx    = (long)Math.Floor( Math.Log(T*root5) / Math.Log(phi) + 0.5 );
+#    long u = (long)Math.Floor( Math.Pow(phi, idx)/root5 + 0.5);
+#
+#    return (u == T);
+#}
+
+#var
+#  N, F1, F2, K: integer;
+#Порядковый номер числа Фибоначчи
+#begin
+#  write('N = ');
+#  readln(N);
+#  F1 := 1; { <== первый член ряда Фибоначчи }
+#  F2 := 1; { <== второй член ряда Фибоначчи }
+#  K := 2;
+#  { Выполняем цикл до тех пор, пока введенное нами 
+#  число N больше очередного члена ряда Фибоначчи: }
+#  while (N > F2) do
+#  begin
+#    F2 := F1 + F2; { <== новое значение F2 }
+#    F1 := F2 - F1; { <== новое значение F1 }
+#    inc(K) { <== увеличиваем номер члена F2 }
+#  end;
+#  writeln;
+#  if N = F2 then writeln('Порядковый номер числа Фибоначчи: ', K)
+#  else writeln(' ', N, ' не является числом Фибоначчи!');
+#  readln
+#end.
+
+#var
+#  N, F1, F2, c: integer;
+#Соседние числа Фибоначчи
+#begin
+#  write('N = ');
+#  readln(N);
+#  F1 := 1; { <== первый член ряда Фибоначчи }
+#  F2 := 1; { <== второй член ряда Фибоначчи }
+#  { Выполняем цикл до тех пор, пока введенное нами 
+#  число N больше очередного члена ряда Фибоначчи: }
+#  while (N > F2) do
+#  begin
+#    c := F2; { <== запоминаем второй член ряда }
+#    F2 := F1 + F2; { <== находим новое значение F2 }
+#    F1 := c { <== первому члену приписываем предыдущий (c=F1) }
+#  end;
+#  if N = F2 then writeln('Соседние числа Фибоначчи: ', F1, ' ', F1+F2)
+#  else writeln(N, ' не является числом Фибоначчи!');
+#  readln
+#end.
 
 
 func do_graz_2584():

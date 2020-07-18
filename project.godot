@@ -8,16 +8,27 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Node",
+"class": "AdMob",
+"language": "GDScript",
+"path": "res://admob-lib/admob.gd"
+} ]
 _global_script_class_icons={
-
+"AdMob": ""
 }
+
+[android]
+
+modules="org/godotengine/godot/GodotAdMob"
 
 [application]
 
 config/name="2584 Fibonacci 2048"
 config/description="2584 aka 2048 with Fibonacci numbers and sequence logic"
 run/main_scene="res://Scenes/MainWindow.tscn"
+boot_splash/image="res://Graphics/TELOS-GAMES-LOGO v1.png"
+boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://Graphics/2584 Fibonacci ICON.jpg"
 
 [autoload]
@@ -35,7 +46,6 @@ gdscript/warnings/unsafe_call_argument=true
 
 window/size/width=500
 window/size/height=900
-window/dpi/allow_hidpi=true
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
 window/stretch/aspect="expand"

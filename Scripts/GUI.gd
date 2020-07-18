@@ -151,7 +151,7 @@ func _on_ClickMode_pressed() -> void:
 		$Menu/CRect/CenterContainer/VBox/ClickMode.text = "Click Mode ON"
 		Main.clickInput = true
 		print("Mode %s" % Main.clickInput)
-
+	
 
 
 func _on_Options_pressed() -> void:
@@ -161,7 +161,7 @@ func _on_Options_pressed() -> void:
 
 func _on_AI_pressed() -> void:
 	Main.new_game = 1
-	$Menu/CRect/CenterContainer/VBox/AI.text = "10 turns for AI"
+	$Menu/CRect/CenterContainer/VBox/AI.text = "10 turns AI"
 	$Menu.hide()
 	Main.ai_turns(10)
 	

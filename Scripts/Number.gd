@@ -240,6 +240,11 @@ func set_color_mas():
 func select_node_to_color(color : Color):
 	$CenterContainer/ColorRect.color = color
 
+func select_node_to_color_hsv(color : Color):
+	$CenterContainer/ColorRect.color.from_hsv(color)
+
+
+
 
 func set_color_dyn():
 	# три цвета
@@ -252,24 +257,29 @@ func set_color_dyn():
 func set_color():
 	#print("set_color() number =", number)
 	#0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711
+#	var currnumber = Main.fibn(number) 
+#	var nextnumber
+#	var prevnumber
+#	if Main.fibn(number) 
+	
 	if number == 0:				
-		select_node_to_color("838383")
+		select_node_to_color(Color( 0.3, 0.3, 0.3, 0.3 ))
 	elif number == 1 :
-		select_node_to_color("8e7474")
+		select_node_to_color(Color(0.11, 0.21, 0.31, 0.9))
 	elif number == 2 :
-		select_node_to_color("945959")
+		select_node_to_color(Color(0.35, 0.32, 0.25, 0.9))
 	elif number == 3 :
-		select_node_to_color("cf5317")
+		select_node_to_color(Color(0.33, 0.23, 0.13, 0.9))
 	elif number == 5 :
-		select_node_to_color("cf6917")
+		select_node_to_color(Color(0.24, 0.34, 0.54, 0.9))
 	elif number == 8 :
-		select_node_to_color("cf8717")
+		select_node_to_color(Color(0.15, 0.25, 0.35, 0.9))
 	elif number == 13 :
-		select_node_to_color("cfaa17")
+		select_node_to_color(Color(0.56, 0.36, 0.26, 0.9))
 	elif number == 21 :
-		select_node_to_color("c1cf17")
+		select_node_to_color(Color(0.37, 0.27, 0.17, 0.9))
 	elif number == 34 :
-		select_node_to_color("abcf17")
+		select_node_to_color(Color(0.28, 0.38, 0.98, 0.9))
 	elif number == 55 :
 		select_node_to_color("8dcf17")
 	elif number == 89 :

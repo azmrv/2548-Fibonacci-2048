@@ -19,11 +19,17 @@ var swipe_start = null
 var minimum_drag = 100
 var swipe = null
 
-
+onready var admob = $AdMob
+#onready var debug_out = null #$CanvasLayer/DebugOut
 
 func _ready() -> void:
 	setup()
 	Main.new_game()
+	admob.load_banner()
+	admob.load_interstitial()
+	admob.load_rewarded_video()
+# warning-ignore:return_value_discarded
+	get_tree().connect("screen_resized", self, "_on_resize")
 
 
 func setup():
@@ -290,3 +296,111 @@ func calculate_direction():
 			move_left(Main.game_field)
 		else:
 			move_down(Main.game_field) 
+
+
+
+
+#ADMOB
+
+
+# buttons callbacks
+func banner_toggled(button_pressed):
+	print("MainWindow banner_toggled(button_pressed)")
+#	if button_pressed: admob.show_banner()
+#	else: admob.hide_banner()
+
+func interstitial_show():
+	print("MainWindow interstitial_show()")
+	print("Interstitial loaded before shown = " + str(admob.is_interstitial_loaded()) +"\n")
+#	debug_out.text = debug_out.text + "Interstitial loaded before shown = " + str(admob.is_interstitial_loaded()) +"\n"
+	admob.show_interstitial()
+	print("Interstitial loaded after shown = " + str(admob.is_interstitial_loaded()) +"\n")
+#	debug_out.text = debug_out.text + "Interstitial loaded after shown = " + str(admob.is_interstitial_loaded()) +"\n"
+
+
+func rewardedvideo_show():
+	print("MainWindow rewardedvideo_show()")
+#	debug_out.text = debug_out.text + "Rewarded loaded before shown = " + str(admob.is_rewarded_video_loaded()) +"\n"
+	admob.show_rewarded_video()
+#	debug_out.text = debug_out.text + "Rewarded loaded after shown = " + str(admob.is_rewarded_video_loaded()) +"\n"
+
+
+# AdMob callbacks
+func _on_resize():
+	print("MainWindow _on_resize()")
+#	debug_out.text = debug_out.text + "Banner resized\n"
+	admob.banner_resize()
+
+func _on_AdMob_banner_failed_to_load(error_code):
+	print("MainWindow _on_AdMob_banner_failed_to_load(error_code) %s" % str(error_code))
+#	debug_out.text = debug_out.text + "Banner failed to load: Error code " + str(error_code) + "\n"
+	Main.new_game()
+	
+func _on_AdMob_banner_loaded():
+	print("MainWindow _on_AdMob_banner_loaded()")
+#	$"BtnBanner".disabled = false
+#	debug_out.text = debug_out.text + "Banner loaded\n"
+#	debug_out.text = debug_out.text + "Banner size = " + str(admob.get_banner_dimension()) +  "\n"
+
+
+func _on_AdMob_interstitial_loaded():
+	print("MainWindow _on_AdMob_interstitial_loaded()")
+#	$"BtnInterstitial".disabled = false
+#	debug_out.text = debug_out.text + "Interstitial loaded\n"
+
+
+func _on_AdMob_interstitial_closed():
+	print("MainWindow _on_AdMob_interstitial_closed()")
+#	debug_out.text = debug_out.text + "Interstitial closed\n"
+#	$"BtnInterstitial".disabled = true
+	Main.new_game()
+
+func _on_AdMob_interstitial_failed_to_load(error_code):
+	print("MainWindow _on_AdMob_interstitial_failed_to_load(error_code) %s" % str(error_code))
+#	debug_out.text = debug_out.text + "Interstitial failed to load: Error code " + str(error_code) + "\n"
+	interstitial_show()
+	Main.new_game()
+	
+func _on_AdMob_network_error():
+	print("MainWindow _on_AdMob_network_error()")
+#	debug_out.text = debug_out.text + "Network error\n"
+	interstitial_show()
+	Main.new_game()
+	
+func _on_AdMob_rewarded(currency, amount):
+	print("MainWindow _on_AdMob_rewarded()")
+#	debug_out.text = debug_out.text + "Rewarded watched, currency: " + str(currency) + " amount:"+ str(amount)+ "\n"
+
+
+func _on_AdMob_rewarded_video_closed():
+	print("MainWindow _on_AdMob_rewarded_video_closed()")
+#	debug_out.text = debug_out.text + "Rewarded video closed\n"
+#	$"BtnRewardedVideo".disabled = true
+	admob.load_rewarded_video()
+	Main.new_game()
+
+func _on_AdMob_rewarded_video_failed_to_load(error_code):
+	print("MainWindow _on_AdMob_rewarded_video_failed_to_load()")
+#	debug_out.text = debug_out.text + "Rewarded video failed to load: Error code " + str(error_code) + "\n"
+
+	
+func _on_AdMob_rewarded_video_left_application():
+	print("MainWindow _on_AdMob_rewarded_video_left_application()")
+#	debug_out.text = debug_out.text + "Rewarded video left application\n"
+
+
+func _on_AdMob_rewarded_video_loaded():
+	print("MainWindow _on_AdMob_rewarded_video_loaded()")
+#	$"BtnRewardedVideo".disabled = false
+#	debug_out.text = debug_out.text + "Rewarded video loaded\n"
+
+
+func _on_AdMob_rewarded_video_opened():
+	print("MainWindow _on_AdMob_rewarded_video_opened()")
+#	debug_out.text = debug_out.text + "Rewarded video opened\n"
+
+	
+func _on_AdMob_rewarded_video_started():
+	print("MainWindow _on_AdMob_rewarded_video_started()")
+#	debug_out.text = debug_out.text + "Rewarded video started\n"
+	
