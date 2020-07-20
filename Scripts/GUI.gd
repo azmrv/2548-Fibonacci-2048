@@ -107,21 +107,26 @@ func setup_signals():
 
 func _on_Psyontech_pressed() -> void:
 	emit_signal("gui_psyontech")
+	AdsManager.show()
 	OS.shell_open("http://games.psyon.tech/")
 
 
 func _on_Undo_pressed() -> void:
-	emit_signal("gui_undo")
+	emit_signal("gui_undo")	
+	AdsManager.showRewardedVideo()
+	Main.undo()
 
 
 func _on_MenuB_pressed() -> void:
 	Main.new_game = 0
+
 	$Menu.show()
 
 
 func _on_Restart_pressed() -> void:
 	Main.new_game = 1
 	update_score()
+	AdsManager.showBanner()
 	Main.new_game()
 	$Menu.hide()
 
@@ -137,8 +142,16 @@ func _on_5x5_pressed() -> void:
 
 
 func _on_ToggleTheme_pressed() -> void:
-	Main.new_game = 1
-	$Menu.hide()
+	if Main.is_dark == false && $Menu/CRect/CenterContainer/VBox/ToggleTheme.pressed == false:
+		$Menu/CRect/CenterContainer/VBox/ToggleTheme.pressed = false
+		$Menu/CRect/CenterContainer/VBox/ToggleTheme.text = "Dark"
+		Main.is_dark = true	
+		print("Mode %s" % Main.clickInput)
+	if Main.is_dark == true && $Menu/CRect/CenterContainer/VBox/ToggleTheme.pressed == true:
+		$Menu/CRect/CenterContainer/VBox/ToggleTheme.pressed = true
+		$Menu/CRect/CenterContainer/VBox/ToggleTheme.text = "Bright"
+		Main.is_dark = false
+		print("Mode %s" % Main.clickInput)
 
 
 func _on_ClickMode_pressed() -> void:
@@ -151,7 +164,7 @@ func _on_ClickMode_pressed() -> void:
 		$Menu/CRect/CenterContainer/VBox/ClickMode.text = "Click Mode ON"
 		Main.clickInput = true
 		print("Mode %s" % Main.clickInput)
-
+	
 
 
 func _on_Options_pressed() -> void:
@@ -161,9 +174,9 @@ func _on_Options_pressed() -> void:
 
 func _on_AI_pressed() -> void:
 	Main.new_game = 1
-	$Menu/CRect/CenterContainer/VBox/AI.text = "10 turns for AI"
+	$Menu/CRect/CenterContainer/VBox/AI.text = "10 turns AI"
 	$Menu.hide()
-	Main.ai_turns(10)
+	Main.ai_turns(20)
 	
 
 

@@ -39,11 +39,15 @@ func update_score():
 	
 
 func _on_NewGame_pressed() -> void:
-	$VBox.visible = false
-	$PopUp.visible = true
-	$WaitForADs.wait_time = 0.5
-	$WaitForADs.one_shot = true
-	$WaitForADs.start()
+#	$VBox.visible = false
+#	$PopUp.visible = true
+	Main.gui_gameover_node.set_visible(false)
+	AdsManager.showInterstitial()
+	Main.new_game()
+
+#	$WaitForADs.wait_time = 0.3
+#	$WaitForADs.one_shot = true
+#	$WaitForADs.start()
 
 func _on_WaitForADs_timeout() -> void:
 	$PopUp.visible = false
