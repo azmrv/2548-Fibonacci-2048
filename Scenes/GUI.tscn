@@ -300,6 +300,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="AI" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
+visible = false
 margin_top = 172.0
 margin_right = 400.0
 margin_bottom = 232.0
@@ -327,7 +328,6 @@ custom_fonts/font = ExtResource( 5 )
 text = "Options"
 
 [node name="ToggleTheme" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
-visible = false
 margin_top = 172.0
 margin_right = 400.0
 margin_bottom = 232.0
@@ -338,7 +338,9 @@ custom_styles/focus = ExtResource( 7 )
 custom_styles/disabled = ExtResource( 10 )
 custom_styles/normal = ExtResource( 9 )
 custom_fonts/font = ExtResource( 5 )
-text = "Toggle Theme"
+toggle_mode = true
+pressed = true
+text = "Theme Bright"
 
 [node name="ClickMode" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
 margin_top = 207.0

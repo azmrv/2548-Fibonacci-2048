@@ -42,7 +42,9 @@ func _on_NewGame_pressed() -> void:
 #	$VBox.visible = false
 #	$PopUp.visible = true
 	Main.gui_gameover_node.set_visible(false)
-	Main.show_ads()
+	AdsManager.showInterstitial()
+	Main.new_game()
+
 #	$WaitForADs.wait_time = 0.3
 #	$WaitForADs.one_shot = true
 #	$WaitForADs.start()

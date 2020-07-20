@@ -9,8 +9,8 @@ extends Node2D
 var retryConnectionInterval = 8.0
 var autoLoad = true
 
-var useTestAds = true
-var bannerDisplayTop = true
+var useTestAds = false
+var bannerDisplayTop = false
 
 var testAdBannerId = "ca-app-pub-3940256099942544/6300978111"
 var testAdInterstitialId = "ca-app-pub-3940256099942544/1033173712"
@@ -71,8 +71,8 @@ func _initialize_ads():
 
 func _ready():
 	
-	if(Engine.has_singleton("AdMob")):
-		admob = Engine.get_singleton("AdMob")
+	if(Engine.has_singleton("GodotAdMob")):
+		admob = Engine.get_singleton("GodotAdMob")
 		
 		_initialize_ads()
 		
@@ -163,7 +163,7 @@ func _on_rewarded_video_ad_closed():
 	
 func _on_rewarded(currency, amount):
 	print("Reward: " + currency + ", " + str(amount))
-
+	Main.undo()
 # Resize
 
 func onResize():

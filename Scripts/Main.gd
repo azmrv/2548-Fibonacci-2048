@@ -57,6 +57,7 @@ var hard_level = 3
 var iq_level = 0
 var new_game_numbers = 3
 
+var is_dark = false
 var curr_color_them = "light"
 var main_background_color ="73947A"
 var plate_background_color ="5E7478"
@@ -69,8 +70,8 @@ var koldop = 2
 var kodn
 
 # for testing old value = 1, 2
-var number_one = 123456
-var number_two = 234567
+var number_one = 1
+var number_two = 2
 var number_three = 3
 var number_four = 4
 var number_five = 5
@@ -154,6 +155,7 @@ func new_game():
 	new_game = 1	
 	game_field = make_matrix()
 	summ = 0
+	undo_game_field = make_matrix()
 	current_score = summ
 	fill_field_with_numbers()
 	reasign_numbers_on_gamefield()
@@ -168,6 +170,7 @@ func new_game():
 
 func game_over():
 	print("Main game_over()")
+	undo_game_field = make_matrix()
 	if new_game == 1:
 		print("Main game_over() do smthng")
 		new_game = 0
@@ -217,13 +220,14 @@ func show_ads():
 	print("Main show_ads()")
 	show_ads = true
 #	get_node("/root/MainWindow").rewardedvideo_show()
-	get_node("/root/MainWindow").interstitial_show()
-#	AdsManager.showInterstitial()
+#	get_node("/root/MainWindow").interstitial_show()
+	AdsManager.showInterstitial()
 #	ads_node.set_visible(true)
 #	show_background_node(false)
 #	background_node.set_visible(false)
 #	show_ads_node(true)
 #	ads_node.start_ads_timer()
+	new_game()
 	#$GUI.show_message("ADs, Money blwe $$$$$$$" )
 
 
@@ -242,26 +246,22 @@ func colors_thems(curr_color_them : String):
 		return
 
 
-func undo(lever:bool):	
-	$MainWindow/GUI/VBoxC/Menu/VBox/Buttons/Undo.disabled = true
-	show_ads()
-	if lever == true:
-		game_field = undo_game_field
-	else:
-		$MainWindow/GUI/VBoxC/Menu/VBox/Buttons/Undo.disabled = false
+func undo():
+	game_field = undo_game_field
+	reasign_numbers_on_gamefield()
 
 
 func ai_turns(turns:int):
 	for i in range(turns):
 		if new_game == 1:
 			yield(get_tree().create_timer(0.01), "timeout")
-			get_node("/root/MainWindow").call_deferred("move_right",game_field)
+			call_deferred("move_right",game_field)
 			yield(get_tree().create_timer(0.01), "timeout")
-			get_node("/root/MainWindow").call_deferred("move_down",game_field)
+			call_deferred("move_down",game_field)
 			yield(get_tree().create_timer(0.01), "timeout")
-			get_node("/root/MainWindow").call_deferred("move_left",game_field)
+			call_deferred("move_left",game_field)
 			yield(get_tree().create_timer(0.01), "timeout")
-			get_node("/root/MainWindow").call_deferred("move_up",game_field)
+			call_deferred("move_up",game_field)
 		else:
 			return
 
@@ -564,3 +564,201 @@ func show_background_node(bl:bool):
 	print("Main show_background_node")
 	if background_node != null:
 		background_node.set_visible(bl)
+
+
+
+func move_down(mas):
+#	print("func move_down(mas)")
+	randgen.randomize()
+	undo_game_field = mas
+	var kodx1 = 1
+	while kodx1 == 1:
+		var sempty = 0
+		for colx in range(game_field_size):
+			
+			for rowy in range(game_field_size-1):
+				
+				if mas[rowy][colx] != null:
+					if mas[rowy+1][colx] == null:
+						kodx1 += 1
+						mas[rowy+1][colx] = mas[rowy][colx]
+						mas[rowy][colx] = null
+					elif mas[rowy+1][colx] == 1:
+						if mas[rowy][colx] == 1 or mas[rowy][colx] == 2:
+							kodx1 += 1
+							mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
+							mas[rowy][colx] = null
+					elif mas[rowy+1][colx] > mas[rowy][colx] and mas[rowy+1][colx] <= 2 * mas[rowy][colx]:
+						kodx1 += 1
+						mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
+						mas[rowy][colx] = null
+					elif mas[rowy+1][colx] < mas[rowy][colx] and mas[rowy][colx] <= 2 * mas[rowy+1][colx]:
+						kodx1 += 1
+						mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
+						mas[rowy][colx] = null
+				else:
+					sempty += 1					
+		if kodx1 > 1:
+			kodx1 = 1
+		else:
+			kodx1 = 0
+			if sempty == 0:
+				# после окончания игры прододжает выполнять fill_field_with_numbers()
+				update_score()
+				game_over()
+				return
+			elif sempty <= 4:
+				koldop = 1
+			else:
+				koldop = 2
+			fill_field_with_numbers()
+	if gui_node != null && new_game != 0:
+		reasign_numbers_on_gamefield()
+	update_score()
+
+func move_up(mas):
+#	print("func move_up(mas)")
+	randgen.randomize()
+	undo_game_field = mas
+	var kodx2 = 1
+	while kodx2 == 1:
+		var sempty = 0
+		for colx in range(game_field_size):
+			
+			for rowy in range(1, game_field_size):
+				
+				if mas[game_field_size-rowy][colx] != null:
+					if  mas[game_field_size-rowy-1][colx] == null:
+						kodx2+=1
+						mas[game_field_size-rowy-1][colx] =  mas[game_field_size-rowy][colx]
+						mas[game_field_size-rowy][colx] = null
+					elif  mas[game_field_size-rowy-1][colx] == 1:
+						if  mas[game_field_size-rowy][colx] == 1 or  mas[game_field_size-rowy][colx] == 2:
+							kodx2+=1
+							mas[game_field_size-rowy-1][colx] = mas[game_field_size-rowy-1][colx]+ mas[game_field_size-rowy][colx]
+							mas[game_field_size-rowy][colx] = null
+					elif  mas[game_field_size-rowy-1][colx] > mas[game_field_size-rowy][colx]  and  mas[game_field_size-rowy-1][colx] <= 2 * mas[game_field_size-rowy][colx] :
+						kodx2+=1
+						mas[game_field_size-rowy-1][colx] =  mas[game_field_size-rowy-1][colx]+ mas[game_field_size-rowy][colx]
+						mas[game_field_size-rowy][colx] = null
+					elif  mas[game_field_size-rowy-1][colx] <  mas[game_field_size-rowy][colx] and  mas[game_field_size-rowy][colx] <= 2 *  mas[game_field_size-rowy-1][colx]:
+						kodx2+=1
+						mas[game_field_size-rowy-1][colx] =  mas[game_field_size-rowy-1][colx] +  mas[game_field_size-rowy][colx]
+						mas[game_field_size-rowy][colx] = null
+				else:
+					sempty += 1
+
+		if kodx2 > 1:
+			kodx2 = 1
+		else:
+			kodx2 = 0
+			if sempty == 0:
+				update_score()
+				game_over()
+				return
+			elif sempty <= 4:
+				koldop = 1
+			else:
+				koldop = 2
+			fill_field_with_numbers()
+	if gui_node != null && new_game != 0:
+		reasign_numbers_on_gamefield()
+	update_score()
+	
+func move_right(mas):
+#	print("func move_right(mas)")
+	randgen.randomize()
+	undo_game_field = mas
+	var kody1 = 1
+	while kody1 == 1:
+		var sempty = 0
+		for rowy in range(game_field_size):
+			
+			for colx in range(game_field_size-1):
+				
+				if mas[rowy][colx] != null:
+					if mas[rowy][colx+1] == null:
+						kody1+=1
+						mas[rowy][colx+1] = mas[rowy][colx]
+						mas[rowy][colx] = null
+					elif mas[rowy][colx+1] == 1:
+						if mas[rowy][colx] == 1 or mas[rowy][colx] == 2:
+							kody1+=1
+							mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
+							mas[rowy][colx] = null
+					elif mas[rowy][colx+1] > mas[rowy][colx] and mas[rowy][colx+1] <= 2 * mas[rowy][colx]:
+						kody1+=1
+						mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
+						mas[rowy][colx] = null
+					elif mas[rowy][colx+1] < mas[rowy][colx] and mas[rowy][colx] <= 2 * mas[rowy][colx+1]:
+						kody1+=1
+						mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
+						mas[rowy][colx] = null	
+				else:
+					sempty += 1					
+		if kody1 > 1:
+			kody1 = 1
+		else:
+			kody1 = 0
+			if sempty == 0:
+				update_score()
+				game_over()
+				return
+			elif sempty <= 4:
+				koldop = 1
+			else:
+				koldop = 2
+			fill_field_with_numbers()
+	if gui_node != null && new_game != 0:
+		reasign_numbers_on_gamefield()
+	update_score()
+
+func move_left(mas):
+#	print("func move_left(mas)")
+	randgen.randomize()
+	undo_game_field = mas
+	var kody2 = 1
+	while kody2 == 1:
+		var sempty = 0
+		for rowy in range(game_field_size):
+			
+			for colx in range(1, game_field_size):
+				
+				if mas[rowy][game_field_size-colx] != null:
+					if mas[rowy][game_field_size-colx-1]== null:
+						kody2+=1
+						mas[rowy][game_field_size-colx-1] =  mas[rowy][game_field_size-colx]
+						mas[rowy][game_field_size-colx] = null
+					elif mas[rowy][game_field_size-colx-1]  == 1:
+						if  mas[rowy][game_field_size-colx] == 1 or  mas[rowy][game_field_size-colx] == 2:
+							kody2+=1
+							mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
+							mas[rowy][game_field_size-colx] = null
+					elif  mas[rowy][game_field_size-colx-1] >  mas[rowy][game_field_size-colx] and  mas[rowy][game_field_size-colx-1] <= 2 * mas[rowy][game_field_size-colx]  :
+						kody2+=1
+						mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
+						mas[rowy][game_field_size-colx] =  null
+						
+					elif  mas[rowy][game_field_size-colx-1] < mas[rowy][game_field_size-colx] and  mas[rowy][game_field_size-colx] <= 2 * mas[rowy][game_field_size-colx-1] :
+						kody2+=1
+						mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
+						mas[rowy][game_field_size-colx] =  null
+				else:
+					sempty += 1
+											
+		if kody2 > 1:
+			kody2 = 1
+		else:
+			kody2 = 0
+			if sempty == 0:
+				update_score()
+				game_over()
+				return
+			elif sempty <= 4:
+				koldop = 1
+			else:
+				koldop = 2
+			fill_field_with_numbers()
+	if gui_node != null && new_game != 0:
+		reasign_numbers_on_gamefield()
+	update_score()

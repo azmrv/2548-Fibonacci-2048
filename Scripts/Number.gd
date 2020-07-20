@@ -15,7 +15,7 @@ var colors = []
 
 var curry_row = 0
 var currx_col = 0
-
+var prev_them = Main.is_dark
 var text_label = ""
 
 func set_xy(rowy, colx):
@@ -34,14 +34,11 @@ func set_number_to_label(num : int):
 	number = num 
 	set_color()
 
-
 #func _ready():
 #	enter_scene()
 
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-#	pass
+func _process(delta):	
+	set_color()
 
 
 func set_number_fonts_size():
@@ -52,7 +49,7 @@ func set_number_text(text):
 	$CenterContainer/Label.text = text
 	exist_number = 1
 	number = 0
-	set_color()
+	set_color()	
 	
 func setup_number_rect(size : Vector2):
 	#print("Number setup()")
@@ -252,9 +249,14 @@ func set_color_dyn():
 	# насыщенность
 	pass
 
-
-
 func set_color():
+	if Main.is_dark == true:
+		set_color_darker()
+	else:
+		set_color_bright()
+
+
+func set_color_darker():
 	#print("set_color() number =", number)
 	#0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711
 #	var currnumber = Main.fibn(number) 
@@ -265,21 +267,73 @@ func set_color():
 	if number == 0:				
 		select_node_to_color(Color( 0.3, 0.3, 0.3, 0.3 ))
 	elif number == 1 :
-		select_node_to_color(Color(0.11, 0.21, 0.31, 0.9))
+		select_node_to_color("7ca66d")
 	elif number == 2 :
-		select_node_to_color(Color(0.35, 0.32, 0.25, 0.9))
+		select_node_to_color("68a08b")
 	elif number == 3 :
-		select_node_to_color(Color(0.33, 0.23, 0.13, 0.9))
+		select_node_to_color("5d8686")
 	elif number == 5 :
-		select_node_to_color(Color(0.24, 0.34, 0.54, 0.9))
+		select_node_to_color("506c80")
 	elif number == 8 :
-		select_node_to_color(Color(0.15, 0.25, 0.35, 0.9))
+		select_node_to_color("585c88")
 	elif number == 13 :
-		select_node_to_color(Color(0.56, 0.36, 0.26, 0.9))
+		select_node_to_color("695887")
 	elif number == 21 :
-		select_node_to_color(Color(0.37, 0.27, 0.17, 0.9))
+		select_node_to_color("6e4e7b")
 	elif number == 34 :
-		select_node_to_color(Color(0.28, 0.38, 0.98, 0.9))
+		select_node_to_color("764873")
+	elif number == 55 :
+		select_node_to_color("ca5973")
+	elif number == 89 :
+		select_node_to_color("f96d42")
+	elif number == 144 :
+		select_node_to_color("e5a03e")
+	elif number == 233 :
+		select_node_to_color("f0ed0f")	
+	elif number == 377 :
+		select_node_to_color("acee0b")	
+	elif number == 610 :
+		select_node_to_color("0ce32d")	
+	elif number == 987 :
+		select_node_to_color("08f7e1")	
+	elif number == 1597 :
+		select_node_to_color("2d04f6")	
+	elif number == 2584 :
+		select_node_to_color("7e04f8")	
+	elif number == 4181 :
+		select_node_to_color("b105ef")
+	elif number == 6765 :
+		select_node_to_color("9403cf")
+	elif number == 10946 :
+		select_node_to_color("d6048a")
+	elif number == 17711 :
+		select_node_to_color("d6056c")	
+	else:
+		select_node_to_color("d62147")
+	
+
+
+func set_color_bright():
+	#print("set_color() number =", number)
+	#0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711
+	if number == 0:				
+		select_node_to_color("838383")
+	elif number == 1 :
+		select_node_to_color("8e7474")
+	elif number == 2 :
+		select_node_to_color("945959")
+	elif number == 3 :
+		select_node_to_color("cf5317")
+	elif number == 5 :
+		select_node_to_color("cf6917")
+	elif number == 8 :
+		select_node_to_color("cf8717")
+	elif number == 13 :
+		select_node_to_color("cfaa17")
+	elif number == 21 :
+		select_node_to_color("c1cf17")
+	elif number == 34 :
+		select_node_to_color("abcf17")
 	elif number == 55 :
 		select_node_to_color("8dcf17")
 	elif number == 89 :
@@ -309,5 +363,3 @@ func set_color():
 	else:
 		select_node_to_color("cf1739")
 	
-
-
