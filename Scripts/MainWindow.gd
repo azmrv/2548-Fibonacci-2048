@@ -40,6 +40,7 @@ func setup():
 
 
 func _input(event):
+	Main.undo_game_field = Main.game_field
 	if (Main.new_game != 0) && (Main.clickInput == true):
 		#print("_input(event)", event)
 		if(Input.is_action_just_pressed("ui_touch")):
