@@ -35,7 +35,7 @@ func setup():
 
 func update_score():
 	print("GUI_GameOver update_score(score)")
-	$VBox/VBoxLabels/Score.text = "Score: %s" % str(Main.current_score)  
+	$VBox/VBoxLabels/ScoreTable.text = "Score: %s" % str(Main.current_score) 
 	
 
 func _on_NewGame_pressed() -> void:

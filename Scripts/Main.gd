@@ -76,7 +76,7 @@ var number_three = 3
 var number_four = 4
 var number_five = 5
 
-var undo_game_field = [[],[]]
+var undo_game_field = null
 var game_field = [[],[]]
 
 var randgen = RandomNumberGenerator.new()
@@ -154,8 +154,7 @@ func new_game():
 	background_node.set_visible(true)
 	new_game = 1	
 	game_field = make_matrix()
-	summ = 0
-	undo_game_field = make_matrix()
+	summ = 0	
 	current_score = summ
 	fill_field_with_numbers()
 	reasign_numbers_on_gamefield()
@@ -170,7 +169,6 @@ func new_game():
 
 func game_over():
 	print("Main game_over()")
-	undo_game_field = make_matrix()
 	if new_game == 1:
 		print("Main game_over() do smthng")
 		new_game = 0
@@ -216,6 +214,11 @@ func setup_window():
 	number_rect_size = Vector2(number_size, number_size)
 
 
+func show_records_table():
+	# функция отображения результатов ввиде таблицы использовать словари ключ - знчение где ключ имя игрока или дата игры - значение реузтат игры.
+	pass
+
+
 func show_ads():
 	print("Main show_ads()")
 	show_ads = true
@@ -247,9 +250,9 @@ func colors_thems(curr_color_them : String):
 
 
 func undo():
-	game_field = undo_game_field
+	if undo_game_field != null:
+		game_field = undo_game_field
 	reasign_numbers_on_gamefield()
-
 
 func ai_turns(turns:int):
 	for i in range(turns):
@@ -264,8 +267,6 @@ func ai_turns(turns:int):
 			call_deferred("move_up",game_field)
 		else:
 			return
-
-
 
 
 func save():
@@ -359,7 +360,7 @@ func make_matrix():
 	for colx in game_field_size:
 		array.append([])
 		for rowy in game_field_size:
-			array[colx].append(null)
+			array[colx].append(0)
 	return array
 
 
@@ -375,7 +376,7 @@ func generate_new_numbers_in_array():
 		var colx = randgen.randi_range(0,game_field_size - 1)
 		var rowy = randgen.randi_range(0,game_field_size - 1)	
 		#print(rowy, colx)
-		if game_field[rowy][colx] == null:
+		if game_field[rowy][colx] == 0:
 			kodn = kodn - 1
 			var num = randgen.randf()
 			if num <= 0.618:
@@ -401,10 +402,10 @@ func create_gamefield_with_plates():
 		for rowy in range(game_field_size):
 			var curr_number = number_scene.instance()
 			#$GUI/VBoxC/GFContainer/GameField/VBoxContainer/ColorRect			
-			if game_field[rowy][colx] == null:
+			if game_field[rowy][colx] == 0:
 				curr_number.set_xy(rowy, colx)
 				curr_number.setup_number_rect(number_rect_size)
-				curr_number.set_number_text("")
+				curr_number.set_empty_number()
 				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
 				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 			else:
@@ -426,8 +427,8 @@ func reasign_numbers_on_gamefield():
 			
 			for i in range(len(children_mas_number_scene)):
 				if children_mas_number_scene[i].curry_row == rowy and children_mas_number_scene[i].currx_col == colx:
-					if game_field[rowy][colx] == null: 
-						children_mas_number_scene[i].set_number_text("")					
+					if game_field[rowy][colx] == 0: 
+						children_mas_number_scene[i].set_empty_number()
 					else:
 						children_mas_number_scene[i].set_number_to_label(game_field[rowy][colx])	
 					if children_mas_number_scene[i].number == 2584:
@@ -475,6 +476,8 @@ func fibn(k):
 		sb = sc
 	return n
 
+
+# функции для динамического расчета палитры плашек под числами
 #static bool IsFib(long T, out long idx)
 #{
 #    double root5 = Math.Sqrt(5);
@@ -570,7 +573,7 @@ func show_background_node(bl:bool):
 func move_down(mas):
 #	print("func move_down(mas)")
 	randgen.randomize()
-	undo_game_field = mas
+	
 	var kodx1 = 1
 	while kodx1 == 1:
 		var sempty = 0
@@ -578,24 +581,24 @@ func move_down(mas):
 			
 			for rowy in range(game_field_size-1):
 				
-				if mas[rowy][colx] != null:
-					if mas[rowy+1][colx] == null:
+				if mas[rowy][colx] != 0:
+					if mas[rowy+1][colx] == 0:
 						kodx1 += 1
 						mas[rowy+1][colx] = mas[rowy][colx]
-						mas[rowy][colx] = null
+						mas[rowy][colx] = 0
 					elif mas[rowy+1][colx] == 1:
 						if mas[rowy][colx] == 1 or mas[rowy][colx] == 2:
 							kodx1 += 1
 							mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
-							mas[rowy][colx] = null
+							mas[rowy][colx] = 0
 					elif mas[rowy+1][colx] > mas[rowy][colx] and mas[rowy+1][colx] <= 2 * mas[rowy][colx]:
 						kodx1 += 1
 						mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
-						mas[rowy][colx] = null
+						mas[rowy][colx] = 0
 					elif mas[rowy+1][colx] < mas[rowy][colx] and mas[rowy][colx] <= 2 * mas[rowy+1][colx]:
 						kodx1 += 1
 						mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
-						mas[rowy][colx] = null
+						mas[rowy][colx] = 0
 				else:
 					sempty += 1					
 		if kodx1 > 1:
@@ -619,7 +622,7 @@ func move_down(mas):
 func move_up(mas):
 #	print("func move_up(mas)")
 	randgen.randomize()
-	undo_game_field = mas
+
 	var kodx2 = 1
 	while kodx2 == 1:
 		var sempty = 0
@@ -627,24 +630,24 @@ func move_up(mas):
 			
 			for rowy in range(1, game_field_size):
 				
-				if mas[game_field_size-rowy][colx] != null:
-					if  mas[game_field_size-rowy-1][colx] == null:
+				if mas[game_field_size-rowy][colx] != 0:
+					if  mas[game_field_size-rowy-1][colx] == 0:
 						kodx2+=1
 						mas[game_field_size-rowy-1][colx] =  mas[game_field_size-rowy][colx]
-						mas[game_field_size-rowy][colx] = null
+						mas[game_field_size-rowy][colx] = 0
 					elif  mas[game_field_size-rowy-1][colx] == 1:
 						if  mas[game_field_size-rowy][colx] == 1 or  mas[game_field_size-rowy][colx] == 2:
 							kodx2+=1
 							mas[game_field_size-rowy-1][colx] = mas[game_field_size-rowy-1][colx]+ mas[game_field_size-rowy][colx]
-							mas[game_field_size-rowy][colx] = null
+							mas[game_field_size-rowy][colx] = 0
 					elif  mas[game_field_size-rowy-1][colx] > mas[game_field_size-rowy][colx]  and  mas[game_field_size-rowy-1][colx] <= 2 * mas[game_field_size-rowy][colx] :
 						kodx2+=1
 						mas[game_field_size-rowy-1][colx] =  mas[game_field_size-rowy-1][colx]+ mas[game_field_size-rowy][colx]
-						mas[game_field_size-rowy][colx] = null
+						mas[game_field_size-rowy][colx] = 0
 					elif  mas[game_field_size-rowy-1][colx] <  mas[game_field_size-rowy][colx] and  mas[game_field_size-rowy][colx] <= 2 *  mas[game_field_size-rowy-1][colx]:
 						kodx2+=1
 						mas[game_field_size-rowy-1][colx] =  mas[game_field_size-rowy-1][colx] +  mas[game_field_size-rowy][colx]
-						mas[game_field_size-rowy][colx] = null
+						mas[game_field_size-rowy][colx] = 0
 				else:
 					sempty += 1
 
@@ -668,7 +671,7 @@ func move_up(mas):
 func move_right(mas):
 #	print("func move_right(mas)")
 	randgen.randomize()
-	undo_game_field = mas
+
 	var kody1 = 1
 	while kody1 == 1:
 		var sempty = 0
@@ -676,24 +679,24 @@ func move_right(mas):
 			
 			for colx in range(game_field_size-1):
 				
-				if mas[rowy][colx] != null:
-					if mas[rowy][colx+1] == null:
+				if mas[rowy][colx] != 0:
+					if mas[rowy][colx+1] == 0:
 						kody1+=1
 						mas[rowy][colx+1] = mas[rowy][colx]
-						mas[rowy][colx] = null
+						mas[rowy][colx] = 0
 					elif mas[rowy][colx+1] == 1:
 						if mas[rowy][colx] == 1 or mas[rowy][colx] == 2:
 							kody1+=1
 							mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
-							mas[rowy][colx] = null
+							mas[rowy][colx] = 0
 					elif mas[rowy][colx+1] > mas[rowy][colx] and mas[rowy][colx+1] <= 2 * mas[rowy][colx]:
 						kody1+=1
 						mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
-						mas[rowy][colx] = null
+						mas[rowy][colx] = 0
 					elif mas[rowy][colx+1] < mas[rowy][colx] and mas[rowy][colx] <= 2 * mas[rowy][colx+1]:
 						kody1+=1
 						mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
-						mas[rowy][colx] = null	
+						mas[rowy][colx] = 0	
 				else:
 					sempty += 1					
 		if kody1 > 1:
@@ -716,7 +719,7 @@ func move_right(mas):
 func move_left(mas):
 #	print("func move_left(mas)")
 	randgen.randomize()
-	undo_game_field = mas
+
 	var kody2 = 1
 	while kody2 == 1:
 		var sempty = 0
@@ -724,25 +727,25 @@ func move_left(mas):
 			
 			for colx in range(1, game_field_size):
 				
-				if mas[rowy][game_field_size-colx] != null:
-					if mas[rowy][game_field_size-colx-1]== null:
+				if mas[rowy][game_field_size-colx] != 0:
+					if mas[rowy][game_field_size-colx-1]== 0:
 						kody2+=1
 						mas[rowy][game_field_size-colx-1] =  mas[rowy][game_field_size-colx]
-						mas[rowy][game_field_size-colx] = null
+						mas[rowy][game_field_size-colx] = 0
 					elif mas[rowy][game_field_size-colx-1]  == 1:
 						if  mas[rowy][game_field_size-colx] == 1 or  mas[rowy][game_field_size-colx] == 2:
 							kody2+=1
 							mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
-							mas[rowy][game_field_size-colx] = null
+							mas[rowy][game_field_size-colx] = 0
 					elif  mas[rowy][game_field_size-colx-1] >  mas[rowy][game_field_size-colx] and  mas[rowy][game_field_size-colx-1] <= 2 * mas[rowy][game_field_size-colx]  :
 						kody2+=1
 						mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
-						mas[rowy][game_field_size-colx] =  null
+						mas[rowy][game_field_size-colx] =  0
 						
 					elif  mas[rowy][game_field_size-colx-1] < mas[rowy][game_field_size-colx] and  mas[rowy][game_field_size-colx] <= 2 * mas[rowy][game_field_size-colx-1] :
 						kody2+=1
 						mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
-						mas[rowy][game_field_size-colx] =  null
+						mas[rowy][game_field_size-colx] =  0
 				else:
 					sempty += 1
 											

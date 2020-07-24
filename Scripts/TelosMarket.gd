@@ -14,3 +14,10 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float) -> void:
 #	pass
+
+
+func javascript_eval(code):
+	if OS.has_feature('JavaScript'):
+		return JavaScript.eval(code)
+	else:
+		return null

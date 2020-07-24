@@ -40,6 +40,7 @@ func setup():
 
 
 func _input(event):
+	Main.undo_game_field = Main.game_field
 	if (Main.new_game != 0) && (Main.clickInput == true):
 		#print("_input(event)", event)
 		if(Input.is_action_just_pressed("ui_touch")):
@@ -200,4 +201,3 @@ func calculate_direction():
 #func _on_AdMob_rewarded_video_started():
 #	print("MainWindow _on_AdMob_rewarded_video_started()")
 ##	debug_out.text = debug_out.text + "Rewarded video started\n"
-
