@@ -17,6 +17,8 @@ android/
 .mono/
 data_*/
 
+Builds/
+
 # End of https://www.toptal.com/developers/gitignore/api/godot
 *.apk
 *.png
