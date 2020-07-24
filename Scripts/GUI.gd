@@ -94,7 +94,7 @@ func show_game_over():
 func update_score():
 #	print("GUI update_score(score)")
 	$VBoxC/Menu/VBox/Score/Score.text = "Score: %s" % str(Main.current_score)
-	$VBoxC/Menu/VBox/Score/Best.text = "Best: %s" % str(Main.best_score)    
+	$VBoxC/Menu/VBox/Score/Best.text = "Score: %s" % str(Main.best_score)    
 
 
 func setup_signals():
@@ -188,14 +188,3 @@ func _on_Share_pressed() -> void:
 func _on_Close_pressed() -> void:
 	Main.new_game = 1
 	$Menu.hide()
-
-
-func _on_Help_pressed() -> void:
-	Main.new_game = 0
-
-	$HelpM.show()
-
-
-func _on_CloseHelpM_pressed() -> void:
-	Main.new_game = 1
-	$HelpM.hide()

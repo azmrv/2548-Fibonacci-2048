@@ -7,7 +7,7 @@ signal change_number
 # onready var destroy = get_node("destroy_tween")
 # onready var alpha = get_node("alpha_tween")
 # onready var timer = get_node("destroy_timer")
-var is_number_exist = false
+var exist_number = 0
 var number = 0
 var mas_coord = 0
 
@@ -21,30 +21,25 @@ var text_label = ""
 func set_xy(rowy, colx):
 	curry_row = rowy
 	currx_col = colx
-	set_color()
 	
 
 func set_number_to_label(num : int):
 	text_label = num as String
 	#$MarginContainer/CenterContainer/ColorRect/Label.text = str(num)
 	$CenterContainer/Label.text = str(num)
-	is_number_exist = true
+	if num == 0:
+		exist_number = 0
+	else:
+		exist_number = 1
 	number = num 
 	set_color()
 
 #func _ready():
 #	enter_scene()
 
-#func _process(delta):	
-#
+func _process(delta):	
+	set_color()
 
-
-
-func set_empty_number():
-	$CenterContainer/Label.text = ''
-	is_number_exist = null
-	number = null
-	set_color()	
 
 func set_number_fonts_size():
 	# number
@@ -52,8 +47,8 @@ func set_number_fonts_size():
 
 func set_number_text(text):
 	$CenterContainer/Label.text = text
-	is_number_exist = 1
-	number = null
+	exist_number = 1
+	number = 0
 	set_color()	
 	
 func setup_number_rect(size : Vector2):
@@ -61,7 +56,6 @@ func setup_number_rect(size : Vector2):
 	$CenterContainer.rect_min_size = (size - Vector2(4,4))
 	$CenterContainer/ColorRect.rect_min_size = (size - Vector2(4,4))
 	$CenterContainer/Label.rect_min_size = (size - Vector2(4,4))
-	set_color()
 	#print("set number size = %s" %  size)
 
 
@@ -270,7 +264,7 @@ func set_color_darker():
 #	var prevnumber
 #	if Main.fibn(number) 
 	
-	if number == null:				
+	if number == 0:				
 		select_node_to_color(Color( 0.3, 0.3, 0.3, 0.3 ))
 	elif number == 1 :
 		select_node_to_color("7ca66d")
@@ -322,7 +316,7 @@ func set_color_darker():
 func set_color_bright():
 	#print("set_color() number =", number)
 	#0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711
-	if number == null:				
+	if number == 0:				
 		select_node_to_color("838383")
 	elif number == 1 :
 		select_node_to_color("8e7474")

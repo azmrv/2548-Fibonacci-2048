@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/FontsStyle.tres" type="DynamicFont" id=2]
@@ -16,6 +16,13 @@ font_data = ExtResource( 1 )
 [sub_resource type="DynamicFont" id=2]
 size = 39
 font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFontData" id=3]
+font_path = "res://Fonts/PT Sans_Regular.ttf"
+
+[sub_resource type="DynamicFont" id=4]
+size = 45
+font_data = SubResource( 3 )
 
 [sub_resource type="DynamicFont" id=5]
 size = 33
@@ -45,7 +52,7 @@ __meta__ = {
 [node name="VBoxLabels" type="VBoxContainer" parent="VBox"]
 show_behind_parent = true
 margin_right = 500.0
-margin_bottom = 704.0
+margin_bottom = 816.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 11
@@ -55,8 +62,9 @@ custom_constants/separation = 30
 alignment = 1
 
 [node name="GameStatus" type="Label" parent="VBox/VBoxLabels"]
+margin_top = 277.0
 margin_right = 500.0
-margin_bottom = 92.0
+margin_bottom = 369.0
 custom_fonts/font = SubResource( 1 )
 text = "Game Over"
 align = 1
@@ -65,12 +73,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ScoreTable" type="Label" parent="VBox/VBoxLabels"]
-margin_top = 122.0
+[node name="ResultText" type="Label" parent="VBox/VBoxLabels"]
+margin_top = 399.0
 margin_right = 500.0
-margin_bottom = 704.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 2 )
 text = "Your Score:"
 align = 1
@@ -79,11 +85,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Score" type="Label" parent="VBox/VBoxLabels"]
+margin_top = 480.0
+margin_right = 500.0
+margin_bottom = 539.0
+custom_fonts/font = SubResource( 4 )
+text = "2584"
+align = 1
+valign = 1
+
 [node name="VBoxB" type="VBoxContainer" parent="VBox"]
 show_behind_parent = true
-margin_top = 712.0
+margin_top = 820.0
 margin_right = 500.0
-margin_bottom = 792.0
+margin_bottom = 900.0
 rect_min_size = Vector2( 500, 80 )
 size_flags_horizontal = 3
 size_flags_vertical = 11
@@ -100,15 +115,8 @@ size_flags_vertical = 11
 custom_constants/separation = 20
 alignment = 2
 
-[node name="Container3" type="Container" parent="VBox/VBoxB/HBox"]
-margin_right = 20.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 20, 80 )
-size_flags_vertical = 3
-
 [node name="NewGame" type="Button" parent="VBox/VBoxB/HBox"]
-margin_left = 40.0
-margin_right = 460.0
+margin_right = 500.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
@@ -123,19 +131,6 @@ text = "Try Again!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Container2" type="Container" parent="VBox/VBoxB/HBox"]
-margin_left = 480.0
-margin_right = 500.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 20, 80 )
-size_flags_vertical = 3
-
-[node name="Container" type="Container" parent="VBox"]
-margin_top = 800.0
-margin_right = 500.0
-margin_bottom = 900.0
-rect_min_size = Vector2( 0, 100 )
 
 [node name="WaitForADs" type="Timer" parent="."]
 wait_time = 3.0
