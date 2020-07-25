@@ -249,9 +249,13 @@ func colors_thems(curr_color_them : String):
 		return
 
 
+func arr_copy(arr):
+	return arr.duplicate(true)
+
+
 func undo():
 	if undo_game_field != null:
-		game_field = undo_game_field
+		game_field = arr_copy(undo_game_field)
 	reasign_numbers_on_gamefield()
 
 func ai_turns(turns:int):
