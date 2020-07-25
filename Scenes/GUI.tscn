@@ -332,6 +332,19 @@ margin_bottom = 197.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="GAME OVER" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
+margin_top = 172.0
+margin_right = 400.0
+margin_bottom = 232.0
+rect_min_size = Vector2( 0, 60 )
+custom_styles/hover = ExtResource( 11 )
+custom_styles/pressed = ExtResource( 8 )
+custom_styles/focus = ExtResource( 7 )
+custom_styles/disabled = ExtResource( 10 )
+custom_styles/normal = ExtResource( 9 )
+custom_fonts/font = ExtResource( 5 )
+text = "GAME OVER"
+
 [node name="AI" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
 margin_top = 172.0
 margin_right = 400.0
@@ -557,6 +570,7 @@ text = "Close Help"
 [connection signal="pressed" from="VBoxC/Menu/VBox/Buttons/Undo" to="." method="_on_Undo_pressed"]
 [connection signal="pressed" from="VBoxC/Menu/VBox/Buttons/Help" to="." method="_on_Help_pressed"]
 [connection signal="pressed" from="VBoxC/Menu/VBox/Buttons/MenuB" to="." method="_on_MenuB_pressed"]
+[connection signal="pressed" from="Menu/CRect/CenterContainer/VBox/GAME OVER" to="." method="gameover"]
 [connection signal="pressed" from="Menu/CRect/CenterContainer/VBox/AI" to="." method="_on_AI_pressed"]
 [connection signal="pressed" from="Menu/CRect/CenterContainer/VBox/Options" to="." method="_on_Options_pressed"]
 [connection signal="pressed" from="Menu/CRect/CenterContainer/VBox/ToggleTheme" to="." method="_on_ToggleTheme_pressed"]

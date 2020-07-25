@@ -69,20 +69,16 @@ var eend = 4
 var koldop = 2
 var kodn
 
-# for testing old value = 1, 2
-var number_one = 1
-var number_two = 2
-var number_three = 3
-var number_four = 4
-var number_five = 5
-
 var undo_game_field = null
+var is_undo_copied = false
+
 var game_field = [[],[]]
 
 var randgen = RandomNumberGenerator.new()
 
 var current_score = 0
 var best_score = 0
+var scores_dict = {"1st Place": 1134903170, "2st Place": 832040, "3st Place": 317811, "4st Place": 46368, "5st Place": 10946, "6st Place": 2584}
 
 var show_ads = false
 
@@ -90,6 +86,13 @@ var new_game = 0
 
 var number_rect_size = null
 var number_scene_pos = 0
+# for testing old value = 1, 2
+var number_one = 1
+var number_two = 2
+var number_three = 3
+var number_four = 4
+var number_five = 5
+
 
 func _ready():
 #	print("_ready()")
@@ -152,6 +155,7 @@ func new_game():
 	print("Main new_game()")
 	randgen.randomize()
 	background_node.set_visible(true)
+	undo_game_field = null
 	new_game = 1	
 	game_field = make_matrix()
 	summ = 0	
@@ -169,6 +173,7 @@ func new_game():
 
 func game_over():
 	print("Main game_over()")
+	undo_game_field = null
 	if new_game == 1:
 		print("Main game_over() do smthng")
 		new_game = 0
@@ -214,9 +219,9 @@ func setup_window():
 	number_rect_size = Vector2(number_size, number_size)
 
 
-func show_records_table():
-	# функция отображения результатов ввиде таблицы использовать словари ключ - знчение где ключ имя игрока или дата игры - значение реузтат игры.
-	pass
+func set_records_table():
+	# проверять значение current_score и вставлять его в словарь.
+	scores_dict = {"1st Place": 1134903170, "2st Place": 832040, "3st Place": 317811, "4st Place": 46368, "5st Place": 10946, "6st Place": 2584}
 
 
 func show_ads():
@@ -254,9 +259,30 @@ func arr_copy(arr):
 
 
 func undo():
+	print("			undo()")
+	print("game_field = %s" % str(game_field))
+	print("undo_game_field = %s" % str(undo_game_field))
 	if undo_game_field != null:
 		game_field = arr_copy(undo_game_field)
+	is_undo_copied = false	
+	print("			Undo")
+	print("game_field = %s" % str(game_field))
+	print("undo_game_field = %s" % str(undo_game_field) + "\n")
 	reasign_numbers_on_gamefield()
+
+
+func copy_gamefield():
+	print("			copy_gamefield()")
+	print("game_field = %s" % str(game_field))
+	print("undo_game_field = %s" % str(undo_game_field))
+	if is_undo_copied == false:
+		undo_game_field = arr_copy(game_field)
+	is_undo_copied = true
+	print("			COPY")
+	print("game_field = %s" % str(game_field))
+	print("undo_game_field = %s" % str(undo_game_field) + "\n")
+	reasign_numbers_on_gamefield()
+
 
 func ai_turns(turns:int):
 	for i in range(turns):
@@ -423,7 +449,7 @@ func create_gamefield_with_plates():
 
 
 func reasign_numbers_on_gamefield():
-#	print("reasign_numbers_on_gamefield()")
+	print("reasign_numbers_on_gamefield()")
 	var children_mas_number_scene = gamefield_node.get_children()
 	for colx in range(game_field_size):
 		for rowy in range(game_field_size):
@@ -463,6 +489,7 @@ func fill_field_with_numbers():
 		generate_new_numbers_in_array()
 	else:
 		game_over()
+
 
 func fibn(k):
 	if k == 1:
@@ -577,7 +604,7 @@ func show_background_node(bl:bool):
 func move_down(mas):
 #	print("func move_down(mas)")
 	randgen.randomize()
-	
+	copy_gamefield()
 	var kodx1 = 1
 	while kodx1 == 1:
 		var sempty = 0
@@ -622,11 +649,13 @@ func move_down(mas):
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
+	is_undo_copied = false
+
 
 func move_up(mas):
 #	print("func move_up(mas)")
 	randgen.randomize()
-
+	copy_gamefield()
 	var kodx2 = 1
 	while kodx2 == 1:
 		var sempty = 0
@@ -671,11 +700,13 @@ func move_up(mas):
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
-	
+	is_undo_copied = false
+
+
 func move_right(mas):
 #	print("func move_right(mas)")
 	randgen.randomize()
-
+	copy_gamefield()
 	var kody1 = 1
 	while kody1 == 1:
 		var sempty = 0
@@ -719,11 +750,13 @@ func move_right(mas):
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
+	is_undo_copied = false
+
 
 func move_left(mas):
 #	print("func move_left(mas)")
 	randgen.randomize()
-
+	copy_gamefield()
 	var kody2 = 1
 	while kody2 == 1:
 		var sempty = 0
@@ -769,3 +802,4 @@ func move_left(mas):
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
+	is_undo_copied = false

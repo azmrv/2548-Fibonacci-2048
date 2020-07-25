@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Fonts/PT Sans_Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/FontsStyle.tres" type="DynamicFont" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://Styles/styleboxflat_pressed.tres" type="StyleBox" id=6]
 [ext_resource path="res://Styles/styleboxflat_disabled.tres" type="StyleBox" id=7]
 [ext_resource path="res://Styles/styleboxflat_hover.tres" type="StyleBox" id=8]
+[ext_resource path="res://Styles/dynamicfont_numbers.tres" type="DynamicFont" id=9]
+[ext_resource path="res://Styles/GUI.tres" type="StyleBox" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 70
@@ -17,7 +19,7 @@ font_data = ExtResource( 1 )
 size = 39
 font_data = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=3]
 size = 33
 use_mipmaps = true
 use_filter = true
@@ -65,10 +67,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ScoreTable" type="Label" parent="VBox/VBoxLabels"]
+[node name="123" type="Label" parent="VBox/VBoxLabels"]
+visible = false
 margin_top = 122.0
 margin_right = 500.0
-margin_bottom = 704.0
+margin_bottom = 674.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 2 )
@@ -78,6 +81,24 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ScoreTable" type="RichTextLabel" parent="VBox/VBoxLabels"]
+margin_top = 122.0
+margin_right = 500.0
+margin_bottom = 704.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/normal = ExtResource( 10 )
+custom_fonts/normal_font = ExtResource( 9 )
+custom_colors/default_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 2
+bbcode_enabled = true
+bbcode_text = "TEXT1 "
+text = "TEXT1 "
+scroll_following = true
 
 [node name="VBoxB" type="VBoxContainer" parent="VBox"]
 show_behind_parent = true
@@ -154,7 +175,7 @@ margin_left = 56.0
 margin_top = 208.0
 margin_right = 456.0
 margin_bottom = 626.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 text = "PLZ SEE ADS"
 align = 1
 valign = 1
