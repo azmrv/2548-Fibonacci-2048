@@ -160,7 +160,7 @@ func new_game():
 	game_field = make_matrix()
 	summ = 0	
 	current_score = summ
-	fill_field_with_numbers()
+	check_game_condition()
 	reasign_numbers_on_gamefield()
 	gui_node.set_visible(true)
 	gui_node.update_score()
@@ -174,12 +174,10 @@ func new_game():
 func game_over():
 	print("Main game_over()")
 	undo_game_field = null
-	if new_game == 1:
-		print("Main game_over() do smthng")
-		new_game = 0
-		gui_node.set_visible(false)
-		gui_gameover_node.update_score()
-		gui_gameover_node.set_visible(true)
+	new_game = 0
+	gui_node.set_visible(false)
+	gui_gameover_node.update_score()
+	gui_gameover_node.set_visible(true)
 
 
 func setup():
@@ -378,7 +376,7 @@ func load_game():
 
 
 func make_matrix():
-	#	print("make_2d_array()")
+	#print("make_2d_array()")
 	var array = []
 	for colx in game_field_size:
 		array.append([])
@@ -388,14 +386,10 @@ func make_matrix():
 
 
 func generate_new_numbers_in_array():
-	print("Main generate_new_numbers_in_array() \n")
+	#print("Main generate_new_numbers_in_array() \n")
 	randgen.randomize()
 	kodn = koldop
 	while kodn > 0:
-		#var nx = randgen.randf()
-		#var ny = randgen.randf()
-		#var x = int(nx * game_field_size % 1)
-		#var y = int(ny * game_field_size % 1)	
 		var colx = randgen.randi_range(0,game_field_size - 1)
 		var rowy = randgen.randi_range(0,game_field_size - 1)	
 		#print(rowy, colx)
@@ -408,19 +402,10 @@ func generate_new_numbers_in_array():
 			else:
 				game_field[rowy][colx] = number_two
 				summ += 2
-#			if num <= 0.5:
-#				game_field[rowy][colx] = 1
-#				summ += 1
-#			elif num <= 0.8:
-#				game_field[rowy][colx] = 2
-#				summ += 2
-#			else:
-#				game_field[rowy][colx] = 3
-#				summ += 3	
 
 
 func create_gamefield_with_plates():
-#	print("create_gamefield_with_plates()")
+	#print("create_gamefield_with_plates()")
 	for colx in range(game_field_size):
 		for rowy in range(game_field_size):
 			var curr_number = number_scene.instance()
@@ -432,7 +417,7 @@ func create_gamefield_with_plates():
 				curr_number.position.x = number_size * colx + game_field_margin * (colx + 1)
 				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 			else:
-#				print("draw_field() %s " % game_field[rowy][colx] as String)
+	#print("draw_field() %s " % game_field[rowy][colx] as String)
 				curr_number.set_xy(rowy, colx)
 				curr_number.setup_number_rect(number_rect_size)
 				curr_number.set_number_to_label(game_field[rowy][colx])
@@ -442,7 +427,7 @@ func create_gamefield_with_plates():
 
 
 func reasign_numbers_on_gamefield():
-#	print("reasign_numbers_on_gamefield()")
+	#print("reasign_numbers_on_gamefield()")
 	var children_mas_number_scene = gamefield_node.get_children()
 	for colx in range(game_field_size):
 		for rowy in range(game_field_size):
@@ -462,26 +447,24 @@ func reasign_numbers_on_gamefield():
 
 
 func check_space_for_numbers():
-#	print("Main blank_space_on_board()")
-	var space = 0
+	#print("Main check_space_for_numbers()")
+	var spaces = 0
 	for colx in game_field_size:
 		for rowy in game_field_size:
-			if game_field[rowy][colx] == null or game_field[rowy][colx] == 0:
-				space += 1
-	if space >= 2:
-		return true
-	elif space < 4:
-		kodn = 0
-	else:
-		return false
+			if game_field[rowy][colx] == 0:
+				spaces += 1
+	return spaces
 
 
-func fill_field_with_numbers():
-#	print("fill_field_with_numbers()")
-	if check_space_for_numbers():
+func check_game_condition():
+	#print("fill_field_with_numbers()")
+	if check_space_for_numbers() >= 2:
 		generate_new_numbers_in_array()
-	else:
+	elif check_space_for_numbers() == 0:
 		game_over()
+		return
+	else:
+		return
 
 
 func fibn(k):
@@ -593,7 +576,6 @@ func show_background_node(bl:bool):
 		background_node.set_visible(bl)
 
 
-
 func move_down(mas):
 #	print("func move_down(mas)")
 	randgen.randomize()
@@ -631,14 +613,13 @@ func move_down(mas):
 			kodx1 = 0
 			if sempty == 0:
 				# после окончания игры прододжает выполнять fill_field_with_numbers()
-				update_score()
 				game_over()
-				return
 			elif sempty <= 4:
 				koldop = 1
+				generate_new_numbers_in_array()
 			else:
 				koldop = 2
-			fill_field_with_numbers()
+				generate_new_numbers_in_array()
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
@@ -682,14 +663,13 @@ func move_up(mas):
 		else:
 			kodx2 = 0
 			if sempty == 0:
-				update_score()
 				game_over()
-				return
 			elif sempty <= 4:
 				koldop = 1
+				generate_new_numbers_in_array()
 			else:
 				koldop = 2
-			fill_field_with_numbers()
+				generate_new_numbers_in_array()
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
@@ -732,14 +712,13 @@ func move_right(mas):
 		else:
 			kody1 = 0
 			if sempty == 0:
-				update_score()
 				game_over()
-				return
 			elif sempty <= 4:
 				koldop = 1
+				generate_new_numbers_in_array()
 			else:
 				koldop = 2
-			fill_field_with_numbers()
+				generate_new_numbers_in_array()
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
@@ -784,14 +763,13 @@ func move_left(mas):
 		else:
 			kody2 = 0
 			if sempty == 0:
-				update_score()
 				game_over()
-				return
 			elif sempty <= 4:
 				koldop = 1
+				generate_new_numbers_in_array()
 			else:
 				koldop = 2
-			fill_field_with_numbers()
+				generate_new_numbers_in_array()
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
