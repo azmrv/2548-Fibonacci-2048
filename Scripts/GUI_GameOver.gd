@@ -10,12 +10,12 @@ var background_scenes = preload("res://Scenes/Background.tscn")
 
 func _ready() -> void:
 	setup()
-
-
-func _process(delta: float) -> void:
-	if $WaitForADs.get_time_left() != 0:
-		$PopUp/TimeToADs.text = str($WaitForADs.time_left)
-
+#
+#
+#func _process(delta: float) -> void:
+#	if $WaitForADs.get_time_left() != 0:
+#		$PopUp/TimeToADs.text = str($WaitForADs.time_left)
+#
 
 
 func setup():

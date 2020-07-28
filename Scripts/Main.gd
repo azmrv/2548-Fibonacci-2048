@@ -616,7 +616,7 @@ func move_down(mas):
 				game_over()
 			elif sempty <= 4:
 				koldop = 1
-
+				generate_new_numbers_in_array()
 			else:
 				koldop = 2
 				generate_new_numbers_in_array()
@@ -666,6 +666,7 @@ func move_up(mas):
 				game_over()
 			elif sempty <= 4:
 				koldop = 1
+				generate_new_numbers_in_array()
 			else:
 				koldop = 2
 				generate_new_numbers_in_array()
@@ -714,9 +715,10 @@ func move_right(mas):
 				game_over()
 			elif sempty <= 4:
 				koldop = 1
+				generate_new_numbers_in_array()
 			else:
 				koldop = 2
-			generate_new_numbers_in_array()
+				generate_new_numbers_in_array()
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
@@ -764,9 +766,10 @@ func move_left(mas):
 				game_over()
 			elif sempty <= 4:
 				koldop = 1
+				generate_new_numbers_in_array()
 			else:
 				koldop = 2
-			generate_new_numbers_in_array()
+				generate_new_numbers_in_array()
 	if gui_node != null && new_game != 0:
 		reasign_numbers_on_gamefield()
 	update_score()
