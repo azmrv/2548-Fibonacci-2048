@@ -78,7 +78,7 @@ var randgen = RandomNumberGenerator.new()
 
 var current_score = 0
 var best_score = 0
-var scores_dict = {"1st Place": 1134903170, "2st Place": 832040, "3st Place": 317811, "4st Place": 46368, "5st Place": 10946, "6st Place": 2584}
+var scores_dict = {"1st    ": 1134903170, "2st    ": 832040, "3st    ": 317811, "4st    ": 46368, "5st    ": 10946, "6st    ": 2584, "7st    ": 987, "8st    ": 377, "9st    ": 233, "10st  ": 144}
 
 var show_ads = false
 
@@ -221,7 +221,12 @@ func setup_window():
 
 func set_records_table():
 	# проверять значение current_score и вставлять его в словарь.
-	scores_dict = {"1st Place": 1134903170, "2st Place": 832040, "3st Place": 317811, "4st Place": 46368, "5st Place": 10946, "6st Place": 2584}
+	var value = 0
+	for key in scores_dict:
+		if scores_dict[key] as int <= current_score:			
+#			scores_dict[key] = ["My Score"]
+			scores_dict[key] = str(current_score)
+
 
 
 func show_ads():
@@ -259,29 +264,17 @@ func arr_copy(arr):
 
 
 func undo():
-	print("			undo()")
-	print("game_field = %s" % str(game_field))
-	print("undo_game_field = %s" % str(undo_game_field))
 	if undo_game_field != null:
 		game_field = arr_copy(undo_game_field)
 	is_undo_copied = false	
-	print("			Undo")
-	print("game_field = %s" % str(game_field))
-	print("undo_game_field = %s" % str(undo_game_field) + "\n")
 	reasign_numbers_on_gamefield()
 
 
 func copy_gamefield():
-	print("			copy_gamefield()")
-	print("game_field = %s" % str(game_field))
-	print("undo_game_field = %s" % str(undo_game_field))
 	if is_undo_copied == false:
 		undo_game_field = arr_copy(game_field)
 	is_undo_copied = true
-	print("			COPY")
-	print("game_field = %s" % str(game_field))
-	print("undo_game_field = %s" % str(undo_game_field) + "\n")
-	reasign_numbers_on_gamefield()
+	
 
 
 func ai_turns(turns:int):
@@ -323,10 +316,10 @@ func save():
 
 
 func save_game():
-# Note: This can be called from anywhere inside the tree. This function is
-# path independent.
-# Go through everything in the persist category and ask them to return a
-# dict of relevant variables
+	# Note: This can be called from anywhere inside the tree. This function is
+	# path independent.
+	# Go through everything in the persist category and ask them to return a
+	# dict of relevant variables
 	var save_game = File.new()
 	save_game.open("user://savegame.save", File.WRITE)
 	var save_nodes = get_tree().get_nodes_in_group("Persist")
@@ -351,7 +344,7 @@ func save_game():
 
 func load_game():
 	# Note: This can be called from anywhere inside the tree. This function
-# is path independent.
+	# is path independent.
 	var save_game = File.new()
 	if not save_game.file_exists("user://savegame.save"):
 		return # Error! We don't have a save to load.
@@ -385,7 +378,7 @@ func load_game():
 
 
 func make_matrix():
-#	print("make_2d_array()")
+	#	print("make_2d_array()")
 	var array = []
 	for colx in game_field_size:
 		array.append([])
@@ -395,7 +388,7 @@ func make_matrix():
 
 
 func generate_new_numbers_in_array():
-#	print("Main generate_new_numbers_in_array()")
+	print("Main generate_new_numbers_in_array() \n")
 	randgen.randomize()
 	kodn = koldop
 	while kodn > 0:
@@ -449,7 +442,7 @@ func create_gamefield_with_plates():
 
 
 func reasign_numbers_on_gamefield():
-	print("reasign_numbers_on_gamefield()")
+#	print("reasign_numbers_on_gamefield()")
 	var children_mas_number_scene = gamefield_node.get_children()
 	for colx in range(game_field_size):
 		for rowy in range(game_field_size):

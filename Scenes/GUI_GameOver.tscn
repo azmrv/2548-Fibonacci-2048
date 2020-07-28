@@ -34,8 +34,6 @@ script = ExtResource( 3 )
 [node name="VBox" type="VBoxContainer" parent="."]
 margin_right = 500.0
 margin_bottom = 900.0
-grow_horizontal = 2
-grow_vertical = 2
 rect_min_size = Vector2( 500, 900 )
 size_flags_horizontal = 11
 size_flags_vertical = 11
@@ -47,9 +45,7 @@ __meta__ = {
 [node name="VBoxLabels" type="VBoxContainer" parent="VBox"]
 show_behind_parent = true
 margin_right = 500.0
-margin_bottom = 704.0
-grow_horizontal = 2
-grow_vertical = 2
+margin_bottom = 712.0
 size_flags_horizontal = 11
 size_flags_vertical = 11
 size_flags_stretch_ratio = 128.0
@@ -67,25 +63,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="123" type="Label" parent="VBox/VBoxLabels"]
-visible = false
-margin_top = 122.0
-margin_right = 500.0
-margin_bottom = 674.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_fonts/font = SubResource( 2 )
-text = "Your Score:"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="ScoreTable" type="RichTextLabel" parent="VBox/VBoxLabels"]
 margin_top = 122.0
 margin_right = 500.0
-margin_bottom = 704.0
+margin_bottom = 712.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/normal = ExtResource( 10 )
@@ -102,9 +83,9 @@ scroll_following = true
 
 [node name="VBoxB" type="VBoxContainer" parent="VBox"]
 show_behind_parent = true
-margin_top = 712.0
+margin_top = 716.0
 margin_right = 500.0
-margin_bottom = 792.0
+margin_bottom = 796.0
 rect_min_size = Vector2( 500, 80 )
 size_flags_horizontal = 3
 size_flags_vertical = 11
