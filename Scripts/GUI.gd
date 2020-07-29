@@ -102,7 +102,11 @@ func setup_signals():
 	pass
 
 
-
+func show_gameover():
+	$MessPU.show()
+	$MessPU/CRect2/CC/MessageBox.text = "Game over"
+	$GameOverT.wait_time = 2
+	$GameOverT.start()
 
 
 func _on_Psyontech_pressed() -> void:
@@ -181,6 +185,8 @@ func _on_AI_pressed() -> void:
 	Main.new_game = 1
 	$Menu/CRect/CenterContainer/VBox/AI.text = "10 turns AI"
 	$Menu.hide()
+	AdsManager.showRewardedVideo()
+	# temporary ?
 	Main.ai_turns(20)
 	
 
@@ -204,3 +210,8 @@ func _on_Help_pressed() -> void:
 func _on_CloseHelpM_pressed() -> void:
 	Main.new_game = 1
 	$HelpM.hide()
+
+
+func _on_GameOverT_timeout() -> void:
+	$MessPU.hide()
+	Main.show_result()

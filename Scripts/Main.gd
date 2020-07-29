@@ -64,10 +64,13 @@ var plate_background_color ="5E7478"
 var menu_machground = "A5B48C"
 var text_color = "363636"
 
+
 var summ = 0
+var sumb = 0
+var kodurv = 3			  
 var eend = 4
 var koldop = 2
-var kodn
+#var kodn
 
 var undo_game_field = null
 var is_undo_copied = false
@@ -76,6 +79,8 @@ var game_field = [[],[]]
 
 var randgen = RandomNumberGenerator.new()
 
+var undo_best_score
+var undo_score
 var current_score = 0
 var best_score = 0
 var scores_dict = {"1st    ": 1134903170, "2st    ": 832040, "3st    ": 317811, "4st    ": 46368, "5st    ": 10946, "6st    ": 2584, "7st    ": 987, "8st    ": 377, "9st    ": 233, "10st  ": 144}
@@ -132,7 +137,6 @@ func setup_nodes():
 	gui_gameover_node = gui_gameover_scene.instance()
 	get_node("/root/MainWindow").add_child(gui_gameover_node)
 	gui_gameover_node.set_visible(false)
-	
 
 
 #func setup_signals():
@@ -170,14 +174,17 @@ func new_game():
 #	get_tree().change_scene()
 
 
-
 func game_over():
 	print("Main game_over()")
 	undo_game_field = null
 	new_game = 0
+	gui_node.show_gameover()
+
+func show_result():
 	gui_node.set_visible(false)
 	gui_gameover_node.update_score()
 	gui_gameover_node.set_visible(true)
+
 
 
 func setup():
@@ -221,11 +228,47 @@ func set_records_table():
 	# проверять значение current_score и вставлять его в словарь.
 	var value = 0
 	for key in scores_dict:
-		if scores_dict[key] as int <= current_score:			
-#			scores_dict[key] = ["My Score"]
+		if scores_dict[key] as int <= current_score:
+
 			scores_dict[key] = str(current_score)
 
+func max_dict_to(dict, val):
+	var max_var = 0
+	var max_val = 0
+	for i in dict:
+		if val > dict[i]:
+			max_val = val
+			max_var = i
+	return max_var
 
+func min_dict_to(dict, val):
+	var min_var = 0
+	var min_val = 0
+	for i in dict:
+		if val < dict[i]:
+			min_val = val
+			min_var = i
+	return min_var	
+
+func max_dict_val(dict):
+	var max_var = 0
+	var max_val = 0
+	for i in dict:
+		var val = dict[i]
+		if val > dict[i]:
+			max_val = val
+			max_var = i
+	return max_var
+
+func min_dict_val(dict):
+	var min_var = 0
+	var min_val = 0
+	for i in dict:
+		var val = dict[i]
+		if val < dict[i]:
+			min_val = val
+			min_var = i
+	return min_var	
 
 func show_ads():
 	print("Main show_ads()")
@@ -264,15 +307,20 @@ func arr_copy(arr):
 func undo():
 	if undo_game_field != null:
 		game_field = arr_copy(undo_game_field)
+		current_score = undo_score
+		summ = current_score
+		best_score = undo_best_score
 	is_undo_copied = false	
 	reasign_numbers_on_gamefield()
+	update_score()
 
 
 func copy_gamefield():
 	if is_undo_copied == false:
 		undo_game_field = arr_copy(game_field)
+		undo_score = current_score
+		undo_best_score = best_score
 	is_undo_copied = true
-	
 
 
 func ai_turns(turns:int):
@@ -387,6 +435,7 @@ func make_matrix():
 
 func generate_new_numbers_in_array():
 	#print("Main generate_new_numbers_in_array() \n")
+	var kodn
 	randgen.randomize()
 	kodn = koldop
 	while kodn > 0:
@@ -396,13 +445,13 @@ func generate_new_numbers_in_array():
 		if game_field[rowy][colx] == 0:
 			kodn = kodn - 1
 			var num = randgen.randf()
-			if num <= 0.618:
+			if num <= 0.72:
 				game_field[rowy][colx] = number_one
-				summ += 1
+				summ += number_one
 			else:
 				game_field[rowy][colx] = number_two
-				summ += 2
-
+				summ += number_two
+	update_score()
 
 func create_gamefield_with_plates():
 	#print("create_gamefield_with_plates()")
@@ -425,7 +474,6 @@ func create_gamefield_with_plates():
 				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 			gamefield_node.add_child(curr_number)
 
-
 func reasign_numbers_on_gamefield():
 	#print("reasign_numbers_on_gamefield()")
 	var children_mas_number_scene = gamefield_node.get_children()
@@ -445,7 +493,6 @@ func reasign_numbers_on_gamefield():
 						call_deferred("do_graz_adsoff")
 	gui_node.update_score()
 
-
 func check_space_for_numbers():
 	#print("Main check_space_for_numbers()")
 	var spaces = 0
@@ -455,17 +502,13 @@ func check_space_for_numbers():
 				spaces += 1
 	return spaces
 
-
 func check_game_condition():
 	#print("fill_field_with_numbers()")
-	if check_space_for_numbers() >= 2:
+	if check_space_for_numbers() != 0:
 		generate_new_numbers_in_array()
 	elif check_space_for_numbers() == 0:
 		game_over()
 		return
-	else:
-		return
-
 
 func fibn(k):
 	if k == 1:
@@ -482,7 +525,6 @@ func fibn(k):
 		var a = sb
 		sb = sc
 	return n
-
 
 # функции для динамического расчета палитры плашек под числами
 #static bool IsFib(long T, out long idx)
@@ -545,12 +587,9 @@ func do_graz_2584():
 	print("pozdr s 2584")
 	# играть музыку играть фонариками запускать фейерверки 
 
-
 func do_graz_adsoff():
 	print("pozdr s 7778742049 no ads for you")
 	# играть музыку играть фонариками запускать фейерверки 
-
-
 
 func show_gui_node(bl:bool):
 	print("Main show_gui_node")
@@ -597,11 +636,11 @@ func move_down(mas):
 							kodx1 += 1
 							mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
 							mas[rowy][colx] = 0
-					elif mas[rowy+1][colx] > mas[rowy][colx] and mas[rowy+1][colx] <= 2 * mas[rowy][colx]:
+					elif abs(mas[rowy+1][colx]) > abs(mas[rowy][colx]) and abs(mas[rowy+1][colx]) <= 2 * abs(mas[rowy][colx]):
 						kodx1 += 1
 						mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
 						mas[rowy][colx] = 0
-					elif mas[rowy+1][colx] < mas[rowy][colx] and mas[rowy][colx] <= 2 * mas[rowy+1][colx]:
+					elif abs(mas[rowy+1][colx]) < abs(mas[rowy][colx]) and abs(mas[rowy][colx]) <= 2 * abs(mas[rowy+1][colx]):
 						kodx1 += 1
 						mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
 						mas[rowy][colx] = 0
@@ -611,18 +650,14 @@ func move_down(mas):
 			kodx1 = 1
 		else:
 			kodx1 = 0
-			if sempty == 0:
-				# после окончания игры прододжает выполнять fill_field_with_numbers()
-				game_over()
-			elif sempty <= 4:
-				koldop = 1
-				generate_new_numbers_in_array()
-			else:
+			if sempty <= 4:
+				koldop = 1				
+			elif sempty != 0:
 				koldop = 2
-				generate_new_numbers_in_array()
-	if gui_node != null && new_game != 0:
-		reasign_numbers_on_gamefield()
-	update_score()
+			check_game_condition()
+			if sempty == 0:
+				game_over()			
+	reasign_numbers_on_gamefield()	
 	is_undo_copied = false
 
 
@@ -647,11 +682,11 @@ func move_up(mas):
 							kodx2+=1
 							mas[game_field_size-rowy-1][colx] = mas[game_field_size-rowy-1][colx]+ mas[game_field_size-rowy][colx]
 							mas[game_field_size-rowy][colx] = 0
-					elif  mas[game_field_size-rowy-1][colx] > mas[game_field_size-rowy][colx]  and  mas[game_field_size-rowy-1][colx] <= 2 * mas[game_field_size-rowy][colx] :
+					elif  abs(mas[game_field_size-rowy-1][colx]) > abs(mas[game_field_size-rowy][colx])  and  abs(mas[game_field_size-rowy-1][colx]) <= 2 * abs(mas[game_field_size-rowy][colx]) :
 						kodx2+=1
 						mas[game_field_size-rowy-1][colx] =  mas[game_field_size-rowy-1][colx]+ mas[game_field_size-rowy][colx]
 						mas[game_field_size-rowy][colx] = 0
-					elif  mas[game_field_size-rowy-1][colx] <  mas[game_field_size-rowy][colx] and  mas[game_field_size-rowy][colx] <= 2 *  mas[game_field_size-rowy-1][colx]:
+					elif abs(mas[game_field_size-rowy-1][colx]) <  abs(mas[game_field_size-rowy][colx]) and  abs(mas[game_field_size-rowy][colx]) <= 2 * abs(mas[game_field_size-rowy-1][colx]):
 						kodx2+=1
 						mas[game_field_size-rowy-1][colx] =  mas[game_field_size-rowy-1][colx] +  mas[game_field_size-rowy][colx]
 						mas[game_field_size-rowy][colx] = 0
@@ -662,17 +697,14 @@ func move_up(mas):
 			kodx2 = 1
 		else:
 			kodx2 = 0
-			if sempty == 0:
-				game_over()
-			elif sempty <= 4:
-				koldop = 1
-				generate_new_numbers_in_array()
-			else:
+			if sempty <= 4:
+				koldop = 1				
+			elif sempty != 0:
 				koldop = 2
-				generate_new_numbers_in_array()
-	if gui_node != null && new_game != 0:
-		reasign_numbers_on_gamefield()
-	update_score()
+			check_game_condition()
+			if sempty == 0:
+				game_over()			
+	reasign_numbers_on_gamefield()	
 	is_undo_copied = false
 
 
@@ -697,11 +729,11 @@ func move_right(mas):
 							kody1+=1
 							mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
 							mas[rowy][colx] = 0
-					elif mas[rowy][colx+1] > mas[rowy][colx] and mas[rowy][colx+1] <= 2 * mas[rowy][colx]:
+					elif abs(mas[rowy][colx+1]) > abs(mas[rowy][colx]) and abs(mas[rowy][colx+1]) <= 2 * abs(mas[rowy][colx]):
 						kody1+=1
 						mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
 						mas[rowy][colx] = 0
-					elif mas[rowy][colx+1] < mas[rowy][colx] and mas[rowy][colx] <= 2 * mas[rowy][colx+1]:
+					elif abs(mas[rowy][colx+1]) < abs(mas[rowy][colx]) and abs(mas[rowy][colx]) <= 2 * abs(mas[rowy][colx+1]):
 						kody1+=1
 						mas[rowy][colx+1] = mas[rowy][colx+1]+mas[rowy][colx]
 						mas[rowy][colx] = 0	
@@ -711,18 +743,17 @@ func move_right(mas):
 			kody1 = 1
 		else:
 			kody1 = 0
-			if sempty == 0:
-				game_over()
-			elif sempty <= 4:
-				koldop = 1
-				generate_new_numbers_in_array()
-			else:
+			if sempty <= 4:
+				koldop = 1				
+			elif sempty != 0:
 				koldop = 2
-				generate_new_numbers_in_array()
-	if gui_node != null && new_game != 0:
-		reasign_numbers_on_gamefield()
-	update_score()
+			check_game_condition()
+			if sempty == 0:
+				game_over()			
+	reasign_numbers_on_gamefield()	
 	is_undo_copied = false
+	
+
 
 
 func move_left(mas):
@@ -746,12 +777,12 @@ func move_left(mas):
 							kody2+=1
 							mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
 							mas[rowy][game_field_size-colx] = 0
-					elif  mas[rowy][game_field_size-colx-1] >  mas[rowy][game_field_size-colx] and  mas[rowy][game_field_size-colx-1] <= 2 * mas[rowy][game_field_size-colx]  :
+					elif  abs(mas[rowy][game_field_size-colx-1]) >  abs(mas[rowy][game_field_size-colx]) and  abs(mas[rowy][game_field_size-colx-1]) <= 2 * abs(mas[rowy][game_field_size-colx]) :
 						kody2+=1
 						mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
 						mas[rowy][game_field_size-colx] =  0
 						
-					elif  mas[rowy][game_field_size-colx-1] < mas[rowy][game_field_size-colx] and  mas[rowy][game_field_size-colx] <= 2 * mas[rowy][game_field_size-colx-1] :
+					elif  abs(mas[rowy][game_field_size-colx-1]) < abs(mas[rowy][game_field_size-colx]) and  abs(mas[rowy][game_field_size-colx]) <= 2 * abs(mas[rowy][game_field_size-colx-1]) :
 						kody2+=1
 						mas[rowy][game_field_size-colx-1] = mas[rowy][game_field_size-colx-1] + mas[rowy][game_field_size-colx]
 						mas[rowy][game_field_size-colx] =  0
@@ -762,15 +793,12 @@ func move_left(mas):
 			kody2 = 1
 		else:
 			kody2 = 0
-			if sempty == 0:
-				game_over()
-			elif sempty <= 4:
-				koldop = 1
-				generate_new_numbers_in_array()
-			else:
+			if sempty <= 4:
+				koldop = 1				
+			elif sempty != 0:
 				koldop = 2
-				generate_new_numbers_in_array()
-	if gui_node != null && new_game != 0:
-		reasign_numbers_on_gamefield()
-	update_score()
+			check_game_condition()
+			if sempty == 0:
+				game_over()			
+	reasign_numbers_on_gamefield()	
 	is_undo_copied = false
