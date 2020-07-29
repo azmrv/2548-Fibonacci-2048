@@ -146,12 +146,13 @@ func _on_interstitial_not_loaded():
 
 func _on_interstitial_loaded():
 	print("Interstitial loaded")
-	interstitialReady = true
+	interstitialReady = true	
 
 func _on_interstitial_close():
 	print("Interstitial closed")
 	interstitialReady = false
-
+	loadInterstitial()
+	
 func _on_rewarded_video_ad_loaded():
 	print("Rewarded loaded success")
 	rewardedReady = true
@@ -160,10 +161,12 @@ func _on_rewarded_video_ad_closed():
 	print("Rewarded closed")
 	rewardedReady = false
 	loadRewardedVideo()
-	
+
 func _on_rewarded(currency, amount):
 	print("Reward: " + currency + ", " + str(amount))
-	Main.undo()
+	Main.ai_turns(10)
+
+
 # Resize
 
 func onResize():

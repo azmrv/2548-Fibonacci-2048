@@ -12,7 +12,7 @@
 [ext_resource path="res://Styles/GUI.tres" type="StyleBox" id=10]
 
 [sub_resource type="DynamicFont" id=1]
-size = 70
+size = 60
 font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=2]
@@ -54,9 +54,9 @@ alignment = 1
 
 [node name="GameStatus" type="Label" parent="VBox/VBoxLabels"]
 margin_right = 500.0
-margin_bottom = 92.0
+margin_bottom = 79.0
 custom_fonts/font = SubResource( 1 )
-text = "Game Over"
+text = "You can do more!"
 align = 1
 valign = 1
 __meta__ = {
@@ -64,7 +64,7 @@ __meta__ = {
 }
 
 [node name="ScoreTable" type="RichTextLabel" parent="VBox/VBoxLabels"]
-margin_top = 122.0
+margin_top = 109.0
 margin_right = 500.0
 margin_bottom = 712.0
 size_flags_horizontal = 3
