@@ -20,7 +20,6 @@ func _ready() -> void:
 	setup_signals()
 	setup_nodes()
 	add_menu_items()
-	
 
 func setup_nodes():
 	showMenuLag = Timer.new()
@@ -29,14 +28,12 @@ func setup_nodes():
 	showMenuLag.name = "ShowMenuLag"
 	self.add_child(showMenuLag)
 
-	
 #Description
 #Dialog for confirmation of actions. This dialog inherits from AcceptDialog, but has by default an OK and Cancel button (in host OS order).
 #
 #To get cancel action, you can use:
 #
 #get_cancel().connect("pressed", self, "cancelled").
-
 
 func setup():
 	print("GUI setup()")
@@ -51,7 +48,6 @@ func setup():
 #	create_numbers_on_game_field()
 	print("set screen size = %s" %  screenSize)
 
-
 func add_menu_items():
 #	$VBoxC/Menu/VBox/Buttons/Menu.add_item("New Game",1)#	
 #	$VBoxC/Menu/VBox/Buttons/Menu.add_item("5 x 5",5))
@@ -61,14 +57,6 @@ func add_menu_items():
 #	$VBoxC/Menu/VBox/Buttons/Menu.add_item("Change Theme",3)
 #	$VBoxC/Menu/VBox/Buttons/Menu.add_item("Toggle AI",13)
 #	$VBoxC/Menu/VBox/Buttons/Menu.add_item("Options",9)
-	pass
-
-
-func show_message(text):
-#	print("show_message()")
-#	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.text = text
-#	$GUI_InGamePlay/VBoxContainer/CentContMessage/Message.show()
-#	$GUI_InGamePlay/MessageTimer.start()
 	pass
 
 
@@ -90,23 +78,27 @@ func show_game_over():
 #	$GUI_MainMenu/CenterContainer2/VBoxContainer/StartGame.show()
 	pass
 
-
 func update_score():
 #	print("GUI update_score(score)")
 	$VBoxC/Menu/VBox/Score/Score.text = "Score: %s" % str(Main.current_score)
 	$VBoxC/Menu/VBox/Score/Best.text = "Best: %s" % str(Main.best_score)    
 
-
 func setup_signals():
 #	print("setup_signals()")
 	pass
 
-
 func show_gameover():
+	$VBoxC/Menu/VBox/Buttons.visible = false
 	$MessPU.show()
 	$MessPU/CRect2/CC/MessageBox.text = "Game over"
 	$GameOverT.wait_time = 2
 	$GameOverT.start()
+
+func show_message(text):	
+	$MessGL.show()
+	$MessGL/CC/MessageBox.text = text
+	$Timer.wait_time = 2
+	$Timer.start()
 
 
 func _on_Psyontech_pressed() -> void:
@@ -114,18 +106,14 @@ func _on_Psyontech_pressed() -> void:
 	AdsManager.show()
 	OS.shell_open("http://games.psyon.tech/")
 
-
 func _on_Undo_pressed() -> void:
 	emit_signal("gui_undo")	
 	AdsManager.showRewardedVideo()
 	Main.undo()
 
-
 func _on_MenuB_pressed() -> void:
 	Main.new_game = 0
-
 	$Menu.show()
-
 
 func _on_Restart_pressed() -> void:
 	Main.new_game = 1
@@ -134,16 +122,13 @@ func _on_Restart_pressed() -> void:
 	Main.new_game()
 	$Menu.hide()
 
-
 func _on_8x8_pressed() -> void:
 	Main.new_game = 1
 	$Menu.hide()
 
-
 func _on_5x5_pressed() -> void:
 	Main.new_game = 1
 	$Menu.hide()
-
 
 func _on_ToggleTheme_pressed() -> void:
 	if Main.is_dark == false && $Menu/CRect/CenterContainer/VBox/ToggleTheme.pressed == false:
@@ -157,7 +142,6 @@ func _on_ToggleTheme_pressed() -> void:
 		Main.is_dark = false
 		print("Mode %s" % Main.clickInput)
 
-
 func _on_ClickMode_pressed() -> void:
 	print("GUI Change click mode")	
 	if Main.clickInput == true && $Menu/CRect/CenterContainer/VBox/ClickMode.pressed == false:
@@ -168,18 +152,18 @@ func _on_ClickMode_pressed() -> void:
 		$Menu/CRect/CenterContainer/VBox/ClickMode.text = "Click Mode ON"
 		Main.clickInput = true
 		print("Mode %s" % Main.clickInput)
-	
-
 
 func _on_Options_pressed() -> void:
 	Main.new_game = 1
 	$Menu.hide()
 
-
 func gameover():
+	$Menu.hide()
+	$Menu.visible = false	
+	$HelpM.hide()
+	$MessPU.hide()	
 	Main.new_game = 1
 	Main.game_over()
-	$Menu.hide()
 
 func _on_AI_pressed() -> void:
 	Main.new_game = 1
@@ -188,30 +172,28 @@ func _on_AI_pressed() -> void:
 	AdsManager.showRewardedVideo()
 	# temporary ?
 	Main.ai_turns(20)
-	
-
 
 func _on_Share_pressed() -> void:
 	Main.new_game = 1
 	$Menu.hide()
 
-
 func _on_Close_pressed() -> void:
 	Main.new_game = 1
 	$Menu.hide()
 
-
 func _on_Help_pressed() -> void:
 	Main.new_game = 0
-
 	$HelpM.show()
-
 
 func _on_CloseHelpM_pressed() -> void:
 	Main.new_game = 1
 	$HelpM.hide()
 
-
 func _on_GameOverT_timeout() -> void:
 	$MessPU.hide()
+	$VBoxC/Menu/VBox/Buttons.visible = true
 	Main.show_result()
+
+
+func _on_Timer_timeout() -> void:
+	$MessGL.hide()

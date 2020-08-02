@@ -23,7 +23,7 @@ _global_script_class_icons={
 config/name="2584 Fibonacci"
 config/description="2584 aka 2048 with Fibonacci numbers and sequence logic"
 run/main_scene="res://Scenes/MainWindow.tscn"
-boot_splash/image="res://Graphics/TELOS-GAMES-LOGO v1.png"
+boot_splash/image="res://Graphics/Telos Logo Quad 1.jpg"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://Graphics/2584 Fibonacci ICON.jpg"
 
