@@ -8,12 +8,18 @@ signal moving_numbers
 signal exit_game
 signal save_player_data
 
+# Const
+const COMMON_SAVEDATA = "user://savegame.save"
+const SCORE_TABLE_SAVEDATA = "user://scores.save"
+const GAMEFIELD_SAVEDATA = "user://gamefield.save"
+
 #Scenes
 var number_scene = preload("res://Scenes/Number.tscn")
 var ads_scene = preload("res://Scenes/ADs.tscn")
 var gamefield_scene = preload("res://Scenes/GameField.tscn")
 var background_scene = preload("res://Scenes/Background.tscn")
 var game_field_scene = preload("res://Scenes/GameField.tscn")
+var telosgames_logo_scene = preload("res://Scenes/Logo.tscn")
 
 # GUI Scenes
 var gui_scene = preload("res://Scenes/GUI.tscn")
@@ -28,6 +34,7 @@ var gui_gameover_node = null
 var background_node = null
 var mainWindow_node = null
 var gamefield_node = null
+var telosgames_logo_node = null
 
 #Scripts
 #var mainWindow_script = preload("res://Scripts/MainWindow.gd").new()
@@ -79,15 +86,21 @@ var game_field = [[],[]]
 
 var randgen = RandomNumberGenerator.new()
 
+var is_2584 = false
+var is_newgame = false
+
 var undo_best_score
 var undo_score
 var current_score = 0
 var best_score = 0
 var scores_dict = {"1st    ": 1134903170, "2st    ": 832040, "3st    ": 317811, "4st    ": 46368, "5st    ": 10946, "6st    ": 2584, "7st    ": 987, "8st    ": 377, "9st    ": 233, "10st  ": 144}
 
+var fibarr = [2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578, 5702887, 9227465, 14930352, 24157817, 39088169, 63245986, 102334155, 165580141, 267914296, 433494437, 701408733, 1134903170, 1836311903, 2971215073, 4807526976, 7778742049]
+
 var show_ads = false
 
 var new_game = 0
+var is_plaing = false
 
 var number_rect_size = null
 var number_scene_pos = 0
@@ -97,6 +110,8 @@ var number_two = 2
 var number_three = 3
 var number_four = 4
 var number_five = 5
+
+
 
 
 func _ready():
@@ -137,6 +152,10 @@ func setup_nodes():
 	gui_gameover_node = gui_gameover_scene.instance()
 	get_node("/root/MainWindow").add_child(gui_gameover_node)
 	gui_gameover_node.set_visible(false)
+	telosgames_logo_node = telosgames_logo_scene.instance()
+	get_node("/root/MainWindow").add_child(telosgames_logo_node)
+	telosgames_logo_node.set_visible(false)	
+	show_logo()
 
 
 #func setup_signals():
@@ -147,20 +166,18 @@ func setup_nodes():
 #	pass
 
 
-#func _process(_delta):
-#	#if	new_game != 0:
-#		#print("_process(_delta)")
-#		#touch_input()
-#		#draw_field()
-#	pass
-
-
 func new_game():
 	print("Main new_game()")
 	randgen.randomize()
+	# if saved game exists load it
+	# else do newgame stuff
+	if check_saves(COMMON_SAVEDATA) && check_saves(SCORE_TABLE_SAVEDATA) && check_saves(GAMEFIELD_SAVEDATA) && is_newgame == false:
+		load_game()		
+	is_newgame = true
 	background_node.set_visible(true)
 	undo_game_field = null
-	new_game = 1	
+	new_game = 1
+	is_plaing = true
 	game_field = make_matrix()
 	summ = 0	
 	current_score = summ
@@ -168,23 +185,28 @@ func new_game():
 	reasign_numbers_on_gamefield()
 	gui_node.set_visible(true)
 	gui_node.update_score()
-#	gui_gameover_node.queue_free()
-#	ads_node.queue_free()
+	#	gui_gameover_node.queue_free()
+	#	ads_node.queue_free()
 	#inputLagTimer.start()
-#	get_tree().change_scene()
+	#	get_tree().change_scene()
 
 
 func game_over():
 	print("Main game_over()")
-	undo_game_field = null
-	new_game = 0
-	gui_node.show_gameover()
+	if is_plaing == true:
+		print("Main DO STUFF game_over()")
+		is_plaing = false
+		undo_game_field = null
+		new_game = 0
+		gui_node.show_gameover()
+	else:
+		return
+
 
 func show_result():
 	gui_node.set_visible(false)
 	gui_gameover_node.update_score()
 	gui_gameover_node.set_visible(true)
-
 
 
 func setup():
@@ -205,6 +227,8 @@ func setup_thems():
 
 
 func update_score():
+	if is_newgame == false:
+		load_game()
 	current_score = summ
 	if current_score >= best_score:
 		best_score = current_score
@@ -227,10 +251,16 @@ func setup_window():
 func set_records_table():
 	# проверять значение current_score и вставлять его в словарь.
 	var value = 0
+	var dkey = 0	
 	for key in scores_dict:
-		if scores_dict[key] as int <= current_score:
+		if scores_dict[key] as int >= current_score:	
+			dkey = key	
+		elif scores_dict[key] as int <= current_score:
+			dkey = key
+			value = scores_dict[key]
+			scores_dict[dkey] = current_score
+			return dkey
 
-			scores_dict[key] = str(current_score)
 
 func max_dict_to(dict, val):
 	var max_var = 0
@@ -241,6 +271,7 @@ func max_dict_to(dict, val):
 			max_var = i
 	return max_var
 
+
 func min_dict_to(dict, val):
 	var min_var = 0
 	var min_val = 0
@@ -249,6 +280,7 @@ func min_dict_to(dict, val):
 			min_val = val
 			min_var = i
 	return min_var	
+
 
 func max_dict_val(dict):
 	var max_var = 0
@@ -260,6 +292,7 @@ func max_dict_val(dict):
 			max_var = i
 	return max_var
 
+
 func min_dict_val(dict):
 	var min_var = 0
 	var min_val = 0
@@ -269,6 +302,12 @@ func min_dict_val(dict):
 			min_val = val
 			min_var = i
 	return min_var	
+
+
+func show_logo():
+	gui_node.set_visible(false)
+	telosgames_logo_node.set_visible(true)
+
 
 func show_ads():
 	print("Main show_ads()")
@@ -282,7 +321,10 @@ func show_ads():
 #	show_ads_node(true)
 #	ads_node.start_ads_timer()
 	new_game()
-	#$GUI.show_message("ADs, Money blwe $$$$$$$" )
+
+
+func show_message(text):
+	gui_node.show_message(text)
 
 
 func colors_thems(curr_color_them : String):
@@ -325,7 +367,7 @@ func copy_gamefield():
 
 func ai_turns(turns:int):
 	for i in range(turns):
-		if new_game == 1:
+		if new_game == 1 && is_plaing == true:
 			yield(get_tree().create_timer(0.01), "timeout")
 			call_deferred("move_right",game_field)
 			yield(get_tree().create_timer(0.01), "timeout")
@@ -338,7 +380,42 @@ func ai_turns(turns:int):
 			return
 
 
-func save():
+func load_game():
+	load_from_file(COMMON_SAVEDATA, json_node_save())
+	load_from_file(SCORE_TABLE_SAVEDATA, scores_dict)
+	load_from_file(GAMEFIELD_SAVEDATA, game_field)
+
+
+func save_game():
+	save_to_file(COMMON_SAVEDATA, json_node_save())
+	save_to_file(SCORE_TABLE_SAVEDATA, scores_dict)
+	save_to_file(GAMEFIELD_SAVEDATA, game_field)
+
+
+func save_to_file(filepath, save_object):
+	var file = File.new()
+	file.open(filepath, File.WRITE)
+	file.store_var(save_object, true)
+	file.close()
+
+
+func check_saves(filepath):
+	var file = File.new()
+	if file.file_exists(filepath):
+		return true
+	else:
+		return false
+
+
+func load_from_file(filepath, load_object):
+	var file = File.new()
+	if file.file_exists(filepath):
+		file.open(filepath, File.READ)
+		load_object = file.get_var(true)
+		file.close()
+
+
+func json_node_save():
 	var save_dict = {
 		"filename" : get_filename(),
 		"parent" : get_parent().get_path(),
@@ -361,7 +438,7 @@ func save():
 	return save_dict
 
 
-func save_game():
+func save_node_json_game():
 	# Note: This can be called from anywhere inside the tree. This function is
 	# path independent.
 	# Go through everything in the persist category and ask them to return a
@@ -388,7 +465,7 @@ func save_game():
 	save_game.close()
 
 
-func load_game():
+func load_node_json_game():
 	# Note: This can be called from anywhere inside the tree. This function
 	# is path independent.
 	var save_game = File.new()
@@ -453,6 +530,7 @@ func generate_new_numbers_in_array():
 				summ += number_two
 	update_score()
 
+
 func create_gamefield_with_plates():
 	#print("create_gamefield_with_plates()")
 	for colx in range(game_field_size):
@@ -474,6 +552,7 @@ func create_gamefield_with_plates():
 				curr_number.position.y = number_size * rowy + game_field_margin * (rowy + 1)
 			gamefield_node.add_child(curr_number)
 
+
 func reasign_numbers_on_gamefield():
 	#print("reasign_numbers_on_gamefield()")
 	var children_mas_number_scene = gamefield_node.get_children()
@@ -493,6 +572,7 @@ func reasign_numbers_on_gamefield():
 						call_deferred("do_graz_adsoff")
 	gui_node.update_score()
 
+
 func check_space_for_numbers():
 	#print("Main check_space_for_numbers()")
 	var spaces = 0
@@ -502,6 +582,7 @@ func check_space_for_numbers():
 				spaces += 1
 	return spaces
 
+
 func check_game_condition():
 	#print("fill_field_with_numbers()")
 	if check_space_for_numbers() != 0:
@@ -509,6 +590,7 @@ func check_game_condition():
 	elif check_space_for_numbers() == 0:
 		game_over()
 		return
+
 
 func fibn(k):
 	if k == 1:
@@ -525,6 +607,7 @@ func fibn(k):
 		var a = sb
 		sb = sc
 	return n
+
 
 # функции для динамического расчета палитры плашек под числами
 #static bool IsFib(long T, out long idx)
@@ -581,15 +664,6 @@ func fibn(k):
 #  else writeln(N, ' не является числом Фибоначчи!');
 #  readln
 #end.
-
-
-func do_graz_2584():
-	print("pozdr s 2584")
-	# играть музыку играть фонариками запускать фейерверки 
-
-func do_graz_adsoff():
-	print("pozdr s 7778742049 no ads for you")
-	# играть музыку играть фонариками запускать фейерверки 
 
 func show_gui_node(bl:bool):
 	print("Main show_gui_node")
@@ -752,8 +826,6 @@ func move_right(mas):
 				game_over()			
 	reasign_numbers_on_gamefield()	
 	is_undo_copied = false
-	
-
 
 
 func move_left(mas):
