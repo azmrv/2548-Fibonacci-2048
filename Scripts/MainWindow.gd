@@ -80,8 +80,7 @@ func _calculate_swipe(swipe_end):
 		if swipe.y < 0:
 			Main.move_up(Main.game_field)
 
-func calculate_direction():
-	
+func calculate_direction():	
 	var k_scr = (game_window_heigth_y - game_window_width_x)/2
 #	print("calculate_direction()")
 #	print("y =", final_touch.y, " x =", final_touch.x)	
@@ -99,10 +98,10 @@ func calculate_direction():
 
 func _notification(what):
 	if (what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST):
-		Main.save_game()
+		Utility.save_game()
 		get_tree().quit()
 	if (what == MainLoop.NOTIFICATION_WM_FOCUS_OUT ):
-		Main.save_game()
+		Utility.save_game()
 	#if (what == MainLoop.NOTIFICATION_APP_RESUMED ):
 		#Main.load_game()
 	#if (what == MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST):
@@ -113,5 +112,5 @@ func _notification(what):
 
 
 func _finalize():
-	Main.savegame()
+	Utility.savegame()
 

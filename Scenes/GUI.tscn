@@ -360,7 +360,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GAME OVER" type="Button" parent="Menu/CRect/CenterContainer/VBox"]
-visible = false
 margin_top = 102.0
 margin_right = 400.0
 margin_bottom = 162.0
@@ -593,8 +592,14 @@ custom_fonts/font = ExtResource( 5 )
 text = "Close Help"
 
 [node name="MessPU" type="PopupMenu" parent="."]
+show_behind_parent = true
+light_mask = 0
 margin_right = 20.0
 margin_bottom = 20.0
+focus_mode = 0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+hide_on_state_item_selection = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -632,8 +637,11 @@ align = 1
 valign = 1
 
 [node name="MessGL" type="PopupMenu" parent="."]
-margin_right = 20.0
-margin_bottom = 20.0
+show_behind_parent = true
+margin_left = 5.0
+margin_top = 2.0
+margin_right = 25.0
+margin_bottom = 22.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -651,10 +659,10 @@ __meta__ = {
 }
 
 [node name="CC" type="CenterContainer" parent="MessGL"]
-margin_left = 27.6697
-margin_top = 87.5342
-margin_right = 477.67
-margin_bottom = 537.534
+margin_left = 18.156
+margin_top = 171.968
+margin_right = 468.156
+margin_bottom = 621.968
 rect_min_size = Vector2( 450, 450 )
 size_flags_horizontal = 3
 size_flags_vertical = 3

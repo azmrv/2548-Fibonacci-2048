@@ -17,7 +17,6 @@ func _ready() -> void:
 #		$PopUp/TimeToADs.text = str($WaitForADs.time_left)
 #
 
-
 func setup():
 	print("GUI_GameOver setup()")
 #	screenSize.x = get_viewport().get_visible_rect().size.x # Get Width

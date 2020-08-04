@@ -8,7 +8,10 @@ signal moving_numbers
 signal exit_game
 signal save_player_data
 
-
+# Const
+const COMMON_SAVEDATA = "user://savegame.save"
+const SCORE_TABLE_SAVEDATA = "user://scores.save"
+const GAMEFIELD_SAVEDATA = "user://gamefield.save"
 
 #Scenes
 var number_scene = preload("res://Scenes/Number.tscn")
@@ -76,8 +79,7 @@ var eend = 4
 var koldop = 2
 #var kodn
 
-
-var undo_game_field = [[],[]]
+var undo_game_field = null
 var is_undo_copied = false
 
 var game_field = [[],[]]
@@ -168,9 +170,9 @@ func new_game():
 	print("Main new_game()")
 	randgen.randomize()
 	# if saved game exists load it
-	# else do newgame stuff	
-	if Utility.check_saves() && is_newgame == false:
-		Utility.load_game()	
+	# else do newgame stuff
+	if check_saves(COMMON_SAVEDATA) && check_saves(SCORE_TABLE_SAVEDATA) && check_saves(GAMEFIELD_SAVEDATA) && is_newgame == false:
+		load_game()		
 	is_newgame = true
 	background_node.set_visible(true)
 	undo_game_field = null
@@ -220,13 +222,13 @@ func setup():
 #	create_gamefield_with_plates()
 
 
-#func setup_thems():
-#	print("Main setup_thems()")
+func setup_thems():
+	print("Main setup_thems()")
 
 
 func update_score():
 	if is_newgame == false:
-		Utility.load_game()
+		load_game()
 	current_score = summ
 	if current_score >= best_score:
 		best_score = current_score
@@ -260,6 +262,48 @@ func set_records_table():
 			return dkey
 
 
+func max_dict_to(dict, val):
+	var max_var = 0
+	var max_val = 0
+	for i in dict:
+		if val > dict[i]:
+			max_val = val
+			max_var = i
+	return max_var
+
+
+func min_dict_to(dict, val):
+	var min_var = 0
+	var min_val = 0
+	for i in dict:
+		if val < dict[i]:
+			min_val = val
+			min_var = i
+	return min_var	
+
+
+func max_dict_val(dict):
+	var max_var = 0
+	var max_val = 0
+	for i in dict:
+		var val = dict[i]
+		if val > dict[i]:
+			max_val = val
+			max_var = i
+	return max_var
+
+
+func min_dict_val(dict):
+	var min_var = 0
+	var min_val = 0
+	for i in dict:
+		var val = dict[i]
+		if val < dict[i]:
+			min_val = val
+			min_var = i
+	return min_var	
+
+
 func show_logo():
 	gui_node.set_visible(false)
 	telosgames_logo_node.set_visible(true)
@@ -283,32 +327,41 @@ func show_message(text):
 	gui_node.show_message(text)
 
 
-func make_matrix():
-	#print("make_2d_array()")
-	var array = []
-	for colx in game_field_size:
-		array.append([])
-		for rowy in game_field_size:
-			array[colx].append(0)
-	return array
+func colors_thems(curr_color_them : String):
+	if curr_color_them == "light":
+		main_background_color ="73947A"
+		plate_background_color ="5E7478"
+		menu_machground = "A5B48C"
+		text_color = "363636"
+	elif curr_color_them == "dark":
+		main_background_color ="011606"
+		plate_background_color ="0C1618"
+		menu_machground = "1D2411"
+		text_color = "9E9E9E"
+	else:
+		return
+
+
+func arr_copy(arr):
+	return arr.duplicate(true)
 
 
 func undo():
 	if undo_game_field != null:
-		game_field = undo_game_field.duplicate(true)
+		game_field = arr_copy(undo_game_field)
 		current_score = undo_score
 		summ = current_score
-		best_score = undo_best_score	
-	is_undo_copied = false
-	update_score()
+		best_score = undo_best_score
+	is_undo_copied = false	
 	reasign_numbers_on_gamefield()
+	update_score()
 
 
 func copy_gamefield():
-#	if is_undo_copied == false:
-	undo_game_field = game_field.duplicate(true)
-	undo_score = current_score
-	undo_best_score = best_score
+	if is_undo_copied == false:
+		undo_game_field = arr_copy(game_field)
+		undo_score = current_score
+		undo_best_score = best_score
 	is_undo_copied = true
 
 
@@ -325,6 +378,136 @@ func ai_turns(turns:int):
 			call_deferred("move_up",game_field)
 		else:
 			return
+
+
+func load_game():
+	load_from_file(COMMON_SAVEDATA, json_node_save())
+	load_from_file(SCORE_TABLE_SAVEDATA, scores_dict)
+	load_from_file(GAMEFIELD_SAVEDATA, game_field)
+
+
+func save_game():
+	save_to_file(COMMON_SAVEDATA, json_node_save())
+	save_to_file(SCORE_TABLE_SAVEDATA, scores_dict)
+	save_to_file(GAMEFIELD_SAVEDATA, game_field)
+
+
+func save_to_file(filepath, save_object):
+	var file = File.new()
+	file.open(filepath, File.WRITE)
+	file.store_var(save_object, true)
+	file.close()
+
+
+func check_saves(filepath):
+	var file = File.new()
+	if file.file_exists(filepath):
+		return true
+	else:
+		return false
+
+
+func load_from_file(filepath, load_object):
+	var file = File.new()
+	if file.file_exists(filepath):
+		file.open(filepath, File.READ)
+		load_object = file.get_var(true)
+		file.close()
+
+
+func json_node_save():
+	var save_dict = {
+		"filename" : get_filename(),
+		"parent" : get_parent().get_path(),
+		"screenSize_x" : screenSize.x, 
+		"screenSize_y" : screenSize.y,
+		"show_ads" : show_ads, 
+		"best_score" : best_score, 
+		"current_score" : current_score,
+		"game_field" : game_field,
+		"undo_game_field" : undo_game_field,
+		"summ" : summ,
+		"curr_color_them" : curr_color_them,
+		"new_game_numbers" : new_game_numbers,
+		"hard_level" : hard_level,
+		"game_field_size" : game_field_size,
+		"clickInput" : clickInput,
+		"number_size" : number_size,
+		"game_field_width_x" : game_field_width_x
+	}
+	return save_dict
+
+
+func save_node_json_game():
+	# Note: This can be called from anywhere inside the tree. This function is
+	# path independent.
+	# Go through everything in the persist category and ask them to return a
+	# dict of relevant variables
+	var save_game = File.new()
+	save_game.open("user://savegame.save", File.WRITE)
+	var save_nodes = get_tree().get_nodes_in_group("Persist")
+	for node in save_nodes:
+		# Check the node is an instanced scene so it can be instanced again during load
+		if node.filename.empty():
+			print("persistent node '%s' is not an instanced scene, skipped" % node.name)
+			continue
+
+		# Check the node has a save function
+		if !node.has_method("save"):
+			print("persistent node '%s' is missing a save() function, skipped" % node.name)
+			continue
+
+		# Call the node's save function
+		var node_data = node.call("save")
+
+		# Store the save dictionary as a new line in the save file
+		save_game.store_line(to_json(node_data))
+	save_game.close()
+
+
+func load_node_json_game():
+	# Note: This can be called from anywhere inside the tree. This function
+	# is path independent.
+	var save_game = File.new()
+	if not save_game.file_exists("user://savegame.save"):
+		return # Error! We don't have a save to load.
+
+	# We need to revert the game state so we're not cloning objects
+	# during loading. This will vary wildly depending on the needs of a
+	# project, so take care with this step.
+	# For our example, we will accomplish this by deleting saveable objects.
+	var save_nodes = get_tree().get_nodes_in_group("Persist")
+	for i in save_nodes:
+		i.queue_free()
+
+	# Load the file line by line and process that dictionary to restore
+	# the object it represents.
+	save_game.open("user://savegame.save", File.READ)
+	while save_game.get_position() < save_game.get_len():
+		# Get the saved dictionary from the next line in the save file
+		var node_data = parse_json(save_game.get_line())
+
+		# Firstly, we need to create the object and add it to the tree and set its position.
+		var new_object = load(node_data["filename"]).instance()
+		get_node(node_data["parent"]).add_child(new_object)
+		new_object.position = Vector2(node_data["pos_x"], node_data["pos_y"])
+
+		# Now we set the remaining variables.
+		for i in node_data.keys():
+			if i == "filename" or i == "parent" or i == "pos_x" or i == "pos_y":
+				continue
+			new_object.set(i, node_data[i])
+	save_game.close()
+
+
+func make_matrix():
+	#print("make_2d_array()")
+	var array = []
+	for colx in game_field_size:
+		array.append([])
+		for rowy in game_field_size:
+			array[colx].append(0)
+	return array
 
 
 func generate_new_numbers_in_array():
@@ -376,6 +559,7 @@ func reasign_numbers_on_gamefield():
 	for colx in range(game_field_size):
 		for rowy in range(game_field_size):
 			#curr_number.window_size = $GameField.get_viewport().get_visible_rect().size
+			
 			for i in range(len(children_mas_number_scene)):
 				if children_mas_number_scene[i].curry_row == rowy and children_mas_number_scene[i].currx_col == colx:
 					if game_field[rowy][colx] == 0: 
@@ -408,6 +592,103 @@ func check_game_condition():
 		return
 
 
+func fibn(k):
+	if k == 1:
+		 return 0
+	if k == 2:
+		return 1
+	var sc = 0
+	var sa = 1
+	var sb = 2
+	var n = 1
+	while k > sc:
+		n += 1
+		var c = sa + sb
+		var a = sb
+		sb = sc
+	return n
+
+
+# функции для динамического расчета палитры плашек под числами
+#static bool IsFib(long T, out long idx)
+#{
+#    double root5 = Math.Sqrt(5);
+#    double phi = (1 + root5) / 2;
+#
+#    idx    = (long)Math.Floor( Math.Log(T*root5) / Math.Log(phi) + 0.5 );
+#    long u = (long)Math.Floor( Math.Pow(phi, idx)/root5 + 0.5);
+#
+#    return (u == T);
+#}
+
+#var
+#  N, F1, F2, K: integer;
+#Порядковый номер числа Фибоначчи
+#begin
+#  write('N = ');
+#  readln(N);
+#  F1 := 1; { <== первый член ряда Фибоначчи }
+#  F2 := 1; { <== второй член ряда Фибоначчи }
+#  K := 2;
+#  { Выполняем цикл до тех пор, пока введенное нами 
+#  число N больше очередного члена ряда Фибоначчи: }
+#  while (N > F2) do
+#  begin
+#    F2 := F1 + F2; { <== новое значение F2 }
+#    F1 := F2 - F1; { <== новое значение F1 }
+#    inc(K) { <== увеличиваем номер члена F2 }
+#  end;
+#  writeln;
+#  if N = F2 then writeln('Порядковый номер числа Фибоначчи: ', K)
+#  else writeln(' ', N, ' не является числом Фибоначчи!');
+#  readln
+#end.
+
+#var
+#  N, F1, F2, c: integer;
+#Соседние числа Фибоначчи
+#begin
+#  write('N = ');
+#  readln(N);
+#  F1 := 1; { <== первый член ряда Фибоначчи }
+#  F2 := 1; { <== второй член ряда Фибоначчи }
+#  { Выполняем цикл до тех пор, пока введенное нами 
+#  число N больше очередного члена ряда Фибоначчи: }
+#  while (N > F2) do
+#  begin
+#    c := F2; { <== запоминаем второй член ряда }
+#    F2 := F1 + F2; { <== находим новое значение F2 }
+#    F1 := c { <== первому члену приписываем предыдущий (c=F1) }
+#  end;
+#  if N = F2 then writeln('Соседние числа Фибоначчи: ', F1, ' ', F1+F2)
+#  else writeln(N, ' не является числом Фибоначчи!');
+#  readln
+#end.
+
+func show_gui_node(bl:bool):
+	print("Main show_gui_node")
+	if gui_node != null:
+		gui_node.set_visible(bl)
+
+
+func show_ads_node(bl:bool):
+	print("Main show_ads_node")
+	if ads_node != null:
+		ads_node.set_visible(bl)
+
+
+func show_gameover_node(bl:bool):
+	print("Main show_gameover_node")
+	if gui_gameover_node != null:
+		gui_gameover_node.set_visible(bl)
+
+
+func show_background_node(bl:bool):
+	print("Main show_background_node")
+	if background_node != null:
+		background_node.set_visible(bl)
+
+
 func move_down(mas):
 #	print("func move_down(mas)")
 	randgen.randomize()
@@ -416,7 +697,9 @@ func move_down(mas):
 	while kodx1 == 1:
 		var sempty = 0
 		for colx in range(game_field_size):
+			
 			for rowy in range(game_field_size-1):
+				
 				if mas[rowy][colx] != 0:
 					if mas[rowy+1][colx] == 0:
 						kodx1 += 1
@@ -436,20 +719,20 @@ func move_down(mas):
 						mas[rowy+1][colx] = mas[rowy+1][colx]+mas[rowy][colx]
 						mas[rowy][colx] = 0
 				else:
-					sempty += 1
+					sempty += 1					
 		if kodx1 > 1:
 			kodx1 = 1
 		else:
 			kodx1 = 0
 			if sempty <= 4:
-				koldop = 1
+				koldop = 1				
 			elif sempty != 0:
 				koldop = 2
 			check_game_condition()
 			if sempty == 0:
 				game_over()			
 	reasign_numbers_on_gamefield()	
-	is_undo_copied = true
+	is_undo_copied = false
 
 
 func move_up(mas):
@@ -460,7 +743,9 @@ func move_up(mas):
 	while kodx2 == 1:
 		var sempty = 0
 		for colx in range(game_field_size):
+			
 			for rowy in range(1, game_field_size):
+				
 				if mas[game_field_size-rowy][colx] != 0:
 					if  mas[game_field_size-rowy-1][colx] == 0:
 						kodx2+=1
@@ -481,19 +766,20 @@ func move_up(mas):
 						mas[game_field_size-rowy][colx] = 0
 				else:
 					sempty += 1
+
 		if kodx2 > 1:
 			kodx2 = 1
 		else:
 			kodx2 = 0
 			if sempty <= 4:
-				koldop = 1
+				koldop = 1				
 			elif sempty != 0:
 				koldop = 2
 			check_game_condition()
 			if sempty == 0:
-				game_over()
-	reasign_numbers_on_gamefield()
-
+				game_over()			
+	reasign_numbers_on_gamefield()	
+	is_undo_copied = false
 
 
 func move_right(mas):
@@ -504,7 +790,9 @@ func move_right(mas):
 	while kody1 == 1:
 		var sempty = 0
 		for rowy in range(game_field_size):
+			
 			for colx in range(game_field_size-1):
+				
 				if mas[rowy][colx] != 0:
 					if mas[rowy][colx+1] == 0:
 						kody1+=1
@@ -537,17 +825,20 @@ func move_right(mas):
 			if sempty == 0:
 				game_over()			
 	reasign_numbers_on_gamefield()	
+	is_undo_copied = false
 
 
 func move_left(mas):
 #	print("func move_left(mas)")
-	randgen.randomize()	
+	randgen.randomize()
 	copy_gamefield()
 	var kody2 = 1
 	while kody2 == 1:
 		var sempty = 0
-		for rowy in range(game_field_size):			
-			for colx in range(1, game_field_size):				
+		for rowy in range(game_field_size):
+			
+			for colx in range(1, game_field_size):
+				
 				if mas[rowy][game_field_size-colx] != 0:
 					if mas[rowy][game_field_size-colx-1]== 0:
 						kody2+=1
@@ -569,6 +860,7 @@ func move_left(mas):
 						mas[rowy][game_field_size-colx] =  0
 				else:
 					sempty += 1
+											
 		if kody2 > 1:
 			kody2 = 1
 		else:
@@ -581,43 +873,4 @@ func move_left(mas):
 			if sempty == 0:
 				game_over()			
 	reasign_numbers_on_gamefield()	
-
-
-func show_gui_node(bl:bool):
-	print("Main show_gui_node")
-	if gui_node != null:
-		gui_node.set_visible(bl)
-
-
-func show_ads_node(bl:bool):
-	print("Main show_ads_node")
-	if ads_node != null:
-		ads_node.set_visible(bl)
-
-
-func show_gameover_node(bl:bool):
-	print("Main show_gameover_node")
-	if gui_gameover_node != null:
-		gui_gameover_node.set_visible(bl)
-
-
-func show_background_node(bl:bool):
-	print("Main show_background_node")
-	if background_node != null:
-		background_node.set_visible(bl)
-
-
-func colors_thems(curr_color_them : String):
-	if curr_color_them == "light":
-		main_background_color ="73947A"
-		plate_background_color ="5E7478"
-		menu_machground = "A5B48C"
-		text_color = "363636"
-	elif curr_color_them == "dark":
-		main_background_color ="011606"
-		plate_background_color ="0C1618"
-		menu_machground = "1D2411"
-		text_color = "9E9E9E"
-	else:
-		return
-
+	is_undo_copied = false
