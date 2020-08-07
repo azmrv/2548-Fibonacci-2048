@@ -171,7 +171,7 @@ func _on_AI_pressed() -> void:
 	$Menu.hide()
 	AdsManager.showRewardedVideo()
 	# temporary ?
-	Main.ai_turns(20)
+	Main.ai_turns(10)
 
 func _on_Share_pressed() -> void:
 	Main.new_game = 1
