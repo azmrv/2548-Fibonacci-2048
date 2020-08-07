@@ -9,10 +9,9 @@ signal exit_game
 signal save_player_data
 
 
-
 #Scenes
 var number_scene = preload("res://Scenes/Number.tscn")
-var ads_scene = preload("res://Scenes/ADs.tscn")
+#var ads_scene = preload("res://Scenes/ADs.tscn")
 var gamefield_scene = preload("res://Scenes/GameField.tscn")
 var background_scene = preload("res://Scenes/Background.tscn")
 var game_field_scene = preload("res://Scenes/GameField.tscn")
@@ -75,6 +74,8 @@ var kodurv = 3
 var eend = 4
 var koldop = 2
 #var kodn
+var pst = 0.05
+
 
 
 var undo_game_field = [[],[]]
@@ -87,8 +88,8 @@ var randgen = RandomNumberGenerator.new()
 var is_2584 = false
 var is_newgame = false
 
-var undo_best_score
-var undo_score
+var undo_best_score = 0
+var undo_score = 0
 var current_score = 0
 var best_score = 0
 var scores_dict = {"1st    ": 1134903170, "2st    ": 832040, "3st    ": 317811, "4st    ": 46368, "5st    ": 10946, "6st    ": 2584, "7st    ": 987, "8st    ": 377, "9st    ": 233, "10st  ": 144}
@@ -144,9 +145,9 @@ func setup_nodes():
 	gui_node.set_visible(false)
 	gamefield_node = game_field_scene.instance()
 	get_node("/root/MainWindow/GUI/VBoxC/GFContainer").add_child(gamefield_node)
-	ads_node = ads_scene.instance()
-	get_node("/root/MainWindow").add_child(ads_node)
-	ads_node.set_visible(false)
+	#ads_node = ads_scene.instance()
+	#get_node("/root/MainWindow").add_child(ads_node)
+	#ads_node.set_visible(false)
 	gui_gameover_node = gui_gameover_scene.instance()
 	get_node("/root/MainWindow").add_child(gui_gameover_node)
 	gui_gameover_node.set_visible(false)
@@ -228,8 +229,9 @@ func update_score():
 	if is_newgame == false:
 		Utility.load_game()
 	current_score = summ
-	if current_score >= best_score:
-		best_score = current_score
+	if current_score != null and best_score != null:
+		if current_score >= best_score:
+			best_score = current_score
 
 
 func setup_window():
@@ -326,7 +328,22 @@ func ai_turns(turns:int):
 		else:
 			return
 
-
+func colors_thems(curr_color_them : String):
+	if curr_color_them == "light":
+		main_background_color ="73947A"
+		plate_background_color ="5E7478"
+		menu_machground = "A5B48C"
+		text_color = "363636"
+	elif curr_color_them == "dark":
+		main_background_color ="011606"
+		plate_background_color ="0C1618"
+		menu_machground = "1D2411"
+		text_color = "9E9E9E"
+	else:
+		return
+		
+		
+		
 func generate_new_numbers_in_array():
 	#print("Main generate_new_numbers_in_array() \n")
 	var kodn
@@ -493,7 +510,7 @@ func move_up(mas):
 			if sempty == 0:
 				game_over()
 	reasign_numbers_on_gamefield()
-
+	is_undo_copied = true			
 
 
 func move_right(mas):
@@ -537,7 +554,7 @@ func move_right(mas):
 			if sempty == 0:
 				game_over()			
 	reasign_numbers_on_gamefield()	
-
+	is_undo_copied = true			
 
 func move_left(mas):
 #	print("func move_left(mas)")
@@ -581,43 +598,4 @@ func move_left(mas):
 			if sempty == 0:
 				game_over()			
 	reasign_numbers_on_gamefield()	
-
-
-func show_gui_node(bl:bool):
-	print("Main show_gui_node")
-	if gui_node != null:
-		gui_node.set_visible(bl)
-
-
-func show_ads_node(bl:bool):
-	print("Main show_ads_node")
-	if ads_node != null:
-		ads_node.set_visible(bl)
-
-
-func show_gameover_node(bl:bool):
-	print("Main show_gameover_node")
-	if gui_gameover_node != null:
-		gui_gameover_node.set_visible(bl)
-
-
-func show_background_node(bl:bool):
-	print("Main show_background_node")
-	if background_node != null:
-		background_node.set_visible(bl)
-
-
-func colors_thems(curr_color_them : String):
-	if curr_color_them == "light":
-		main_background_color ="73947A"
-		plate_background_color ="5E7478"
-		menu_machground = "A5B48C"
-		text_color = "363636"
-	elif curr_color_them == "dark":
-		main_background_color ="011606"
-		plate_background_color ="0C1618"
-		menu_machground = "1D2411"
-		text_color = "9E9E9E"
-	else:
-		return
-
+	is_undo_copied = true			
